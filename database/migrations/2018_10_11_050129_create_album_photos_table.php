@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersTable extends Migration
+class CreateAlbumPhotosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('album_photos', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('username');
-            $table->string('password');
+            $table->integer('album_id')->default(0)->comment('粉丝ID');
+            $table->string('url', 256)->default('')->comment('图片链接');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('album_photos');
     }
 }
