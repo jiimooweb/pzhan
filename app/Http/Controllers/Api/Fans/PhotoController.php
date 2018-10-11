@@ -2,24 +2,25 @@
 
 namespace App\Http\Controllers\Api\Fans;
 
-use App\Models\Social;
+use App\Models\Photo;
 use App\Services\Qiniu;
 use Illuminate\Http\Request;
+use App\Http\Requests\PhotoRequest;
 use App\Http\Controllers\Controller;
 
-class SocialController extends Controller
+class PhotoController extends Controller
 {
     public function index() 
     {
-        $socials = Social::with(['photo'])->orderBy('created_at', 'desc')->paginate(config('common.pagesize'));   ;
-        return response()->json(['status' => 'success', 'data' => $socials]);   
+        $photo = Photo::where('album_id', request('album_id'))->get();
+        return response()->json(['status' => 'success', 'data' => $photos]);   
     }
 
-    public function store(SocialRequest $request) 
+    public function store(PhotoRequest $request) 
     {   
         $data = request()->all();  
-        $data['fan_id'] = Token::getUid();  
-        if(Social::create($data)) {
+        $data['fan_id'] = Token::getUid(); 
+        if(Photo::create($data)) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);
         }
 
@@ -28,15 +29,15 @@ class SocialController extends Controller
 
     public function show()
     {
-        $social = Social::where('id', request()->social)->with(['photo']);
-        $status = $social ? 'success' : 'error';
-        return response()->json(['status' => $status, 'data' => $social]);   
+        $photo = Photo::where('id', request()->photo)->with(['album']);
+        $status = $photo ? 'success' : 'error';
+        return response()->json(['status' => $status, 'data' => $photo]);   
     }
 
-    public function update(SocialRequest $request)
+    public function update(PhotoRequest $request)
     {
         $data = request()->all();                      
-        if(Social::where('id', request()->social)->update($data)) {
+        if(Photo::where('id', request()->photo)->update($data)) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);               
         }
 
@@ -45,7 +46,7 @@ class SocialController extends Controller
 
     public function destroy()
     {
-        if(Social::where('id', request()->social)->delete()) {
+        if(Photo::where('id', request()->photo)->delete()) {
             return response()->json(['status' => 'success', 'msg' => '删除成功！']); 
         }
 
@@ -54,7 +55,7 @@ class SocialController extends Controller
 
     public function change() 
     {
-        if(Social::where('id', request('id'))->update(['hidden' => request('hidden')])) {
+        if(Photo::where('id', request('id'))->update(['hidden' => request('hidden')])) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']); 
         }
 

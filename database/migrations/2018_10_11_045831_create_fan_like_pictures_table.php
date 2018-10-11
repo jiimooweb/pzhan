@@ -15,6 +15,8 @@ class CreateFanLikePicturesTable extends Migration
     {
         Schema::create('fan_like_pictures', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('fan_id')->default(0)->comment('粉丝ID');
+            $table->integer('picture_id')->default(0)->comment('图片ID');
             $table->timestamps();
         });
     }

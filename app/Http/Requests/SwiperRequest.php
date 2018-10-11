@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Commons;
+namespace App\Http\Requests;
 
 use App\Http\Requests\CommonRequest;
 

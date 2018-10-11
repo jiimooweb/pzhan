@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Swipers;
 use App\Models\Swiper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SwiperRequest;
 
 class SwiperController extends Controller
 {

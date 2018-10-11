@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Api\Pictures;
 
+use App\Models\Picture;
 use App\Services\Qiniu;
+use App\Services\Token;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PictureRequest;
 
 class PictureController extends Controller
 {
@@ -21,6 +24,7 @@ class PictureController extends Controller
 
     public function show()
     {
+        $fan_id = Token::getUid();
         $picture = Picture::with(['tags' => function ($query){
             $query->select('tag.id', 'tag.name');
         }])->find(request()->picture);
@@ -60,27 +64,5 @@ class PictureController extends Controller
 
         return response()->json(['status' => 'error', 'msg' => '删除失败！']);
     }
-
-    public function upload() 
-    {
-        $file = request()->file('file');
-
-        $url = Qiniu::upload($file);
-
-        if($url) {
-            return response()->json(['status' => 'success', 'msg' => '上传成功', 'url' => $url]);   
-            
-        }   
-
-        return response()->json(['status' => 'error', 'msg' => '上传失败']);
-    }
-
-    public function delete() 
-    {
-        if(Qiniu::delete(request('url'))) {
-            return response()->json(['status' => 'success', 'msg' => '删除成功']);
-        }
-
-        return response()->json(['status' => 'error', 'msg' => '删除失败']);
-    }
+    
 }

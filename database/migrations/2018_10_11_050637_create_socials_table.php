@@ -18,7 +18,6 @@ class CreateSocialsTable extends Migration
             $table->integer('fan_id')->default(0)->comment('粉丝ID');
             $table->string('content', 200)->default('')->comment('内容');
             $table->string('location', 50)->default('')->comment('地理位置');
-            
             $table->timestamps();
         });
     }

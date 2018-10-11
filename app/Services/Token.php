@@ -139,8 +139,7 @@ class Token
     public static function getUid()
     {
         $uid = self::getCurrentTokenVar('uid');
-        $scope = self::getCurrentTokenVar('scope');
-        if($uid&&$scope){
+        if($uid){
             return $uid;
         }else{
             return response()->json(['msg' => 'uid无效']);

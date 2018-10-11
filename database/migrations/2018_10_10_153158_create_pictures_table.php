@@ -17,7 +17,7 @@ class CreatePicturesTable extends Migration
             $table->increments('id');
             $table->string('title', 50)->default('')->comment('标题');
             $table->string('image', 256)->default('')->comment('图片链接');
-            $table->string('author', 50)->default('')->comment('作者名');
+            $table->string('author', 50)->default('')->comment('作者');
             $table->integer('click')->default(0)->comment('点击数');
             $table->timestamps();
         });
