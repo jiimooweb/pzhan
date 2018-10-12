@@ -11,7 +11,10 @@ class TagController extends Controller
 {
     public function index() 
     {
-        $tags = Tag::paginate(50);
+        $keyword = request('keyword');
+        $tags = Tag::when($keyword, function($query) use ($keyword) {
+            return $query->where('name', 'like', '%'.$keyword.'%');
+        })->paginate(50);
         return response()->json(['status' => 'success', 'data' => $tags]);   
     }
 
