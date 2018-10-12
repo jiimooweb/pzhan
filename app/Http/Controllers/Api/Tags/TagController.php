@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Tabs;
+namespace App\Http\Controllers\Api\Tags;
 
 use App\Models\Tag;
 use Illuminate\Http\Request;
