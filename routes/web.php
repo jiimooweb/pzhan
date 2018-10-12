@@ -23,8 +23,12 @@ Route::post('/add', 'Api\Users\UserController@store');
 Route::group(['middleware' => ['cors', 'token']], function () {
 
     //图片
-    Route::post('pictures/upload', 'Api\Pictures\PictureController@upload');
-    Route::post('pictures/delete', 'Api\Pictures\PictureController@delete');
+    Route::post('pictures/upload', 'Api\Pictures\PictureController@upload');  //上传图片
+    Route::post('pictures/delete', 'Api\Pictures\PictureController@delete');   //删除图片
+    Route::post('pictures/{picture}/collect', 'Api\Pictures\PictureController@collect'); //收藏
+    Route::post('pictures/{picture}/uncollect', 'Api\Pictures\PictureController@uncollect'); //取消收藏
+    Route::post('pictures/{picture}/like', 'Api\Pictures\PictureController@like');  //点赞
+    Route::post('pictures/{picture}/unlike', 'Api\Pictures\PictureController@unlike');  //取消赞
     Route::apiResource('pictures', 'Api\Pictures\PictureController');
 
     //标签
