@@ -35,11 +35,11 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::apiResource('tags', 'Api\Tags\TagController');
 
     //轮播图
-    Route::apiResource('/swipers', '\App\Api\Controllers\Commons\SwiperController');   
+    Route::apiResource('/swipers', 'Api\Swipers\SwiperController');   
 
     //轮播图组
-    Route::get('/swiper_groups/display', '\App\Api\Controllers\Commons\SwiperGroupController@display'); 
-    Route::apiResource('/swiper_groups', '\App\Api\Controllers\Commons\SwiperGroupController'); 
+    Route::get('/swiper_groups/display', 'Api\Swipers\SwiperGroupController@display'); 
+    Route::apiResource('/swiper_groups', 'Api\Swipers\SwiperGroupController'); 
 
     //粉丝专辑（相册）
     Route::post('albums/change', 'Api\Fans\AlbumController@change');

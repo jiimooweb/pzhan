@@ -10,4 +10,10 @@ class Social extends Model
     {
         return $this->hasMany(Photo::class, 'social_id');
     }
+
+    public function comments()
+    {
+        return $this->hasMany(SocialComment::class);
+    }
+
 }
