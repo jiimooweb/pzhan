@@ -22,9 +22,9 @@ Route::post('/add', 'Api\Users\UserController@store');
 
 Route::group(['middleware' => ['cors', 'token']], function () {
 
+    Route::post('qiniu/upload', 'Controller@upload');  //上传图片
+    Route::post('qiniu/delete', 'Controller@delete');   //删除图片
     //图片
-    Route::post('pictures/upload', 'Api\Pictures\PictureController@upload');  //上传图片
-    Route::post('pictures/delete', 'Api\Pictures\PictureController@delete');   //删除图片
     Route::post('pictures/{picture}/collect', 'Api\Pictures\PictureController@collect'); //收藏
     Route::post('pictures/{picture}/uncollect', 'Api\Pictures\PictureController@uncollect'); //取消收藏
     Route::post('pictures/{picture}/like', 'Api\Pictures\PictureController@like');  //点赞
@@ -43,12 +43,10 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
     //粉丝专辑（相册）
     Route::post('albums/change', 'Api\Fans\AlbumController@change');
-    Route::post('albums/upload', 'Api\Fans\AlbumController@upload');
     Route::apiResource('albums', 'Api\Fans\AlbumController');
 
     //粉丝相片
     Route::post('photo/change', 'Api\Fans\PhotoController@change');
-    Route::post('photo/upload', 'Api\Fans\PhotoController@upload');
     Route::apiResource('photo', 'Api\Fans\PhotoController');
 
     //粉丝朋友圈
