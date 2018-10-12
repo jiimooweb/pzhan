@@ -11,7 +11,7 @@ class SocialController extends Controller
 {
     public function index() 
     {
-        $socials = Social::with(['photo'])->orderBy('created_at', 'desc')->paginate(config('common.pagesize'));   ;
+        $socials = Social::with(['photo'])->orderBy('created_at', 'desc')->paginate(config('common.pagesize'));
         return response()->json(['status' => 'success', 'data' => $socials]);   
     }
 

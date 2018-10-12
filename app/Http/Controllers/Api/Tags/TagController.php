@@ -11,7 +11,7 @@ class TagController extends Controller
 {
     public function index() 
     {
-        $tags = Tag::get();
+        $tags = Tag::paginate(50);
         return response()->json(['status' => 'success', 'data' => $tags]);   
     }
 
