@@ -60,7 +60,7 @@ class SwiperGroupController extends Controller
 
     public function change()
     {
-        SwiperGroup::update(['display' => 0]);
+        SwiperGroup::where('display', 1)->update(['display' => 0]);
 
         if(SwiperGroup::where('id', request()->swiper_group)->update(['display' => 1])) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);   
