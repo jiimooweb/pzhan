@@ -37,7 +37,7 @@ class SwiperGroupController extends Controller
     public function update(SwiperGroupRequest $request) 
     {
         // TODO:判断更新权限
-        SwiperGroup::where('xcx_id', session('xcx_id'))->update(['display' => 0]);
+        SwiperGroup::update(['display' => 0]);
 
         $data = request()->all();
         
