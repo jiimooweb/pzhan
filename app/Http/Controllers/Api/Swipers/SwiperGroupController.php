@@ -37,7 +37,7 @@ class SwiperGroupController extends Controller
     public function update(SwiperGroupRequest $request) 
     {
         // TODO:判断更新权限
-        SwiperGroup::update(['display' => 0]);
+        // SwiperGroup::update(['display' => 0]);
 
         $data = request()->all();
         
@@ -56,6 +56,17 @@ class SwiperGroupController extends Controller
         }
 
         return response()->json(['status' => 'error', 'msg' => '删除失败！']);   
+    }
+
+    public function change()
+    {
+        SwiperGroup::update(['display' => 0]);
+
+        if(SwiperGroup::where('id', request()->swiper_group)->update(['display' => 1])) {
+            return response()->json(['status' => 'success', 'msg' => '更新成功！']);   
+        }
+
+        return response()->json(['status' => 'error', 'msg' => '更新失败！']);   
     }
 
     public function display() 

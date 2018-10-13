@@ -38,6 +38,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::apiResource('/swipers', 'Api\Swipers\SwiperController');   
 
     //轮播图组
+    Route::get('/swiper_groups/{swiper_group}/change', 'Api\Swipers\SwiperGroupController@change'); 
     Route::get('/swiper_groups/display', 'Api\Swipers\SwiperGroupController@display'); 
     Route::apiResource('/swiper_groups', 'Api\Swipers\SwiperGroupController'); 
 
