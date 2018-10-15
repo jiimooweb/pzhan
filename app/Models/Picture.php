@@ -11,12 +11,12 @@ class Picture extends Model
         return $this->belongsToMany(Tag::class, 'picture_tags', 'picture_id', 'tag_id');
     }
 
-    public function is_collect($fan_id) 
+    public function isCollect($fan_id) 
     {
        return CollectPicture::where(['fan_id' => $fan_id, 'picture_id' => $this->id ])->exists();
     }
 
-    public function is_like($fan_id) 
+    public function isLike($fan_id) 
     {
         return LikePicture::where(['fan_id' => $fan_id, 'picture_id' => $this->id ])->exists();
     }
@@ -31,12 +31,12 @@ class Picture extends Model
         return $this->hasOne(LikePicture::class)->where(['fan_id' => $fan_id, 'picture_id' => $this->id ]);
     }
 
-    public function collect_fans() 
+    public function collectFans() 
     {
         return $this->belongsToMany(Fan::class, 'fan_collect_pictures', 'picture_id', 'fan_id');
     }
 
-    public function like_fans() 
+    public function likeFans() 
     {
         return $this->belongsToMany(Fan::class, 'fan_like_pictures', 'picture_id', 'fan_id');
     }

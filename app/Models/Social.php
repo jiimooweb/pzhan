@@ -13,7 +13,7 @@ class Social extends Model
 
     public function comments()
     {
-        return $this->hasMany(SocialComment::class);
+        return $this->hasMany(SocialComment::class)->with(['fan','toFan']);
     }
 
 }

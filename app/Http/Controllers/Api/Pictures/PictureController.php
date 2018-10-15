@@ -13,15 +13,17 @@ class PictureController extends Controller
 {
     public function index() 
     {
-        $pictures = Picture::with(['tags' => function ($query) use ($tag_id){
-            $query->when($tag_id, function($query) use ($tag_id) {
-                return $query->where('tag_id', $tag_id);
+        $tag_ids = request('tag_ids');
+        $fan_id = request('fan_id') ?? Token::getUid();
+        $pictures = Picture::with(['tags' => function ($query) use ($tag_ids){
+            $query->when($tag_ids, function($query) use ($tag_ids) {
+                return $query->whereIn('id', $tag_ids);
             })->select('tags.id', 'tags.name');
         }])->get(); 
 
         foreach($pictures as &$picture) {
-            $picture->collect = $picture->is_collect($fan_id) ? 1 : 0;
-            $picture->like = $picture->is_like($fan_id) ? 1 : 0;
+            $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
+            $picture->like = $picture->isLike($fan_id) ? 1 : 0;
         }
         
         return response()->json(['status' => 'success', 'data' => $pictures]);
@@ -29,13 +31,13 @@ class PictureController extends Controller
 
     public function show()
     {
-        $fan_id = Token::getUid();
+        $fan_id = request('fan_id') ?? Token::getUid();
         $picture = Picture::with(['tags' => function ($query){
             $query->select('tags.id', 'tags.name');
         }])->find(request()->picture);
 
-        $picture->collect = $picture->is_collect($fan_id) ? 1 : 0;  //是否收藏
-        $picture->like = $picture->is_like($fan_id) ? 1 : 0;   //是否点赞
+        $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;  //是否收藏
+        $picture->like = $picture->isLike($fan_id) ? 1 : 0;   //是否点赞
         
         $status = $picture ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $picture]);   
@@ -77,7 +79,7 @@ class PictureController extends Controller
     public function collect(Picture $picture) 
     {
         $param = [
-            'fan_id' => Token::getUid(),
+            'fan_id' => request('fan_id') ?? Token::getUid(),
             'picture_id' => $picture->id
         ];
 
@@ -90,7 +92,8 @@ class PictureController extends Controller
 
     public function uncollect(Picture $picture) 
     {
-        if($picture->collect(Token::getUid())->delete()) {
+        $fan_id = request('fan_id') ?? Token::getUid();
+        if($picture->collect($fan_id)->delete()) {
             return response()->json(['status' => 'success', 'msg' => '取消成功！']);  
         }
 
@@ -100,7 +103,7 @@ class PictureController extends Controller
     public function like(Picture $picture) 
     {
         $param = [
-            'fan_id' => Token::getUid(),
+            'fan_id' => request('fan_id') ?? Token::getUid(),
             'picture_id' => $picture->id
         ];
 
@@ -113,7 +116,8 @@ class PictureController extends Controller
 
     public function unlike(Picture $picture) 
     {
-        if($picture->like(Token::getUid())->delete()) {
+        $fan_id = request('fan_id') ?? Token::getUid();        
+        if($picture->like($fan_id)->delete()) {
             return response()->json(['status' => 'success', 'msg' => '取消成功！']);  
         }
 
