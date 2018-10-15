@@ -40,20 +40,20 @@ class SignController extends Controller
     {
         $point=config('common.sign_point');
         $con_point=config('common.sign_continuity');
-        $date['fan_id']=request('fan_id');
+        $data['fan_id']=request('fan_id');
         $data['last_day']=$datetime = Carbon::now();
-        $sign_data=Sign::where('fan_id',$date['fan_id'])->first();
+        $sign_data=Sign::where('fan_id',$data['fan_id'])->first();
         $date=$sign_data->last_day->modify('+1 days');
         if($date->eq($data['last_day'])){
-            $date['continuity']=1;
-            $date['continuity_day']=$sign_data->continuity_day++;
-            $date['sign_point']=$sign_data->sign_point+$con_point;
+            $data['continuity']=1;
+            $data['continuity_day']=$sign_data->continuity_day++;
+            $data['sign_point']=$sign_data->sign_point+$con_point;
         }else{
-            $date['continuity']=0;
-            $date['continuity_day']=1;
-            $date['sign_point']=$sign_data->sign_point+$point;
+            $data['continuity']=0;
+            $data['continuity_day']=1;
+            $data['sign_point']=$sign_data->sign_point+$point;
         }
-        if(Sign::where('id', $date['fan_id'])->update($data)) {
+        if(Sign::where('id', $data['fan_id'])->update($data)) {
             SignHistory::create(['fan_id'=>$data['fan_id'],'sign_day'=>$data['last_day']]);
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);
         }
