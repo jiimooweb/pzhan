@@ -32,14 +32,9 @@ class PictureController extends Controller
 
     public function show(Picture $picture)
     {
-        $fan_id = request('fan_id') ?? Token::getUid();
-
         $picture = $picture->with(['tags' => function ($query){
             $query->select('tags.id', 'tags.name');
-        }])->first();
-
-        $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;  //是否收藏
-        $picture->like = $picture->isLike($fan_id) ? 1 : 0;   //是否点赞
+        }])->withCount(['likeFans', 'collectFans'])->first();
         
         $status = $picture ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $picture]);   
@@ -151,9 +146,11 @@ class PictureController extends Controller
     public function app_list()
     {
         $fan_id = request('fan_id') ?? Token::getUid();                
-        $pCount = Picture::count();
-        $rand = \App\Utils\Common::getLimitRand(1, $pCount, 30);
-        $pictures = Picture::whereIn('id', $rand)->withCount(['likeFans', 'collectFans'])->get(); 
+        $start = Picture::orderBy('id', 'asc')->first()['id'];
+        $end = Picture::orderBy('id', 'decs')->first()['id'];
+        $limit = 15;
+        $rand = \App\Utils\Common::getLimitRandRange($start, $end, $limit * 2);
+        $pictures = Picture::whereBetween('id', $rand)->withCount(['likeFans', 'collectFans'])->inRandomOrder()->limit($limit)->get(); 
 
         foreach($pictures as &$picture) {
             $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
@@ -163,9 +160,22 @@ class PictureController extends Controller
         return response()->json(['status' => 'success', 'data' => $pictures]);
     }
 
-    public function app_show()
+    public function app_show(Picture $picture)
     {
+        $fan_id = request('fan_id') ?? Token::getUid();
 
+        $picture = $picture->with(['tags' => function ($query){
+            $query->select('tags.id', 'tags.name');
+        }])->first();
+
+        $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;  //是否收藏
+        $picture->like = $picture->isLike($fan_id) ? 1 : 0;   //是否点赞
+
+        //相关推荐
+        $tags = PictureTag::where('picture_id',$picture->id)->get()->pluck('tag_id');
+
+        $status = $picture ? 'success' : 'error';
+        return response()->json(['status' => $status, 'data' => $picture]);   
     }
     
 }

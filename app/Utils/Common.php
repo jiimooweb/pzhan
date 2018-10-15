@@ -47,12 +47,24 @@ class Common
         return $result;
     }
 
-    public static function getLimitRand($start, $end, $limit) 
-    {
-        $rand = range($start, $end);
-        shuffle($rand);
-        $rand = array_slice($rand, 0, $limit);
-        return $rand;
+    /**
+     * Undocumented function
+     *
+     * @param [int] $start
+     * @param [int] $end
+     * @param [int] $limit
+     * @return void
+     * 随机获取指定的数字
+     */
+    public static function getLimitRandRange(int $start, int $end, int $limit) 
+    {   
+        $rnum = rand($start, $end - $limit);
+
+        $rstart = $rnum;
+        
+        $rend = $rstart + $limit;        
+
+        return [$rstart, $rend];
     }
 
 }
