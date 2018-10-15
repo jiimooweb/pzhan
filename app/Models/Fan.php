@@ -15,4 +15,9 @@ class Fan extends Model
     {
         return $this->hasMany(Picture::class, 'fan_like_pictures', 'fan_id', 'picture_id');
     }
+
+    public function album()
+    {
+        return $this->hasMany(Album::class);
+    }
 }

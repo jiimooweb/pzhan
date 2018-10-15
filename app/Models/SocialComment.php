@@ -8,12 +8,12 @@ class SocialComment extends Model
 {
     public function fan()
     {
-        $this->hasOne(Fan::class, 'fan_id');
+        return $this->hasOne(Fan::class, 'id', 'fan_id')->select('id', 'nickname');
     }
 
     public function toFan()
     {
-        $this->hasOne(Fan::class, 'to_fan_id');
+        return $this->hasOne(Fan::class, 'id','to_fan_id')->select('id', 'nickname');
     }
 
 }

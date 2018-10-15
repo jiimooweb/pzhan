@@ -29,12 +29,13 @@ class PictureController extends Controller
         return response()->json(['status' => 'success', 'data' => $pictures]);
     }
 
-    public function show()
+    public function show(Picture $picture)
     {
         $fan_id = request('fan_id') ?? Token::getUid();
-        $picture = Picture::with(['tags' => function ($query){
+
+        $picture = $picture->with(['tags' => function ($query){
             $query->select('tags.id', 'tags.name');
-        }])->find(request()->picture);
+        }])->first();
 
         $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;  //是否收藏
         $picture->like = $picture->isLike($fan_id) ? 1 : 0;   //是否点赞
@@ -60,9 +61,18 @@ class PictureController extends Controller
     }
 
 
-    public function update(PictureRequest $request) 
+    public function update(PictureRequest $request, Picture $picture) 
     {
-        if(Picture::where('id', request()->picture)->update(request()->all())){
+        $tags = $request->tags;
+
+        if($picture->update(request()->all())){
+
+            PictureTag::where('picture_id',$picture->id)->delete();
+
+            foreach($tags as $tag) {
+                PictureTag::create(['tag_id' => $tag, 'picture_id' => $picture->id]);
+            }
+
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);                  
         }
 
@@ -70,10 +80,13 @@ class PictureController extends Controller
     }
 
 
-    public function destroy()
+    public function destroy(Picture $picture)
     {
         // TODO:判断删除权限
-        if(Picture::where('id', request()->picture)->delete()) {
+        if($picture->delete()) {
+            
+            PictureTag::where('picture_id',$picture->id)->delete();
+
             return response()->json(['status' => 'success', 'msg' => '删除成功！']);   
         }
 

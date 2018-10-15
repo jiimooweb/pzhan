@@ -4,21 +4,27 @@ namespace App\Http\Controllers\Api\Fans;
 
 use App\Models\Social;
 use App\Services\Qiniu;
+use App\Services\Token;
 use Illuminate\Http\Request;
+use App\Models\SocialComment;
 use App\Http\Controllers\Controller;
 
 class SocialController extends Controller
 {
     public function index() 
     {
-        $socials = Social::with(['photo'])->orderBy('created_at', 'desc')->paginate(config('common.pagesize'));
+        $fan_id = request('fan_id') ?? Token::getUid();
+        $socials = Social::with(['photos'])->withCount(['likeFans', 'comments'])->orderBy('created_at', 'desc')->paginate(10);
+        foreach($socials as &$social) {
+            $social->like = $social->isLike($fan_id) ? 1 : 0;
+        }
         return response()->json(['status' => 'success', 'data' => $socials]);   
     }
 
     public function store(SocialRequest $request) 
     {   
         $data = request()->all();  
-        $data['fan_id'] = Token::getUid();  
+        $data['fan_id'] = request('fan_id') ?? Token::getUid(); 
         if(Social::create($data)) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);
         }
@@ -59,6 +65,13 @@ class SocialController extends Controller
         }
 
         return response()->json(['status' => 'error', 'msg' => '更新失败！']);     
+    }
+
+    public function comments()
+    {
+        $comments = SocialComment::where('social_id', request('social'))->with(['fan', 'toFan'])->orderBy('created_at', 'asc')->get();
+        $comments = \App\Utils\Common::getCommentTree($comments->toArray());
+        return response()->json(['status' => 'success', 'data' => $comments]);
     }
 
 }
