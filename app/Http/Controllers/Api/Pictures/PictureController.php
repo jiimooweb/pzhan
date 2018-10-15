@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Pictures;
 use App\Models\Picture;
 use App\Services\Qiniu;
 use App\Services\Token;
+use App\Models\PictureTag;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PictureRequest;
