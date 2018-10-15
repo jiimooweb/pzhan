@@ -46,12 +46,13 @@ class PictureController extends Controller
 
     public function store(PictureRequest $request) 
     {
+        dd($request->picture);
         $tags = $request->tags;
 
         $picture = Picture::create($request->picture);
 
         if($picture) {
-            
+
             if($tags) {
                 foreach($tags as $tag) {
                     PictureTag::create(['tag_id' => $tag, 'picture_id' => $picture->id]);
