@@ -56,7 +56,7 @@ class TagController extends Controller
 
     public function all()
     {
-        $tags = Tag::all();
+        $tags = Tag::get();
         return response()->json(['status' => 'success', 'data' => $tags]);
     }
     

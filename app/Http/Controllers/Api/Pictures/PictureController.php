@@ -146,11 +146,8 @@ class PictureController extends Controller
     public function app_list()
     {
         $fan_id = request('fan_id') ?? Token::getUid();                
-        $start = Picture::orderBy('id', 'asc')->first()['id'];
-        $end = Picture::orderBy('id', 'decs')->first()['id'];
         $limit = 15;
-        $rand = \App\Utils\Common::getLimitRandRange($start, $end, $limit * 2);
-        $pictures = Picture::whereBetween('id', $rand)->withCount(['likeFans', 'collectFans'])->inRandomOrder()->limit($limit)->get(); 
+        $pictures = Picture::withCount(['likeFans', 'collectFans'])->inRandomOrder()->limit($limit)->get(); 
 
         foreach($pictures as &$picture) {
             $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
@@ -173,6 +170,9 @@ class PictureController extends Controller
 
         //相关推荐
         $tags = PictureTag::where('picture_id',$picture->id)->get()->pluck('tag_id');
+        foreach($tags as $tag) {
+            PictureTag::whereIn('tag_id', $tag)->inRandomOrder()->limit(10)->get();
+        }
 
         $status = $picture ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $picture]);   
