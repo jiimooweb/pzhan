@@ -19,6 +19,12 @@ Route::post('/login','Api\LoginController@login')->middleware(['cors']);
 
 Route::post('/add', 'Api\Users\UserController@store');
 
+Route::group(['prefix' => 'wechat/token/'], function() {
+    Route::post('verifyToken', 'Api\Fans\FanController@verifyToken');
+    Route::post('getToken', 'Api\Fans\FanController@getToken');
+    Route::post('saveInfo', 'Api\Fans\FanController@saveInfo');
+});
+
 
 Route::group(['middleware' => ['cors', 'token']], function () {
 

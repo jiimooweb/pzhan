@@ -20,4 +20,9 @@ class Fan extends Model
     {
         return $this->hasMany(Album::class);
     }
+
+    public static function getByOpenID($openid) 
+    {
+        return self::where('openid', $openid)->first();
+    }
 }
