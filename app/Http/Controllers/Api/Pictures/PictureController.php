@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Pictures;
 use App\Models\Picture;
 use App\Services\Qiniu;
 use App\Services\Token;
+use App\Models\PictureTag;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PictureRequest;
@@ -19,7 +20,7 @@ class PictureController extends Controller
             $query->when($tag_ids, function($query) use ($tag_ids) {
                 return $query->whereIn('id', $tag_ids);
             })->select('tags.id', 'tags.name');
-        }])->get(); 
+        }])->withCount(['likeFans', 'collectFans'])->paginate(30); 
 
         foreach($pictures as &$picture) {
             $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
@@ -29,12 +30,13 @@ class PictureController extends Controller
         return response()->json(['status' => 'success', 'data' => $pictures]);
     }
 
-    public function show()
+    public function show(Picture $picture)
     {
         $fan_id = request('fan_id') ?? Token::getUid();
-        $picture = Picture::with(['tags' => function ($query){
+
+        $picture = $picture->with(['tags' => function ($query){
             $query->select('tags.id', 'tags.name');
-        }])->find(request()->picture);
+        }])->first();
 
         $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;  //是否收藏
         $picture->like = $picture->isLike($fan_id) ? 1 : 0;   //是否点赞
@@ -45,9 +47,17 @@ class PictureController extends Controller
 
     public function store(PictureRequest $request) 
     {
-        $picture = Picture::create($request);
+        $tags = $request->tags;
+
+        $picture = Picture::create($request->picture);
 
         if($picture) {
+
+            if($tags) {
+                foreach($tags as $tag) {
+                    PictureTag::create(['tag_id' => $tag, 'picture_id' => $picture->id]);
+                }
+            }
 
             return response()->json(['status' => 'success', 'msg' => '新增成功!']);               
         }
@@ -56,9 +66,20 @@ class PictureController extends Controller
     }
 
 
-    public function update(PictureRequest $request) 
+    public function update(PictureRequest $request, Picture $picture) 
     {
-        if(Picture::where('id', request()->picture)->update(request()->all())){
+        $tags = $request->tags;
+
+        if($picture->update($request->picture)){
+
+            if($tags) {
+                PictureTag::where('picture_id',$picture->id)->delete();
+
+                foreach($tags as $tag) {
+                    PictureTag::create(['tag_id' => $tag, 'picture_id' => $picture->id]);
+                }
+            }
+
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);                  
         }
 
@@ -66,10 +87,13 @@ class PictureController extends Controller
     }
 
 
-    public function destroy()
+    public function destroy(Picture $picture)
     {
         // TODO:判断删除权限
-        if(Picture::where('id', request()->picture)->delete()) {
+        if($picture->delete()) {
+
+            PictureTag::where('picture_id',$picture->id)->delete();
+
             return response()->json(['status' => 'success', 'msg' => '删除成功！']);   
         }
 
@@ -122,6 +146,26 @@ class PictureController extends Controller
         }
 
         return response()->json(['status' => 'error', 'msg' => '取消失败！']);  
+    }
+
+    public function app_list()
+    {
+        $fan_id = request('fan_id') ?? Token::getUid();                
+        $pCount = Picture::count();
+        $rand = \App\Utils\Common::getLimitRand(1, $pCount, 30);
+        $pictures = Picture::whereIn('id', $rand)->withCount(['likeFans', 'collectFans'])->get(); 
+
+        foreach($pictures as &$picture) {
+            $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
+            $picture->like = $picture->isLike($fan_id) ? 1 : 0;
+        }
+        
+        return response()->json(['status' => 'success', 'data' => $pictures]);
+    }
+
+    public function app_show()
+    {
+
     }
     
 }

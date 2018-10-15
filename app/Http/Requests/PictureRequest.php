@@ -15,8 +15,7 @@ class PictureRequest extends CommonRequest
     public function rules()
     {
         return [
-            'title' => 'required|string',
-            'url' => 'required|string',
+            'picture' => 'required|array'
         ];
     }
 }
