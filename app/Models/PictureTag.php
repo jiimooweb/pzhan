@@ -8,5 +8,5 @@ class PictureTag extends Model
 {
     protected $table = 'picture_tags';
 
-    protected $timestamps = false;
+    public $timestamps = false;
 }
