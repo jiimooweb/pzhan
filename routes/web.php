@@ -37,7 +37,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::apiResource('pictures', 'Api\Pictures\PictureController');
 
     //标签
-    Route::apiResource('tags/all', 'Api\Tags\TagController@all');
+    Route::get('tags/all', 'Api\Tags\TagController@all');
     Route::apiResource('tags', 'Api\Tags\TagController');
 
     //轮播图

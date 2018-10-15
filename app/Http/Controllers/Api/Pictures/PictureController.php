@@ -169,11 +169,13 @@ class PictureController extends Controller
         $picture->like = $picture->isLike($fan_id) ? 1 : 0;   //是否点赞
 
         //相关推荐
+        $limit = 15;
         $tags = PictureTag::where('picture_id',$picture->id)->get()->pluck('tag_id');
-        foreach($tags as $tag) {
-            PictureTag::whereIn('tag_id', $tag)->inRandomOrder()->limit(10)->get();
-        }
 
+        foreach($tags as $tag) {
+            $picture_ids = PictureTag::whereIn('tag_id', $tag)->inRandomOrder()->limit($limit)->get()->pluck('picture_id');
+        }
+        dd($picture_ids);
         $status = $picture ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $picture]);   
     }
