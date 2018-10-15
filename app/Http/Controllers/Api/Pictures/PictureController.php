@@ -51,9 +51,13 @@ class PictureController extends Controller
         $picture = Picture::create($request->picture);
 
         if($picture) {
-            foreach($tags as $tag) {
-                PictureTag::create(['tag_id' => $tag, 'picture_id' => $picture->id]);
+            
+            if($tags) {
+                foreach($tags as $tag) {
+                    PictureTag::create(['tag_id' => $tag, 'picture_id' => $picture->id]);
+                }
             }
+
             return response()->json(['status' => 'success', 'msg' => '新增成功!']);               
         }
 
@@ -67,10 +71,12 @@ class PictureController extends Controller
 
         if($picture->update(request()->all())){
 
-            PictureTag::where('picture_id',$picture->id)->delete();
+            if($tags) {
+                PictureTag::where('picture_id',$picture->id)->delete();
 
-            foreach($tags as $tag) {
-                PictureTag::create(['tag_id' => $tag, 'picture_id' => $picture->id]);
+                foreach($tags as $tag) {
+                    PictureTag::create(['tag_id' => $tag, 'picture_id' => $picture->id]);
+                }
             }
 
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);                  
@@ -84,7 +90,7 @@ class PictureController extends Controller
     {
         // TODO:判断删除权限
         if($picture->delete()) {
-            
+
             PictureTag::where('picture_id',$picture->id)->delete();
 
             return response()->json(['status' => 'success', 'msg' => '删除成功！']);   
