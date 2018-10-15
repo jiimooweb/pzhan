@@ -20,9 +20,9 @@ Route::post('/login','Api\LoginController@login')->middleware(['cors']);
 Route::post('/add', 'Api\Users\UserController@store');
 
 Route::group(['prefix' => 'wechat/token/'], function() {
-    Route::post('verifyToken', 'Api\Fans\FanController@verifyToken');
-    Route::post('getToken', 'Api\Fans\FanController@getToken');
-    Route::post('saveInfo', 'Api\Fans\FanController@saveInfo');
+    Route::post('verifyToken', 'Api\Fans\FanController@verifyToken');  //验证Token
+    Route::post('getToken', 'Api\Fans\FanController@getToken');  //获取Token
+    Route::post('saveInfo', 'Api\Fans\FanController@saveInfo');  //存用户信息
 });
 
 
