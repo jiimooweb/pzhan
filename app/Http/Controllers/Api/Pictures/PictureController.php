@@ -46,7 +46,6 @@ class PictureController extends Controller
 
     public function store(PictureRequest $request) 
     {
-        dd($request->picture);
         $tags = $request->tags;
 
         $picture = Picture::create($request->picture);
