@@ -70,7 +70,7 @@ class PictureController extends Controller
     {
         $tags = $request->tags;
 
-        if($picture->update(request()->all())){
+        if($picture->update($request->picture)){
 
             if($tags) {
                 PictureTag::where('picture_id',$picture->id)->delete();
@@ -146,6 +146,26 @@ class PictureController extends Controller
         }
 
         return response()->json(['status' => 'error', 'msg' => '取消失败！']);  
+    }
+
+    public function app_list()
+    {
+        $fan_id = request('fan_id') ?? Token::getUid();                
+        $pCount = Picture::count();
+        $rand = \App\Utils\Common::getLimitRand(1, $pCount, 30);
+        $pictures = Picture::whereIn('id', $rand)->withCount(['likeFans', 'collectFans'])->get(); 
+
+        foreach($pictures as &$picture) {
+            $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
+            $picture->like = $picture->isLike($fan_id) ? 1 : 0;
+        }
+        
+        return response()->json(['status' => 'success', 'data' => $pictures]);
+    }
+
+    public function app_show()
+    {
+
     }
     
 }

@@ -47,4 +47,12 @@ class Common
         return $result;
     }
 
+    public static function getLimitRand($start, $end, $limit) 
+    {
+        $rand = range($start, $end);
+        shuffle($rand);
+        $rand = array_slice($rand, 0, $limit);
+        return $rand;
+    }
+
 }
