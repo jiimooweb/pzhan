@@ -19,7 +19,7 @@ class PictureController extends Controller
             $query->when($tag_ids, function($query) use ($tag_ids) {
                 return $query->whereIn('id', $tag_ids);
             })->select('tags.id', 'tags.name');
-        }])->withCount(['likeFans', 'collectFans'])->get(); 
+        }])->withCount(['likeFans', 'collectFans'])->paginate(30); 
 
         foreach($pictures as &$picture) {
             $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
@@ -45,12 +45,14 @@ class PictureController extends Controller
 
     public function store(PictureRequest $request) 
     {
+        $tags = $request->tags;
 
-
-        $picture = Picture::create($request);
+        $picture = Picture::create($request->picture);
 
         if($picture) {
-
+            foreach($tags as $tag) {
+                PictureTag::create(['tag_id' => $tag, 'picture_id' => $picture->id]);
+            }
             return response()->json(['status' => 'success', 'msg' => '新增成功!']);               
         }
 
