@@ -61,5 +61,9 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('socials/change', 'Api\Fans\SocialController@change');
     Route::post('socials/upload', 'Api\Fans\SocialController@upload');
     Route::apiResource('socials', 'Api\Fans\SocialController');
-    
+
+
+    //签到
+    Route::post('sign_in/new','Api\Fans\SignController@store');
+    Route::post('sign_in','Api\Fans\SignController@update');
 });
