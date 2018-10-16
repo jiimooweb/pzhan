@@ -27,14 +27,15 @@ class TodayController extends Controller
 
     public function search()
     {
-        $date = request('date');
-        $data = Today::where('date', $date)->with('picture')->get();
+        $date = Carbon::parse(request('date'));
+        $data = Today::where('date', $date)->with('picture')->withCount('todayLikes')->get();
         return response()->json(['status' => 'success', 'data' => $data]);
     }
 
     public function update()
     {
         $list = request(['title', 'img_id', 'text', 'date']);
+        $list['date'] = Carbon::parse($list['date']);
         $id = request()->today;
         DB::beginTransaction();
         try {
