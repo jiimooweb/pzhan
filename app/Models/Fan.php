@@ -8,12 +8,12 @@ class Fan extends Model
 {
     public function collcetPictures()
     {
-        return $this->hasMany(Picture::class, 'fan_collect_pictures', 'fan_id', 'picture_id');
+        return $this->belongsToMany(Picture::class, 'fan_collect_pictures', 'fan_id', 'picture_id');
     }
 
     public function likePictures()
     {
-        return $this->hasMany(Picture::class, 'fan_like_pictures', 'fan_id', 'picture_id');
+        return $this->belongsToMany(Picture::class, 'fan_like_pictures', 'fan_id', 'picture_id');
     }
 
     public function album()

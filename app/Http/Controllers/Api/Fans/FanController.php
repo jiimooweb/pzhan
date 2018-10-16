@@ -55,4 +55,14 @@ class FanController extends Controller
     {
         return response()->json(['isValid' => Token::verifyToken(request()->header('token'))]);
     }
+
+    public function collect(Fan $fan)
+    {
+        return response()->json(['status' => 'success','data' => $fan->collcetPictures]);
+    }
+
+    public function like(Fan $fan)
+    {
+        return response()->json(['status' => 'success','data' => $fan->likePictures]);
+    }
 }

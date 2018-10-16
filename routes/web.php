@@ -68,8 +68,12 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('socials/upload', 'Api\Fans\SocialController@upload');
     Route::apiResource('socials', 'Api\Fans\SocialController');
 
-
     //签到
     Route::post('sign_in/new','Api\Fans\SignController@store');
     Route::post('sign_in','Api\Fans\SignController@update');
+
+    //粉丝收藏
+    Route::get('fans/{fan}/collect', 'Api\Fans\FanController@collect');  //点赞
+    //粉丝点赞
+    Route::get('fans/{fan}/like', 'Api\Fans\FanController@like');  //点赞
 });
