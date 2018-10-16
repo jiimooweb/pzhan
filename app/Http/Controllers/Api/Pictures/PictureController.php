@@ -183,5 +183,19 @@ class PictureController extends Controller
         $status = $picture ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $picture, 'recommends' => $recommends]);   
     }
+
+    public function rank()
+    {             
+        $collect = request('collect');
+        $like = request('like');
+        $pictures = Picture::withCount(['likeFans', 'collectFans'])->when($collect, function($query) use ($collectOrder){
+            return $query->orderBy('collect_fans_count', 'desc');
+        })->when($likeOrder, function($query) use ($like){
+            return $query->orderBy('like_fans_count', 'desc');
+        })->paginate(20);
+
+        return response()->json(['status' => 'success', 'data' => $pictures]);
+        
+    }
     
 }
