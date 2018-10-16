@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\DB;
 class TodayController extends Controller
 {
 
+    public function index()
+    {
+        $data = Today::with('picture')->withCount('todayLikes')->orderBy('today_likes_count')->get();
+        return response()->json(['status' => 'success', 'data' => $data]);
+    }
+
     public function store()
     {
         $list = request(['title', 'img_id', 'text', 'date']);
