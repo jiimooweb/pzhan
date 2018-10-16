@@ -13,7 +13,7 @@ class TodayController extends Controller
     public function store()
     {
         $list = request(['title', 'img_id', 'text', 'date']);
-        $list['data'] = Carbon::parse($list['data']);
+        $list['date'] = Carbon::parse($list['date']);
         DB::beginTransaction();
         try {
             Today::create($list);
@@ -29,6 +29,8 @@ class TodayController extends Controller
     {
         $date = request('date');
         $data = Today::where('date', $date)->with('picture')->get();
+        $data = Today::where('date', $date)->with('picture')->map();
+
         return response()->json(['status' => 'success', 'data' => $data]);
     }
 
