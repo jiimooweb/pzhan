@@ -53,5 +53,11 @@ class TagController extends Controller
 
         return response()->json(['status' => 'error', 'msg' => '删除失败！']);     
     }
+
+    public function all()
+    {
+        $tags = Tag::get();
+        return response()->json(['status' => 'success', 'data' => $tags]);
+    }
     
 }

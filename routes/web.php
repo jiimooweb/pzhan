@@ -19,20 +19,32 @@ Route::post('/login','Api\LoginController@login')->middleware(['cors']);
 
 Route::post('/add', 'Api\Users\UserController@store');
 
+Route::group(['prefix' => 'wechat/token/'], function() {
+    Route::post('verifyToken', 'Api\Fans\FanController@verifyToken');  //验证Token
+    Route::post('getToken', 'Api\Fans\FanController@getToken');  //获取Token
+    Route::post('saveInfo', 'Api\Fans\FanController@saveInfo');  //存用户信息
+});
+
 
 Route::group(['middleware' => ['cors', 'token']], function () {
 
     Route::post('qiniu/upload', 'Controller@upload');  //上传图片
     Route::post('qiniu/delete', 'Controller@delete');   //删除图片
+
     //图片
-    Route::get('pictures/app_list', 'Api\Pictures\PictureController@app_list'); //收藏
+    /*** 小程序 ***/
+    Route::get('pictures/rank', 'Api\Pictures\PictureController@rank');  //排行榜
+    Route::get('pictures/app_list', 'Api\Pictures\PictureController@app_list'); 
+    Route::get('pictures/{picture}/app_show', 'Api\Pictures\PictureController@app_show'); 
     Route::post('pictures/{picture}/collect', 'Api\Pictures\PictureController@collect'); //收藏
     Route::post('pictures/{picture}/uncollect', 'Api\Pictures\PictureController@uncollect'); //取消收藏
     Route::post('pictures/{picture}/like', 'Api\Pictures\PictureController@like');  //点赞
     Route::post('pictures/{picture}/unlike', 'Api\Pictures\PictureController@unlike');  //取消赞
+    /*** 后台 ***/
     Route::apiResource('pictures', 'Api\Pictures\PictureController');
 
     //标签
+    Route::get('tags/all', 'Api\Tags\TagController@all');
     Route::apiResource('tags', 'Api\Tags\TagController');
 
     //轮播图
@@ -57,8 +69,20 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('socials/upload', 'Api\Fans\SocialController@upload');
     Route::apiResource('socials', 'Api\Fans\SocialController');
 
+    //今日推荐
+    Route::post('todays/search','Api\Todays\TodayController@search');
+    Route::post('todays/delete','Api\Todays\TodayController@delete');
+    Route::apiResource('todays', 'Api\Todays\TodayController');
+
+    //专题
+    Route::apiResource('specials', 'Api\Specials\SpecialController');
 
     //签到
     Route::post('sign_in/new','Api\Fans\SignController@store');
     Route::post('sign_in','Api\Fans\SignController@update');
+
+    //粉丝收藏
+    Route::get('fans/{fan}/collect', 'Api\Fans\FanController@collect');  //点赞
+    //粉丝点赞
+    Route::get('fans/{fan}/like', 'Api\Fans\FanController@like');  //点赞
 });
