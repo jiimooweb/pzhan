@@ -18,7 +18,7 @@ class TodayController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['status' => 'error', 'msg' => '新增失败' . $e]);
+            return response()->json(['status' => 'error', 'msg' => $e]);
         }
         return response()->json(['status' => 'success', 'msg' => '新增成功！']);
     }
@@ -40,7 +40,7 @@ class TodayController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['status' => 'error', 'msg' => '修改失败！' . $e]);
+            return response()->json(['status' => 'error', 'msg' => $e]);
         }
         return response()->json(['status' => 'success', 'msg' => '修改成功！']);
     }
@@ -54,9 +54,9 @@ class TodayController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['status' => 'error', 'msg' => '删除失败！' . $e]);
+            return response()->json(['status' => 'error', 'msg' => $e]);
         }
-        return response()->json(['status' => 'error', 'msg' => '删除成功！' . $e]);
+        return response()->json(['status' => 'sucess', 'msg' => '删除成功！']);
     }
 
 //    public function miniIndex()
