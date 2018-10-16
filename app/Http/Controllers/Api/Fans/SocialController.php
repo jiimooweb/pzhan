@@ -74,4 +74,38 @@ class SocialController extends Controller
         return response()->json(['status' => 'success', 'data' => $comments]);
     }
 
+    public function comment(Social $social)
+    {
+        $data =request()->all();
+
+        if(SocialComment::create($data)) {
+
+            $fan_id = request('fan_id') ?? Token::getUid(); 
+            //如果是本人发的评论，则不做回复，或者本人回复他人，并发通知给被回复人
+            if($fan_id == $data['fan_id']) {
+                $fan_id = $data['to_fan_id'];
+            }
+
+            if($fan_id > 0) {
+                //添加通知
+                $notice = [
+                    'fan_id' => $fan_id,
+                    'module_id' => $social->id,
+                    'module' => 'social',
+                    'type' => 1,
+                    'status' => 0
+                ];
+
+                Notice::create($notice);
+            }
+            
+        }
+       
+    }
+
+    public function like()
+    {
+
+    }
+
 }

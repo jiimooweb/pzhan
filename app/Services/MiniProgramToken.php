@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\Cache;
 
 class MiniProgramToken extends Token
 {
-
-    
     public function getToken(array $data) : string
     {
         $openid = $data['openid'];
