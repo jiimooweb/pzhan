@@ -21,12 +21,13 @@ class PictureController extends Controller
         $collectOrder = request('collectOrder') ? 'asc' : 'desc';
         $likeOrder = request('likeOrder') ? 'asc' : 'desc';
         $fan_id = request('fan_id') ?? Token::getUid();
-        $pictures = Picture::with(['tags' => function ($query) use ($tag_id){
-            $query->when($tag_id, function($query) use ($tag_id) {
-                return $query->whereIn('id', $tag_id);
-            })->select('tags.id', 'tags.name');
-        }])->when($id > 0, function($query) use ($id) {
+        if(isset($tag_id)) {
+            $picture_ids = PictureTag::where('tag_id',$tag_id)->get()->pluck('picture_id');
+        }
+        $pictures = Picture::with(['tags'])->when($id > 0, function($query) use ($id) {
             return $query->where('id', $id);
+        })->when($picture_ids, function($query) use ($picture_ids) {
+            return $query->whereIn('id', $picture_ids);
         })->when($title, function($query) use ($title) {
             return $query->where('title', 'like', '%'.$title.'%');
         })->when($author, function($query) use ($author) {
