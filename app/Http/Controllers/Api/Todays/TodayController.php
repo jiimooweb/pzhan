@@ -29,8 +29,6 @@ class TodayController extends Controller
     {
         $date = request('date');
         $data = Today::where('date', $date)->with('picture')->get();
-        $data = Today::where('date', $date)->with('picture')->map();
-
         return response()->json(['status' => 'success', 'data' => $data]);
     }
 
