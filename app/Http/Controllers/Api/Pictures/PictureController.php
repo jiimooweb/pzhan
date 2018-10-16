@@ -15,15 +15,15 @@ class PictureController extends Controller
     public function index() 
     {
         $id = request('id');
-        $tag_ids = request('tag_ids');
+        $tag_id = request('tag_id');
         $title = request('title');
         $author = request('author');
         $collectOrder = request('collectOrder') ? 'asc' : 'desc';
         $likeOrder = request('likeOrder') ? 'asc' : 'desc';
         $fan_id = request('fan_id') ?? Token::getUid();
-        $pictures = Picture::with(['tags' => function ($query) use ($tag_ids){
-            $query->when($tag_ids, function($query) use ($tag_ids) {
-                return $query->whereIn('id', $tag_ids);
+        $pictures = Picture::with(['tags' => function ($query) use ($tag_id){
+            $query->when($tag_id, function($query) use ($tag_id) {
+                return $query->whereIn('id', $tag_id);
             })->select('tags.id', 'tags.name');
         }])->when($id > 0, function($query) use ($id) {
             return $query->where('id', $id);
@@ -182,6 +182,20 @@ class PictureController extends Controller
         $recommends = PictureTag::getRecommends($picture->id);
         $status = $picture ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $picture, 'recommends' => $recommends]);   
+    }
+
+    public function rank()
+    {             
+        $collect = request('collect');
+        $like = request('like');
+        $pictures = Picture::withCount(['likeFans', 'collectFans'])->when($collect, function($query) use ($collectOrder){
+            return $query->orderBy('collect_fans_count', 'desc');
+        })->when($likeOrder, function($query) use ($like){
+            return $query->orderBy('like_fans_count', 'desc');
+        })->paginate(20);
+
+        return response()->json(['status' => 'success', 'data' => $pictures]);
+        
     }
     
 }

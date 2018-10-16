@@ -33,6 +33,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
     //图片
     /*** 小程序 ***/
+    Route::get('pictures/rank', 'Api\Pictures\PictureController@rank');  //排行榜
     Route::get('pictures/app_list', 'Api\Pictures\PictureController@app_list'); 
     Route::get('pictures/{picture}/app_show', 'Api\Pictures\PictureController@app_show'); 
     Route::post('pictures/{picture}/collect', 'Api\Pictures\PictureController@collect'); //收藏
