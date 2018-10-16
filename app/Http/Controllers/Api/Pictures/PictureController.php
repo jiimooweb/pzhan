@@ -21,6 +21,7 @@ class PictureController extends Controller
         $collectOrder = request('collectOrder') ? 'asc' : 'desc';
         $likeOrder = request('likeOrder') ? 'asc' : 'desc';
         $fan_id = request('fan_id') ?? Token::getUid();
+        $picture_ids = null;
         if(isset($tag_id)) {
             $picture_ids = PictureTag::where('tag_id',$tag_id)->get()->pluck('picture_id');
         }
