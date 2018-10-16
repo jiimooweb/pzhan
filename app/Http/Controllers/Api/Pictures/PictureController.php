@@ -14,6 +14,7 @@ class PictureController extends Controller
 {
     public function index() 
     {
+        $id = request('id');
         $tag_ids = request('tag_ids');
         $title = request('title');
         $author = request('author');
@@ -24,7 +25,9 @@ class PictureController extends Controller
             $query->when($tag_ids, function($query) use ($tag_ids) {
                 return $query->whereIn('id', $tag_ids);
             })->select('tags.id', 'tags.name');
-        }])->when($title, function($query) use ($title) {
+        }])->when($id > 0, function($query) use ($id) {
+            return $query->where('id', $id);
+        })->when($title, function($query) use ($title) {
             return $query->where('title', 'like', '%'.$title.'%');
         })->when($author, function($query) use ($author) {
             return $query->where('author', 'like', '%'.$author.'%');
