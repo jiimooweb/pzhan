@@ -65,6 +65,8 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
     //粉丝朋友圈
     Route::get('socials/{social}/comments', 'Api\Fans\SocialController@comments');
+    Route::post('socials/{social}/comment', 'Api\Fans\SocialController@comment');
+    Route::post('socials/{social}/like', 'Api\Fans\SocialController@like');
     Route::post('socials/change', 'Api\Fans\SocialController@change');
     Route::post('socials/upload', 'Api\Fans\SocialController@upload');
     Route::apiResource('socials', 'Api\Fans\SocialController');
@@ -78,8 +80,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::apiResource('specials', 'Api\Specials\SpecialController');
 
     //签到
-    Route::post('sign_in/new','Api\Fans\SignController@store');
-    Route::post('sign_in','Api\Fans\SignController@update');
+    Route::post('sign_in','Api\Fans\SignInController@signIn');
 
     //粉丝收藏
     Route::get('fans/{fan}/collect', 'Api\Fans\FanController@collect');  //点赞

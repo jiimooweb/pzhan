@@ -6,7 +6,7 @@ use App\Models\Model;
 
 class Sign extends Model
 {
-    protected $table = 'fan_sign';
+    protected $table = 'fan_signs';
 
 
 }
