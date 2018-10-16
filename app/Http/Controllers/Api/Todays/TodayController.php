@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Api\Todays;
 
 use App\Models\Today;
-use App\Services\Token;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class TodayController extends Controller
 {
+
     public function store()
     {
         $list = request(['title', 'img_id', 'text', 'date']);
@@ -60,17 +59,17 @@ class TodayController extends Controller
         return response()->json(['status' => 'error', 'msg' => '删除成功！' . $e]);
     }
 
-    public function miniIndex()
-    {
-//        缺评论
-        $list = request(['date']);
-        $date = $list['date'];
-        $fanID = Token::getUid();
-        $data = Today::where('date', $date)->withCount('todayLikes')
-            ->withCount(['todayLikes as isLike' => function ($query) use($fanID) {
-                    $query->where('fan_ID',$fanID);
-            }])->get();
-
-        return response()->json(['status' => 'success', 'data' => $data]);
-    }
+//    public function miniIndex()
+//    {
+////        缺评论
+//        $list = request(['date']);
+//        $date = $list['date'];
+//        $fanID = Token::getUid();
+//        $data = Today::where('date', $date)->withCount('todayLikes')
+//            ->withCount(['todayLikes as isLike' => function ($query) use($fanID) {
+//                    $query->where('fan_ID',$fanID);
+//            }])->get();
+//
+//        return response()->json(['status' => 'success', 'data' => $data]);
+//    }
 }
