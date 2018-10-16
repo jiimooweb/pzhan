@@ -33,13 +33,13 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
     //图片
     /*** 小程序 ***/
+    Route::get('pictures/rank', 'Api\Pictures\PictureController@rank');  //排行榜
     Route::get('pictures/app_list', 'Api\Pictures\PictureController@app_list'); 
     Route::get('pictures/{picture}/app_show', 'Api\Pictures\PictureController@app_show'); 
     Route::post('pictures/{picture}/collect', 'Api\Pictures\PictureController@collect'); //收藏
     Route::post('pictures/{picture}/uncollect', 'Api\Pictures\PictureController@uncollect'); //取消收藏
     Route::post('pictures/{picture}/like', 'Api\Pictures\PictureController@like');  //点赞
     Route::post('pictures/{picture}/unlike', 'Api\Pictures\PictureController@unlike');  //取消赞
-    Route::get('pictures/rank', 'Api\Pictures\PictureController@rank'); 
     /*** 后台 ***/
     Route::apiResource('pictures', 'Api\Pictures\PictureController');
 
