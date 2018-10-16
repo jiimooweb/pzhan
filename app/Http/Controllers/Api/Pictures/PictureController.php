@@ -15,15 +15,15 @@ class PictureController extends Controller
     public function index() 
     {
         $id = request('id');
-        $tag_ids = request('tag_ids');
+        $tag_id = request('tag_id');
         $title = request('title');
         $author = request('author');
         $collectOrder = request('collectOrder') ? 'asc' : 'desc';
         $likeOrder = request('likeOrder') ? 'asc' : 'desc';
         $fan_id = request('fan_id') ?? Token::getUid();
-        $pictures = Picture::with(['tags' => function ($query) use ($tag_ids){
-            $query->when($tag_ids, function($query) use ($tag_ids) {
-                return $query->whereIn('id', $tag_ids);
+        $pictures = Picture::with(['tags' => function ($query) use ($tag_id){
+            $query->when($tag_id, function($query) use ($tag_id) {
+                return $query->whereIn('id', $tag_id);
             })->select('tags.id', 'tags.name');
         }])->when($id > 0, function($query) use ($id) {
             return $query->where('id', $id);
