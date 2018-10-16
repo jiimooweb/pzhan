@@ -80,7 +80,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::apiResource('specials', 'Api\Specials\SpecialController');
 
     //签到
-    Route::post('sign_in','Api\Fans\SignController@signIn');
+    Route::post('sign_in','Api\Fans\SignInController@signIn');
 
     //粉丝收藏
     Route::get('fans/{fan}/collect', 'Api\Fans\FanController@collect');  //点赞
