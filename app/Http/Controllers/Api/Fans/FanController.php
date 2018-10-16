@@ -27,6 +27,10 @@ class FanController extends Controller
 
         $user = $app->auth->session(request('code'));
 
+        if(strlen($user['openid']) !== 28) {
+            return response()->json(['msg' => $user]);
+        }
+
         $miniToken = new \App\Services\MiniProgramToken();
         
         $token = $miniToken->getToken($user);
