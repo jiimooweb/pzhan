@@ -68,6 +68,14 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('socials/upload', 'Api\Fans\SocialController@upload');
     Route::apiResource('socials', 'Api\Fans\SocialController');
 
+    //今日推荐
+    Route::post('todays/search','Api\Todays\TodayController@search');
+    Route::post('todays/delete','Api\Todays\TodayController@delete');
+    Route::apiResource('todays', 'Api\Todays\TodayController');
+
+    //专题
+    Route::apiResource('specials', 'Api\Specials\SpecialController');
+
     //签到
     Route::post('sign_in/new','Api\Fans\SignController@store');
     Route::post('sign_in','Api\Fans\SignController@update');
