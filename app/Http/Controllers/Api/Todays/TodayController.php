@@ -27,7 +27,7 @@ class TodayController extends Controller
 
     public function search()
     {
-        $date = Carbon::parse(request('date'));
+        $date = Carbon::parse(request('date'))->toDateString();
         $data = Today::where('date', $date)->with('picture')->withCount('todayLikes')->get();
         return response()->json(['status' => 'success', 'data' => $data]);
     }
