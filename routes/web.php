@@ -65,6 +65,8 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
     //粉丝朋友圈
     Route::get('socials/{social}/comments', 'Api\Fans\SocialController@comments');
+    Route::post('socials/{social}/comment', 'Api\Fans\SocialController@comment');
+    Route::post('socials/{social}/like', 'Api\Fans\SocialController@like');
     Route::post('socials/change', 'Api\Fans\SocialController@change');
     Route::post('socials/upload', 'Api\Fans\SocialController@upload');
     Route::apiResource('socials', 'Api\Fans\SocialController');
