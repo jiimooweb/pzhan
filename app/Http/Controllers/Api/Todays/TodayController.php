@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Todays;
 
 use App\Models\Today;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class TodayController extends Controller
@@ -12,6 +13,7 @@ class TodayController extends Controller
     public function store()
     {
         $list = request(['title', 'img_id', 'text', 'date']);
+        $list['data'] = Carbon::parse($list['data']);
         DB::beginTransaction();
         try {
             Today::create($list);
