@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Fans;
 
 use App\Models\Fan;
+use App\Models\Sign;
 use App\Services\Token;
 use EasyWeChat\Factory;
 use Illuminate\Http\Request;
@@ -49,6 +50,7 @@ class FanController extends Controller
         unset($userInfo['nickName']);
 
         if(Fan::where('id', $data['uid'])->update($userInfo)){
+            Sign::create(['fan_id',$data['uid']]);
             return response()->json('保存成功');
         }
 
