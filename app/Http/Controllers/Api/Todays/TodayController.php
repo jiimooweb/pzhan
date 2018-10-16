@@ -12,7 +12,7 @@ class TodayController extends Controller
 {
     public function store()
     {
-        $list = request(['title', 'img_id', 'pid', 'text', 'date']);
+        $list = request(['title', 'img_id', 'text', 'date']);
         DB::beginTransaction();
         try {
             Today::create($list);
@@ -33,7 +33,7 @@ class TodayController extends Controller
 
     public function update()
     {
-        $list = request(['title', 'img_id', 'pid', 'text', 'date']);
+        $list = request(['title', 'img_id', 'text', 'date']);
         $id = request()->today;
         DB::beginTransaction();
         try {
