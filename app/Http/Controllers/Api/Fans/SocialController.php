@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Fans;
 
+use App\Utils\Module;
 use App\Models\Social;
 use App\Services\Qiniu;
 use App\Services\Token;
@@ -91,7 +92,7 @@ class SocialController extends Controller
                 $notice = [
                     'fan_id' => $fan_id,
                     'module_id' => $social->id,
-                    'module' => 'social',
+                    'module' => Module::Social,
                     'type' => 1,
                     'status' => 0
                 ];
