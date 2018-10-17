@@ -22,7 +22,6 @@ class SpecialController extends Controller
         $id = request()->special;
         $data = Special::find($id);
         $imgIDS  = json_decode($data->img_id,true);
-        return $imgIDS;
         $imgs = Picture::whereIn('id',$imgIDS)->get();
         $data->imgs = $imgs;
         return response()->json(['status' => 'success', 'data' => $data]);
