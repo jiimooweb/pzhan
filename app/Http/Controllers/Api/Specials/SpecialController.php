@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class SpecialController extends Controller
 {
-    //
+    //web
     public function index()
     {
         $data = Special::paginate(20);
