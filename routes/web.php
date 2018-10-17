@@ -25,6 +25,10 @@ Route::group(['prefix' => 'wechat/token/'], function() {
     Route::post('saveInfo', 'Api\Fans\FanController@saveInfo');  //存用户信息
 });
 
+Route::get('/get', function() {
+    return \Cache::store('redis')->get('hotRank');
+});
+
 
 Route::group(['middleware' => ['cors', 'token']], function () {
 

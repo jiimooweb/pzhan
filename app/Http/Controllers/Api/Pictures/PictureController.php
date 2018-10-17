@@ -14,7 +14,7 @@ class PictureController extends Controller
 {
     public function index() 
     {
-        $id = request('id');
+        $pic_id = request('id');
         $tag_id = request('tag_id');
         $title = request('title');
         $author = request('author');
@@ -25,8 +25,8 @@ class PictureController extends Controller
         if(isset($tag_id)) {
             $picture_ids = PictureTag::where('tag_id',$tag_id)->get()->pluck('picture_id');
         }
-        $pictures = Picture::with(['tags'])->when($id > 0, function($query) use ($id) {
-            return $query->where('id', $id);
+        $pictures = Picture::with(['tags'])->when($pic_id > 0, function($query) use ($pic_id) {
+            return $query->where('pic_id', $pic_id);
         })->when($picture_ids, function($query) use ($picture_ids) {
             return $query->whereIn('id', $picture_ids);
         })->when($title, function($query) use ($title) {
@@ -46,8 +46,8 @@ class PictureController extends Controller
     {
         $picture = $picture->with(['tags' => function ($query){
             $query->select('tags.id', 'tags.name');
-        }])->withCount(['likeFans', 'collectFans'])->first();
-        
+        }])->withCount(['likeFans', 'collectFans'])->first();         
+        $picture->increment('hot', 1);  //增加一个热度           
         $status = $picture ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $picture]);   
     }
@@ -115,6 +115,7 @@ class PictureController extends Controller
         ];
 
         if(CollectPicture::firstOrCreate($param)) {
+            $picture->increment('hot', 5);            
             return response()->json(['status' => 'success', 'msg' => '收藏成功！']);  
         }
 
@@ -125,6 +126,7 @@ class PictureController extends Controller
     {
         $fan_id = request('fan_id') ?? Token::getUid();
         if($picture->collect($fan_id)->delete()) {
+            $picture->decrement('hot', 5);                        
             return response()->json(['status' => 'success', 'msg' => '取消成功！']);  
         }
 
@@ -139,6 +141,8 @@ class PictureController extends Controller
         ];
 
         if(LikePicture::firstOrCreate($param)) {
+            //更新热度
+            $picture->increment('hot', 2);
             return response()->json(['status' => 'success', 'msg' => '点赞成功！']);  
         }
 
@@ -149,6 +153,7 @@ class PictureController extends Controller
     {
         $fan_id = request('fan_id') ?? Token::getUid();        
         if($picture->like($fan_id)->delete()) {
+            $picture->decrement('hot', 2);            
             return response()->json(['status' => 'success', 'msg' => '取消成功！']);  
         }
 
@@ -190,10 +195,13 @@ class PictureController extends Controller
     {             
         $collect = request('collect');
         $like = request('like');
-        $pictures = Picture::withCount(['likeFans', 'collectFans'])->when($collect, function($query) use ($collectOrder){
+        $hot = request('hot');
+        $pictures = Picture::withCount(['likeFans', 'collectFans'])->when($collect, function($query) {
             return $query->orderBy('collect_fans_count', 'desc');
-        })->when($likeOrder, function($query) use ($like){
+        })->when($likeOrder, function($query) {
             return $query->orderBy('like_fans_count', 'desc');
+        })->when($hot, function($query){
+            return $query->orderBy('hot', 'desc');
         })->paginate(20);
 
         return response()->json(['status' => 'success', 'data' => $pictures]);

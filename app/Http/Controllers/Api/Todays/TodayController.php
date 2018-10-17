@@ -4,14 +4,22 @@ namespace App\Http\Controllers\Api\Todays;
 
 use App\Models\Today;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class TodayController extends Controller
 {
 
+    public function index()
+    {
+        $data = Today::with('picture')->withCount('todayLikes')->orderBy('today_likes_count','DESC')->paginate(20);
+        return response()->json(['status' => 'success', 'data' => $data]);
+    }
+
     public function store()
     {
         $list = request(['title', 'img_id', 'text', 'date']);
+        $list['date'] = Carbon::parse($list['date']);
         DB::beginTransaction();
         try {
             Today::create($list);
@@ -25,14 +33,15 @@ class TodayController extends Controller
 
     public function search()
     {
-        $date = request('date');
-        $data = Today::where('date', $date)->with('picture')->get();
+        $date = Carbon::parse(request('date'))->toDateString();
+        $data = Today::where('date', $date)->with('picture')->withCount('todayLikes')->get();
         return response()->json(['status' => 'success', 'data' => $data]);
     }
 
     public function update()
     {
         $list = request(['title', 'img_id', 'text', 'date']);
+        $list['date'] = Carbon::parse($list['date']);
         $id = request()->today;
         DB::beginTransaction();
         try {
