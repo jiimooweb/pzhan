@@ -72,6 +72,20 @@ class SpecialController extends Controller
         return response()->json(['status' => 'success', 'msg' => '删除成功！']);
     }
 
+    public function updateSwitch()
+    {
+        $list = request(['id', 'switch']);
+        DB::beginTransaction();
+        try {
+            Special::where('id', $list['id'])->update(['switch'=>$list['switch']]);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'error', 'msg' => '修改失败！' . $e]);
+        }
+        return response()->json(['status' => 'success', 'msg' => '修改成功！']);
+    }
+
 //    public function miniIndex()
 //    {
 //        $comments = SpecialComment::where('special_id',request('special'))->with(['fan', 'toFan'])->orderBy('created_at', 'asc')->get();
