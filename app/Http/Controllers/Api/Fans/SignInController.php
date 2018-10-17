@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\Fans;
 
+use App\Models\Fan;
+use App\Models\PointHistory;
 use App\Models\Sign;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -22,15 +24,17 @@ class SignInController extends Controller
         $data['continuity_day']=1;
         $sign_data=Sign::where('fan_id',$data['fan_id'])->first();
 //        if($sign_data){
-            $date=Carbon::parse($sign_data->last_day)->modify('+1 days')->toDateString();
-            if($date==$data['last_day']){
-                $data['continuity']=1;
-                $data['continuity_day']=$sign_data->continuity_day+1;
-                $point=$fan_data->point+$con_point;
-            }else{
-                $point=$fan_data->point+$point;
-            }
-            $save=Sign::where('fan_id',$data['fan_id'])->update($data);
+        $date=Carbon::parse($sign_data->last_day)->modify('+1 days')->toDateString();
+        if($date==$data['last_day']){
+            $data['continuity']=1;
+            $data['continuity_day']=$sign_data->continuity_day+1;
+            $point=$fan_data->point+$con_point;
+            $add_point=$con_point;
+        }else{
+            $point=$fan_data->point+$point;
+            $add_point=$point;
+        }
+        $save=Sign::where('fan_id',$data['fan_id'])->update($data);
 //        }
 //        else{
 //            $save=Sign::create($data);
@@ -38,6 +42,8 @@ class SignInController extends Controller
 //        }
         if($save){
             $fan_data->update(['point'=>$point]);
+            PointHistory::create(['fan_id'=>$data['fan_id'],'state'=>'1','point'=>$add_point,
+                'tag'=>'signIn','comment'=>$data['last_day'].'签到所得']);
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);
         }
         return response()->json(['status' => 'error', 'msg' => '更新失败！']);
