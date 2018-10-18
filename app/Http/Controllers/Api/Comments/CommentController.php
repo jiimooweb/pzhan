@@ -15,7 +15,7 @@ class CommentController extends Controller
     //
     public function index()
     {
-        $data = Paramate::where([['type','comment'],['switch',1]])->get();
+        $data = Paramate::where([['type','comment'],['switch',1]])->paginate(20);
         return response()->json(['status' => 'success', 'data' => $data]);
     }
 
@@ -28,7 +28,9 @@ class CommentController extends Controller
         $social = Module::Social;
         switch ($module){
             case $special:
-                $data = SpecialComment::where('content','like','%'.$key.'%')->get();
+                $data = SpecialComment::where('content','like','%'.$key.'%')->with('fan')->with(['blacklists'=>function ($query){
+                    $query->where('state',1)->orWhere('is_seal',1);
+                }])->paginate(20);
                 $data->transform(function ($item,$key)use($special){
                      $item->module = $special;
                      return $item;
@@ -36,7 +38,9 @@ class CommentController extends Controller
                 break;
 
             case $social:
-                $data = SocialComment::where('content','like','%'.$key.'%')->get();
+                $data = SocialComment::where('content','like','%'.$key.'%')->with('fan')->with(['blacklists'=>function ($query){
+                    $query->where('state',1)->orWhere('is_seal',1);
+                }])->paginate(20);;
                 $data->transform(function ($item,$key)use($social){
                     $item->module = $social;
                     return $item;
@@ -44,13 +48,19 @@ class CommentController extends Controller
                 break;
 
             case 'all':
-                $dataSpecial = SpecialComment::where('content','like','%'.$key.'%')->get();
+                $dataSpecial = SpecialComment::where('content','like','%'.$key.'%')->with('fan')->with(['blacklists'=>function ($query){
+                    $query->where('state',1)->orWhere('is_seal',1);
+                }])->paginate(20);
+
                 $dataSpecial->transform(function ($item,$key)use($special){
                     $item->module = $special;
                     return $item;
                 });
 
-                $dataSocial = SocialComment::where('content','like','%'.$key.'%')->get();
+                $dataSocial = SocialComment::where('content','like','%'.$key.'%')->with('fan')->with(['blacklists'=>function ($query){
+                    $query->where('state',1)->orWhere('is_seal',1);
+                }])->paginate(20);
+
                 $dataSocial->transform(function ($item,$key)use($social){
                     $item->module = $social;
                     return $item;
