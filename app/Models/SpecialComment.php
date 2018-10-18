@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class SpecialComment extends Model
 {
     use SoftDeletes;
+    protected $guarded=[];
     protected $table = 'special_comments';
     protected $dates = ['delete_at'];
 

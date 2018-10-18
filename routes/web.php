@@ -85,12 +85,19 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::apiResource('specials', 'Api\Specials\SpecialController');
     Route::post('specials/switch','Api\Specials\SpecialController@updateSwitch');
 
-    // 专题评论
-    Route::post('specials/comment','Api\Specials\SpecialCommentController@store');
+    // 新增专题评论
+//    Route::post('specials/comment','Api\Specials\SpecialCommentController@store');
+
     // 评论管理
     Route::post('comments/query','Api\Comments\CommentController@queryComments');
     Route::get('comments','Api\Comments\CommentController@index');
     Route::post('comments/delete','Api\Comments\CommentController@delete');
+
+   //黑名单
+
+    Route::post('backlist/ban', 'Api\Backlists\BacklistController@banList');
+    Route::get('backlist/seal', 'Api\Backlists\BacklistController@sealList');
+    Route::apiResource('backlist', 'Api\Backlists\BacklistController');
 
 
     //签到

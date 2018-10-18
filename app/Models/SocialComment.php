@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use App\Models\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SocialComment extends Model
 {
+    use SoftDeletes;
+    protected $dates = ['delete_at'];
+
     public function fan()
     {
         return $this->hasOne(Fan::class, 'id', 'fan_id')->select('id', 'nickname');
