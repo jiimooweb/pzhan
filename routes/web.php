@@ -85,7 +85,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
     //签到
     Route::post('sign_in','Api\Fans\SignInController@signIn');
-
+    Route::post('sign_date','Api\Fans\SignInController@signInHistory');
     //粉丝收藏
     Route::get('fans/{fan}/collect', 'Api\Fans\FanController@collect');  //点赞
     //粉丝点赞

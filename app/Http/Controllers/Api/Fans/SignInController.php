@@ -12,6 +12,12 @@ use App\Http\Controllers\Controller;
 class SignInController extends Controller
 {
 
+    public function show()
+    {
+        $fan_id=request('fan_id');
+        $sign=Sign::where('fan_id',$fan_id)->first();
+        return response()->json(['status' => 'success', 'data' => $sign]);
+    }
 
     public function signIn()
     {
@@ -47,5 +53,35 @@ class SignInController extends Controller
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);
         }
         return response()->json(['status' => 'error', 'msg' => '更新失败！']);
+    }
+
+    public function signInHistory()
+    {
+        $year=request('year');
+        $month=request('month');
+        $fan_id=request('fan_id');
+        $one_day=Carbon::create($year,$month,1);
+        $last_day=Carbon::create($year,$month+1,0);
+        $star_week=$one_day->dayOfWeek;
+        $month_day=$last_day->diffInDays($one_day)+$star_week;
+        $signs=PointHistory::where('fan_id',$fan_id)->where('tag','signIn')
+            ->where('comment','like',$year."-".$month."%")->get();
+        for ($i=0;$i<=$month_day;$i++){
+            if($i<$star_week){
+                $date_array[$i]=[];
+            }else{
+                $date=Carbon::create($year,$month,$i-$star_week+1);
+                $flag=false;
+                foreach ($signs as $sign){
+                    if($sign->comment==$date->toDateString()."签到所得"){
+                        $flag=true;
+                        break;
+                    }
+                }
+                $date_array[$i]=['isToday'=>$date->format('Ymd'),
+                    'dateNum'=>$date->day ,'flag'=>$flag];
+            }
+        }
+        return response()->json(['status' => 'success', 'data' => $date_array]);
     }
 }
