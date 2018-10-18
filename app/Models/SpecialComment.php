@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
-use App\Models\Model;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class SocialComment extends Model
+class SpecialComment extends Model
 {
     use SoftDeletes;
+    protected $guarded=[];
+    protected $table = 'special_comments';
     protected $dates = ['delete_at'];
 
     public function fan()
@@ -19,5 +21,4 @@ class SocialComment extends Model
     {
         return $this->hasOne(Fan::class, 'id','to_fan_id')->select('id', 'nickname');
     }
-
 }

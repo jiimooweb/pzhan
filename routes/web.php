@@ -79,9 +79,26 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('todays/search','Api\Todays\TodayController@search');
     Route::post('todays/delete','Api\Todays\TodayController@delete');
     Route::apiResource('todays', 'Api\Todays\TodayController');
+    Route::apiResource('todayLikes', 'Api\TodayLikes\TodayLikeController');
 
-    //专题
+    // 专题
     Route::apiResource('specials', 'Api\Specials\SpecialController');
+    Route::post('specials/switch','Api\Specials\SpecialController@updateSwitch');
+
+    // 新增专题评论
+//    Route::post('specials/comment','Api\Specials\SpecialCommentController@store');
+
+    // 评论管理
+    Route::post('comments/query','Api\Comments\CommentController@queryComments');
+    Route::get('comments','Api\Comments\CommentController@index');
+    Route::post('comments/delete','Api\Comments\CommentController@delete');
+
+   //黑名单
+
+    Route::post('backlist/ban', 'Api\Backlists\BacklistController@banList');
+    Route::get('backlist/seal', 'Api\Backlists\BacklistController@sealList');
+    Route::apiResource('backlist', 'Api\Backlists\BacklistController');
+
 
     //签到
     Route::post('sign_in','Api\Fans\SignInController@signIn');
@@ -90,6 +107,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::get('fans/{fan}/collect', 'Api\Fans\FanController@collect');  //点赞
     //粉丝点赞
     Route::get('fans/{fan}/like', 'Api\Fans\FanController@like');  //点赞
+
 
     //分享
     Route::post('share','Api\Fans\ShareController@share');
