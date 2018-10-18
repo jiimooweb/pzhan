@@ -25,7 +25,8 @@ class blacklistController extends Controller
 
     public function store()
     {
-        $list = request(['fan_id','day','state','reason','is_seal']);
+        $list = request(['fan_id','day','reason','is_seal']);
+        $list['state'] =  1;
         DB::beginTransaction();
         try {
             Blacklist::create($list);
