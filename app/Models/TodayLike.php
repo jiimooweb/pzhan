@@ -13,6 +13,6 @@ class TodayLike extends Model
 
     public function fans()
     {
-        return $this->hasMany(Fan::class,'fan_id','id');
+        return $this->hasMany(Fan::class,'fan_id','id')->select('id', 'nickname');;
     }
 }

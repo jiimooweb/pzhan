@@ -25,6 +25,7 @@ class blacklistController extends Controller
 
     public function store()
     {
+
         $list = request(['fan_id','day','state','reason','is_seal']);
         DB::beginTransaction();
         try {
@@ -65,5 +66,14 @@ class blacklistController extends Controller
             return response()->json(['status' => 'error', 'msg' => '删除失败！' . $e]);
         }
         return response()->json(['status' => 'success', 'msg' => '删除成功！']);
+    }
+
+    public function query()
+    {
+        $list = request(['fan_id','day','state','reason','is_seal']);
+        $count = Blacklist::where([['fan_id',$list['fan_id'],['state',1]]])->orWhere('is_seal',1)->count();
+        if($count>0){
+            return response()->json(['status' => '1', 'msg' => '用户已被禁言/封号']);
+        }
     }
 }

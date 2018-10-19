@@ -21,4 +21,9 @@ class SpecialComment extends Model
     {
         return $this->hasOne(Fan::class, 'id','to_fan_id')->select('id', 'nickname');
     }
+
+    public function blacklists()
+    {
+        return $this->hasMany(Blacklist::class, 'fan_id', 'fan_id');
+    }
 }

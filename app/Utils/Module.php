@@ -14,5 +14,7 @@ class Module
 {
     const Social = 'social';
     const Topic = 'topic';
-    
+    const Special = 'special'; //专辑
+
+
 }
