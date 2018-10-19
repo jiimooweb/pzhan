@@ -95,9 +95,9 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
    //黑名单
     
-    Route::post('backlist/ban', 'Api\Backlists\BacklistController@banList');
-    Route::get('backlist/seal', 'Api\Backlists\BacklistController@sealList');
-    Route::apiResource('backlist', 'Api\Backlists\BacklistController');
+    Route::post('blacklist/ban', 'Api\Blacklists\BlacklistController@banList');
+    Route::get('blacklist/seal', 'Api\Blacklists\BlacklistController@sealList');
+    Route::apiResource('blacklist', 'Api\Blacklists\BlacklistController');
 
 
     //签到
