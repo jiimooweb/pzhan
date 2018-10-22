@@ -11,6 +11,6 @@ class Blacklist extends Model
 
     public function fan()
     {
-        return $this->hasOne(Fan::class)->select('id', 'nickname');
+        return $this->hasOne(Fan::class,'id','fan_id')->select('id', 'nickname');
     }
 }
