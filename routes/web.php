@@ -108,6 +108,9 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     //粉丝点赞
     Route::get('fans/{fan}/like', 'Api\Fans\FanController@like');  //点赞
 
+    Route::apiResource('report_cause','Api\Fans\ReportCauseController');
+    Route::post('report','Api\Fans\ReportCauseController@store');
+
 
     //分享
     Route::post('share','Api\Fans\ShareController@share');
