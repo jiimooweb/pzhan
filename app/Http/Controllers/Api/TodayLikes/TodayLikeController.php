@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\TodayLikes;
 use App\Models\TodayLike;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class TodayLikeController extends Controller
 {
@@ -30,11 +31,11 @@ class TodayLikeController extends Controller
     public function store()
     {
         $list = request(['today_id']);
-        $tID = $list['today_id'];
         $fanID = Token::getUid();
+        $list['fan_id'] = $fanID;
         DB::beginTransaction();
         try {
-            TodayLike::create(['today_id'=>$tID,'fan_id'=>$fanID]);
+            TodayLike::create($list);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
