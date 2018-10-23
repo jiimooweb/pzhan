@@ -19,7 +19,6 @@ class SignInRequest extends CommonRequest
             'reward' => 'required|integer',
             'type'=>'required',
             'method'=>'required',
-            'img'=>'required',
         ];
     }
 }
