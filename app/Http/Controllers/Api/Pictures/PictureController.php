@@ -47,7 +47,6 @@ class PictureController extends Controller
         $picture = $picture->with(['tags' => function ($query){
             $query->select('tags.id', 'tags.name');
         }])->withCount(['likeFans', 'collectFans'])->first();         
-        $picture->increment('hot', 1);  //增加一个热度           
         $status = $picture ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $picture]);   
     }
@@ -184,7 +183,8 @@ class PictureController extends Controller
 
         $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;  //是否收藏
         $picture->like = $picture->isLike($fan_id) ? 1 : 0;   //是否点赞
-
+        $picture->increment('hot', 1);  //增加一个热度           
+        
         //相关推荐
         $recommends = PictureTag::getRecommends($picture->id);
         $status = $picture ? 'success' : 'error';

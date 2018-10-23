@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use \App\Http\Requests\CommonRequest;
 
-class AlbumRequest extends CommonRequest
+class SocialRequest extends CommonRequest
 {
 
     /**
@@ -15,7 +15,8 @@ class AlbumRequest extends CommonRequest
     public function rules()
     {
         return [
-            'fan_id' => 'required|integer'
+            'fan_id' => 'required|integer',
+            'content' => 'required|string'
         ];
     }
 }
