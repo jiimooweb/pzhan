@@ -8,26 +8,23 @@ class Common
         global $tree,$comment;
         foreach($arr as $key=>$val) {
             if($val['pid'] == $pid) {
-                if($val['pid'] == 0) {
-                    $tree[] = $val;
-                }else {
-                    $tree[$val['pid']]['comment'][] = $val;                    
-                    $tree[$val['pid']]['pid'] = $val['pid'];                    
-                }
-                self::getCommentTree($arr , $val['id'] ,$step+1);
-            }
+                $tree[] = $val;
+            }else {
+                $tree[$val['pid']]['comment'][] = $val;                    
+                $tree[$val['pid']]['pid'] = $val['pid'];                    
+            }   
         }
 
         foreach($tree as $key => $val) {
             if($val['pid'] == 0) {
-                if(isset($tree[$val['id']])) {
+                if(isset($tree[$val['id']]) && isset($tree[$val['id']]['comment'])) {
                     $tree[$key]['comment'] = $tree[$val['id']]['comment'];
                 }   
                 $comment[$key] = $tree[$key];
             }
         }
 
-        return $comment;
+        return array_values($comment);
         
     }
 

@@ -19,7 +19,7 @@ class PhotoController extends Controller
     public function store(PhotoRequest $request) 
     {   
         $data = request()->all();  
-        $data['fan_id'] = Token::getUid(); 
+        $fan_id = request('fan_id') ?? Token::getUid();  
         if(Photo::create($data)) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);
         }

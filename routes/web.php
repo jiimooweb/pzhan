@@ -30,7 +30,7 @@ Route::get('/get', function() {
 });
 
 
-Route::group(['middleware' => ['cors', 'token']], function () {
+Route::group(['middleware' => ['cors']], function () {
 
     Route::post('qiniu/upload', 'Controller@upload');  //上传图片
     Route::post('qiniu/delete', 'Controller@delete');   //删除图片
@@ -71,6 +71,9 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::get('socials/{social}/comments', 'Api\Fans\SocialController@comments');
     Route::post('socials/{social}/comment', 'Api\Fans\SocialController@comment');
     Route::post('socials/{social}/like', 'Api\Fans\SocialController@like');
+    Route::post('socials/uploadPhoto', 'Api\Fans\SocialController@uploadPhoto');
+    Route::post('socials/deleteComment', 'Api\Fans\SocialController@deleteComment');
+    Route::post('socials/replys', 'Api\Fans\SocialController@replys');
     Route::post('socials/change', 'Api\Fans\SocialController@change');
     Route::post('socials/upload', 'Api\Fans\SocialController@upload');
     Route::apiResource('socials', 'Api\Fans\SocialController');
