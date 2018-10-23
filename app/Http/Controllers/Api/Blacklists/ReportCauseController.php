@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Fans;
+namespace App\Http\Controllers\Api\Blacklists;
 
 use App\Http\Requests\ReportCauseRequest;
 use App\Http\Requests\ShareRequest;

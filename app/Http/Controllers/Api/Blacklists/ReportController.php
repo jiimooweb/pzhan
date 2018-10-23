@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Fans;
+namespace App\Http\Controllers\Api\Blacklists;
 
 use App\Http\Requests\ReportRequest;
 use App\Http\Requests\ShareRequest;
@@ -17,14 +17,25 @@ class ReportController extends Controller
 {
     public function show()
     {
-        $data=Report::with('report_fan')->with('bereport_fan')->with('cause')->get();
+        $datas=Report::with('report_fan:id,nickname')
+            ->with('bereport_fan:id,nickname')->with('cause:id,comment')
+            ->orderBy('created_at','desc')->paginate(20);
+        foreach ($datas as $data){
+            if($data->type=="socials"){
+                $data->content=$data->comment_s;
+                unset($data->comment_s);
+            }else if($data->type=="social_comments"){
+                $data->content=$data->comment_sc;
+                unset($data->comment_sc);
+            }
+        }
         return response()->json(['status' => 'success', 'data' => $data]);
     }
     public function store(ReportRequest $request)
     {
         $data = request()->all();
-        $data['	reporter_id']=Token::getUid();
-        if(ReportCause::create($data)) {
+        //$data['	reporter_id']=Token::getUid();
+        if(Report::create($data)) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);
         }
 
@@ -37,7 +48,7 @@ class ReportController extends Controller
         $report_data=Report::find($report_id);
         if(request()->verify=='1'){
             switch ($report_data->type){
-                case 'social':
+                case 'socials':
                     $model=Social::class;
                     break;
                 case 'social_comments':

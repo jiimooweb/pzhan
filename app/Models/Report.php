@@ -10,19 +10,31 @@ class Report extends Model
 
     public function report_fan()
     {
-        $this->hasOne(Fan::class,
-            'reporter_id', 'id');
+        return $this->hasOne(Fan::class,
+            'id', 'reporter_id');
     }
 
     public function bereport_fan()
     {
-        $this->hasOne(Fan::class,
-            'bereported_id', 'id');
+        return $this->hasOne(Fan::class,
+            'id', 'bereported_id');
     }
 
     public function cause()
     {
-        $this->hasOne(ReportCause::class,
-            'cause', 'id');
+        return $this->hasOne(ReportCause::class,
+            'id', 'cause');
+    }
+
+    public function comment_s()
+    {
+            return $this->hasOne(Social::class,
+                'id', 'comment')->select(['content']);
+    }
+
+    public function comment_sc()
+    {
+        return $this->hasOne(SocialComment::class,
+            'id', 'comment')->select(['content']);
     }
 }
