@@ -50,7 +50,7 @@ class FanController extends Controller
         unset($userInfo['nickName']);
 
         if(Fan::where('id', $data['uid'])->update($userInfo)){
-            Sign::create(['fan_id',$data['uid']]);
+            Sign::create(['fan_id' => $data['uid']]);
             return response()->json('保存成功');
         }
 
@@ -70,5 +70,10 @@ class FanController extends Controller
     public function like(Fan $fan)
     {
         return response()->json(['status' => 'success','data' => $fan->likePictures]);
+    }
+
+    public function getUid() 
+    {
+        return response()->json(['uid' => Token::getUid()]);
     }
 }
