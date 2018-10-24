@@ -111,6 +111,7 @@ Route::group(['middleware' => ['cors']], function () {
     //粉丝点赞
     Route::get('fans/{fan}/like', 'Api\Fans\FanController@like');  //点赞
 
+    //举报
     Route::post('report','Api\Blacklists\ReportController@store');
     Route::post('show_report','Api\Blacklists\ReportController@show');
     Route::apiResource('report_cause','Api\Blacklists\ReportCauseController');

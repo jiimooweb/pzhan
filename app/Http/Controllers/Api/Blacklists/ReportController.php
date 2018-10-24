@@ -18,7 +18,11 @@ class ReportController extends Controller
     public function show()
     {
         $datas=Report::with('report_fan:id,nickname')
-            ->with('bereport_fan:id,nickname')->with('cause:id,comment')
+            ->with('bereport_fan:id,nickname')->with('cause:id,comment');
+        if(request('status')){
+            $datas=$datas->where('status',request('status'));
+        }
+        $datas=$datas->orderBy('status','asc')
             ->orderBy('created_at','desc')->paginate(20);
         foreach ($datas as $data){
             if($data->type=="socials"){
@@ -29,7 +33,7 @@ class ReportController extends Controller
                 unset($data->comment_sc);
             }
         }
-        return response()->json(['status' => 'success', 'data' => $data]);
+        return response()->json(['status' => 'success', 'data' => $datas]);
     }
     public function store(ReportRequest $request)
     {
