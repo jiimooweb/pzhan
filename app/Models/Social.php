@@ -13,6 +13,8 @@ class Social extends Model
         if(time() - $time < 86400) {
             return Carbon::parse($date)->diffForHumans();
         }
+
+        return $data;
     }
 
     public function fan()

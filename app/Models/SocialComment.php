@@ -18,6 +18,8 @@ class SocialComment extends Model
         if(time() - $time < 86400) {
             return Carbon::parse($date)->diffForHumans();
         }
+
+        return $date;
     }
 
     public function fan()
