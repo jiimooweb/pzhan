@@ -15,7 +15,6 @@ class PhotoRequest extends CommonRequest
     public function rules()
     {
         return [
-            'album_id' => 'required|integer',
             'url' => 'required|string'
         ];
     }

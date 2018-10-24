@@ -15,7 +15,6 @@ class SocialRequest extends CommonRequest
     public function rules()
     {
         return [
-            'fan_id' => 'required|integer',
             'content' => 'required|string'
         ];
     }
