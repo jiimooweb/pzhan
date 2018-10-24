@@ -10,7 +10,7 @@ class Social extends Model
     public function getCreatedAtAttribute($date)
     {
         $time = strtotime($date);
-        if(time() - $time < 864000) {
+        if(time() - $time < 86400) {
             return Carbon::parse($date)->diffForHumans();
         }
     }
