@@ -25,7 +25,10 @@ Route::group(['prefix' => 'wechat/token/'], function() {
 });
 
 Route::get('/get', function() {
-    return \Cache::store('redis')->get('hotRank');
+    $date = date('Y-m-d H:i:s', time());
+    $date = strtotime($date);
+    return $date;
+    return \Carbon\Carbon::parse($date);
 });
 
 

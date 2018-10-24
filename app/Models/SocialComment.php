@@ -14,7 +14,10 @@ class SocialComment extends Model
 
     public function getCreatedAtAttribute($date)
     {
-        return Carbon::parse($date)->diffForHumans();
+        $time = strtotime($date);
+        if(time() - $time < 864000) {
+            return Carbon::parse($date)->diffForHumans();
+        }
     }
 
     public function fan()
