@@ -19,7 +19,7 @@ class SocialController extends Controller
     public function index() 
     {
         $fan_id = request('fan_id') ?? Token::getUid();
-        $socials = Social::with(['photos','fan'])->withCount(['likeFans', 'comments', 'photos'])->orderBy('created_at', 'desc')->paginate(30);
+        $socials = Social::with(['photos','fan'])->withCount(['likeFans', 'comments', 'photos'])->orderBy('created_at', 'desc')->paginate(20);
         foreach($socials as &$social) {
             $social->like = $social->isLike($fan_id) ? 1 : 0;
         }
@@ -40,7 +40,8 @@ class SocialController extends Controller
 
     public function show()
     {
-        $social = Social::where('id', request()->social)->with(['photos'])->withCount(['photos','likeFans', 'comments'])->first();
+        $fan_id = request('fan_id') ?? Token::getUid();        
+        $social = Social::where('id', request()->social)->with(['photos','fan'])->withCount(['photos','likeFans', 'comments'])->first();
         $social->like = $social->isLike($fan_id) ? 1 : 0;        
         $status = $social ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $social]);   

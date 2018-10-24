@@ -20,9 +20,8 @@ Route::post('/login','Api\LoginController@login')->middleware(['cors']);
 Route::post('/add', 'Api\Users\UserController@store');
 
 Route::group(['prefix' => 'wechat/token/'], function() {
-    Route::post('verifyToken', 'Api\Fans\FanController@verifyToken');  //验证Token
+    Route::get('verifyToken', 'Api\Fans\FanController@verifyToken');  //验证Token
     Route::post('getToken', 'Api\Fans\FanController@getToken');  //获取Token
-    Route::post('saveInfo', 'Api\Fans\FanController@saveInfo');  //存用户信息
 });
 
 Route::get('/get', function() {
@@ -30,8 +29,10 @@ Route::get('/get', function() {
 });
 
 
-Route::group(['middleware' => ['cors']], function () {
-
+Route::group(['middleware' => ['cors', 'token']], function () {
+    Route::post('wechat/token/saveInfo', 'Api\Fans\FanController@saveInfo');  //存用户信息    
+    Route::get('getUid', 'Api\Fans\FanController@getUid');  //获取用户fan_id
+    
     Route::post('qiniu/upload', 'Controller@upload');  //上传图片
     Route::post('qiniu/delete', 'Controller@delete');   //删除图片
 
