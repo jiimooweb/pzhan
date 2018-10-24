@@ -14,7 +14,7 @@ class Social extends Model
             return Carbon::parse($date)->diffForHumans();
         }
 
-        return $date;
+        return date('m-d H:i',strtotime($date));
     }
 
     public function fan()
