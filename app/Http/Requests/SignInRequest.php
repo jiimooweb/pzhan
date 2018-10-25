@@ -16,7 +16,7 @@ class SignInRequest extends CommonRequest
     {
         return [
             'day' => 'required|integer',
-            'reward' => 'required|integer',
+            'reward' => 'required',
             'type'=>'required',
             'method'=>'required',
         ];
