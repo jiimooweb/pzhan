@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Fans;
 
 use App\Http\Requests\ShareRequest;
+use App\Models\PointHistory;
 use App\Models\ShareHistory;
 use App\Models\Sign;
 use App\Services\Token;
@@ -30,7 +31,7 @@ class ShareController extends Controller
         $fan_data=Fan::find($fan_id);
         $friend_data=Fan::find($friend_id);
         $share_histories=ShareHistory::where('share_id',$fan_id)->
-        where('beshare_id',$friend_id)->get();
+        where('beshare_id',$friend_id)->first();
         if($share_histories){
             return response()->json(['status' => 'repeat', 'msg' => '您已给该好友助力过了']);
         }
