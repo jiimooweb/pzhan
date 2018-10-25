@@ -17,11 +17,19 @@ class ShareController extends Controller
 
     public function showShare(){
         $fan_id=request('fan_id');
+        $friend_id=Token::getUid();
+        $share_flag=true;
         $share_data=ShareHistory::where('share_id',$fan_id)
             ->with('share_fan:id,nickname,avatarUrl')
             ->with('beshare_fan:id,nickname,avatarUrl')
             ->orderBy('created_at','desc')->paginate(20);
-        return response()->json(['status' => 'success', 'data' => $share_data]);
+        $check_data=ShareHistory::where('share_id',$fan_id)->
+        where('beshare_id',$friend_id)->first();
+        if($check_data||$friend_id==$fan_id){
+            $share_flag=false;
+        }
+        return response()->json(['status' => 'success',
+            'data' => compact('share_data','share_flag')]);
     }
 
     public function share(ShareRequest $request){
@@ -32,6 +40,9 @@ class ShareController extends Controller
         $friend_data=Fan::find($friend_id);
         $share_histories=ShareHistory::where('share_id',$fan_id)->
         where('beshare_id',$friend_id)->first();
+        if($friend_id==$fan_id){
+            return response()->json(['status' => 'repeat', 'msg' => '不能给自己加哦']);
+        }
         if($share_histories){
             return response()->json(['status' => 'repeat', 'msg' => '您已给该好友助力过了']);
         }
