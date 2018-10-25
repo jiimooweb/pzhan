@@ -21,6 +21,7 @@ class SignInController extends Controller
         $sign_Tasks=SignTask::all();
         return response()->json(['status' => 'success', 'data' => $sign_Tasks]);
     }
+
     public function store(SignInRequest $request)
     {
         $data=request()->all();
@@ -30,6 +31,7 @@ class SignInController extends Controller
 
         return response()->json(['status' => 'error', 'msg' => '新增失败！']);
     }
+
     public function update(SignInRequest $request)
     {
         $data = request()->all();
@@ -39,6 +41,7 @@ class SignInController extends Controller
 
         return response()->json(['status' => 'error', 'msg' => '更新失败！']);
     }
+
     public function destroy()
     {
         if(SignTask::where('id', request()->sign_Task)->delete()) {
@@ -47,6 +50,7 @@ class SignInController extends Controller
 
         return response()->json(['status' => 'error', 'msg' => '删除失败！']);
     }
+    
     public function signIn()
     {
         $data['fan_id']=Token::getUid();

@@ -109,7 +109,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
     //签到
     Route::post('sign_in','Api\Fans\SignInController@signIn');
-    Route::apiResource('sign_task','Api\Fans\SignInController');
+    Route::apiResource('sign_tasks','Api\Fans\SignInController');
     //粉丝收藏
     Route::get('fans/{fan}/collect', 'Api\Fans\FanController@collect');  //点赞
     //粉丝点赞
