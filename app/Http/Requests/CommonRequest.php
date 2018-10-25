@@ -29,10 +29,14 @@ class CommonRequest extends FormRequest
     }
 
     public function failedValidation( \Illuminate\Contracts\Validation\Validator $validator ) {
-        exit(json_encode(array(
+        // exit(json_encode(array(
+        //     'status' => 'error',
+        //     'data' => $validator->getMessageBag()->toArray()
+        // ))); 
+        return response()->json([
             'status' => 'error',
             'data' => $validator->getMessageBag()->toArray()
-        ))); 
+            ]);
         
     }
 }
