@@ -6,6 +6,7 @@ use App\Http\Requests\ShareRequest;
 use App\Models\ShareHistory;
 use App\Models\Sign;
 use App\Services\Token;
+use App\Models\Fan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -27,7 +28,7 @@ class ShareController extends Controller
         $fan_id=request('fan_id');
         $friend_id=Token::getUid();
         $fan_data=Fan::find($fan_id);
-        $friend_data=Fan;;find($friend_id);
+        $friend_data=Fan::find($friend_id);
         $share_histories=ShareHistory::where('share_id',$fan_id)->
         where('beshare_id',$friend_id)->get();
         if($share_histories){
