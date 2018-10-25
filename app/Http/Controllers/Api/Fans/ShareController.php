@@ -18,8 +18,8 @@ class ShareController extends Controller
     public function showShare(){
         $fan_id=request('fan_id');
         $share_data=ShareHistory::where('share_id',$fan_id)
-            ->with(['share_fan:id,nickname,avatarUrl'])
-            ->with(['beshare_fan::id,nickname,avatarUrl'])
+            ->with('share_fan:id,nickname,avatarUrl')
+            ->with('beshare_fan:id,nickname,avatarUrl')
             ->orderBy('created_at','desc')->paginate(20);
         return response()->json(['status' => 'success', 'data' => $share_data]);
     }
