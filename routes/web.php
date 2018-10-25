@@ -123,4 +123,5 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
     //分享
     Route::post('share','Api\Fans\ShareController@share');
+    Route::post('share_show','Api\Fans\ShareController@showShare');
 });
