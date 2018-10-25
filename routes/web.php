@@ -118,7 +118,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     //举报
     Route::post('report','Api\Blacklists\ReportController@store');
     Route::post('show_report','Api\Blacklists\ReportController@show');
-    Route::apiResource('report_cause','Api\Blacklists\ReportCauseController');
+    Route::apiResource('report_causes','Api\Blacklists\ReportCauseController');
 
 
     //分享

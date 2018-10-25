@@ -28,8 +28,10 @@ class ShareController extends Controller
         $friend_id=Token::getUid();
         $fan_data=Fan::find($fan_id);
         $friend_data=Fan;;find($friend_id);
-        if($friend_data&&$friend_data->status=='1'){
-            return response()->json(['status' => 'repeat', 'msg' => '您已关注']);
+        $share_histories=ShareHistory::where('share_id',$fan_id)->
+        where('beshare_id',$friend_id)->get();
+        if($share_histories){
+            return response()->json(['status' => 'repeat', 'msg' => '您已给该好友助力过了']);
         }
         $point=$fan_data->point+$add_point;
         if($fan_data->update(['point'=>$point])) {
