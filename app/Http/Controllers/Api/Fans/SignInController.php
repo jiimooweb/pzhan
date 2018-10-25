@@ -18,8 +18,8 @@ class SignInController extends Controller
 
     public function index()
     {
-        $sign_Tasks=SignTask::all();
-        return response()->json(['status' => 'success', 'data' => $sign_Tasks]);
+        $sign_tasks=SignTask::all();
+        return response()->json(['status' => 'success', 'data' => $sign_tasks]);
     }
 
     public function store(SignInRequest $request)
