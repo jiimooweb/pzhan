@@ -24,6 +24,10 @@ Route::group(['prefix' => 'wechat/token/'], function() {
     Route::post('getToken', 'Api\Fans\FanController@getToken');  //获取Token
 });
 
+Route::get('getBgIdByTime', function() {
+    return \App\Utils\Common::getBgIdByTime();
+});
+
 Route::get('/get', function() {
     $date = date('Y-m-d H:i:s', time());
     $date = strtotime($date);
