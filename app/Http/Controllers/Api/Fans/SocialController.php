@@ -119,7 +119,8 @@ class SocialController extends Controller
             if($fan_id > 0) {
                 //添加通知
                 $notice = [
-                    'fan_id' => $fan_id,
+                    'fan_id' => $data['to_fan_id'],
+                    'from_fan_id' => $fan_id,
                     'module_id' => $social->id,
                     'module' => Module::Social,
                     'type' => 1
@@ -167,6 +168,7 @@ class SocialController extends Controller
             //添加通知
             $notice = [
                 'fan_id' => $social->fan_id,
+                'from_fan_id' => $fan_id,
                 'module_id' => $social->id,
                 'module' => Module::Social,
                 'type' => 0
