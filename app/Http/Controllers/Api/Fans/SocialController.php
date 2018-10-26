@@ -130,7 +130,14 @@ class SocialController extends Controller
         
     }
 
-    public function replys() {
+    public function addReplyNotice() 
+    {
+        Notice::create(request()->all());
+        return response()->json(['status' => 'success']);
+    }
+
+    public function replys() 
+    {
         
         $comment = SocialComment::where('id', request()->id)->with(['fan', 'toFan'])->withCount('replys')->orderBy('created_at', 'asc')->first();
         $replys = SocialComment::where('pid', request()->id)->with(['fan', 'toFan'])->orderBy('created_at', 'asc')->get();
