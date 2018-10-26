@@ -56,6 +56,10 @@ class SignInController extends Controller
         $data['fan_id']=Token::getUid();
         $data['last_day']=Carbon::now()->toDateString();
         $sign_data=Sign::where('fan_id',$data['fan_id'])->first();
+        if(count($sign_data)==0){
+            Sign::create(['fan_id'=>$data['fan_id']]);
+            $sign_data=Sign::where('fan_id',$data['fan_id'])->first();
+        }
         $date=Carbon::parse($sign_data->last_day)->modify('+1 days')->toDateString();
         if($date==$data['last_day']){//连续签到
             $data['continuity_day']=$sign_data->continuity_day+1;
