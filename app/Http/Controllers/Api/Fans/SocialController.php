@@ -109,14 +109,8 @@ class SocialController extends Controller
         if($comment) {
 
             $fan_id = request('fan_id') ?? Token::getUid(); 
-            //如果是本人发的评论，则不做回复，或者本人回复他人，并发通知给被回复人
-            if($fan_id == $data['fan_id'] && $fan_id != $data['to_fan_id']) {
-                $fan_id = $data['to_fan_id'] ?? 0;
-            }else {
-                $data['to_fan_id'] = 0;
-            }
 
-            if($fan_id > 0) {
+            if($data['to_fan_id'] > 0 && $fan_id != $data['to_fan_id']) {
                 //添加通知
                 $notice = [
                     'fan_id' => $data['to_fan_id'],
