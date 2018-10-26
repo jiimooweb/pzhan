@@ -26,6 +26,16 @@ class SocialController extends Controller
         return response()->json(['status' => 'success', 'data' => $socials]);   
     }
 
+    public function list() 
+    {
+        $fan_id = request('fan_id') ?? Token::getUid();
+        $socials = Social::where('fan_id', $fan_id)->with(['photos','fan'])->withCount(['likeFans', 'comments', 'photos'])->orderBy('created_at', 'desc')->paginate(20);
+        foreach($socials as &$social) {
+            $social->like = $social->isLike($fan_id) ? 1 : 0;
+        }
+        return response()->json(['status' => 'success', 'data' => $socials]); 
+    }
+
     public function store(SocialRequest $request) 
     {   
         $data = request()->all();  
