@@ -87,6 +87,9 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('socials/upload', 'Api\Fans\SocialController@upload');
     Route::apiResource('socials', 'Api\Fans\SocialController');
 
+    //通知
+    Route::apiResource('notices', 'Api\Fans\NoticeController');
+
     //今日推荐
     Route::post('todays/search','Api\Todays\TodayController@search');
     Route::post('todays/delete','Api\Todays\TodayController@delete');

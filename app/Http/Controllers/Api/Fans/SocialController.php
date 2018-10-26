@@ -108,18 +108,14 @@ class SocialController extends Controller
         
         if($comment) {
 
+            $social = Social::where('id', $data['social_id'])->first();
             $fan_id = request('fan_id') ?? Token::getUid(); 
-            //如果是本人发的评论，则不做回复，或者本人回复他人，并发通知给被回复人
-            if($fan_id == $data['fan_id'] && $fan_id != $data['to_fan_id']) {
-                $fan_id = $data['to_fan_id'] ?? 0;
-            }else {
-                $data['to_fan_id'] = 0;
-            }
 
-            if($fan_id > 0) {
+            if($fan_id != $social->fan_id) {
                 //添加通知
                 $notice = [
-                    'fan_id' => $fan_id,
+                    'fan_id' => $social->fan_id,
+                    'from_fan_id' => $fan_id,
                     'module_id' => $social->id,
                     'module' => Module::Social,
                     'type' => 1
@@ -167,6 +163,7 @@ class SocialController extends Controller
             //添加通知
             $notice = [
                 'fan_id' => $social->fan_id,
+                'from_fan_id' => $fan_id,
                 'module_id' => $social->id,
                 'module' => Module::Social,
                 'type' => 0
