@@ -107,8 +107,6 @@ class SocialController extends Controller
         $comment = SocialComment::create($data);
         
         if($comment) {
-
-            $social = Social::where('id', $data['social_id'])->first();
             $fan_id = request('fan_id') ?? Token::getUid(); 
 
             if($fan_id != $social->fan_id) {
@@ -160,16 +158,19 @@ class SocialController extends Controller
         $like = SocialLike::create(['fan_id' => $fan_id, 'social_id' => $social->id]);
         
         if($like ) {
-            //添加通知
-            $notice = [
-                'fan_id' => $social->fan_id,
-                'from_fan_id' => $fan_id,
-                'module_id' => $social->id,
-                'module' => Module::Social,
-                'type' => 0
-            ];
 
-            Notice::create($notice);
+            if($fan_id != $social->fan_id) {
+                //添加通知
+                $notice = [
+                    'fan_id' => $social->fan_id,
+                    'from_fan_id' => $fan_id,
+                    'module_id' => $social->id,
+                    'module' => Module::Social,
+                    'type' => 0
+                ];
+
+                Notice::create($notice);
+            }
             
             return response()->json(['status' => 'success', 'data' => $like]);
         }
