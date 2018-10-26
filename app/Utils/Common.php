@@ -28,6 +28,44 @@ class Common
         
     }
 
+    public static function getBgIdByTime() {
+        $id = 0;
+        $hour = date('H', time());
+        switch($hour) {
+            case $hour < 6:
+                $id = 0;
+                break;
+            case $hour < 8:
+                $id = 1;
+                break;
+            case $hour < 10:
+                $id = 2;
+                break;
+            case $hour < 12:
+                $id = 3;
+                break;  
+            case $hour < 14:
+                $id = 4;
+                break; 
+            case $hour < 16:
+                $id = 5;
+                break;  
+            case $hour < 18:
+                $id = 6;
+                break; 
+            case $hour < 20:
+                $id = 7;
+                break; 
+            case $hour < 24:
+                $id = 8;
+                break; 
+            default:
+                break;
+        }
+
+        return $id;
+    }
+
 
     /**
      * @param $arr
@@ -44,24 +82,6 @@ class Common
         return $result;
     }
 
-    /**
-     * Undocumented function
-     *
-     * @param [int] $start
-     * @param [int] $end
-     * @param [int] $limit
-     * @return void
-     * 随机获取指定的数字
-     */
-    public static function getLimitRandRange(int $start, int $end, int $limit) 
-    {   
-        $rnum = rand($start, $end - $limit);
-
-        $rstart = $rnum;
-        
-        $rend = $rstart + $limit;        
-
-        return [$rstart, $rend];
-    }
+   
 
 }

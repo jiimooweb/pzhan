@@ -50,7 +50,6 @@ class FanController extends Controller
         unset($userInfo['nickName']);
 
         if(Fan::where('id', $data['uid'])->update($userInfo)){
-            Sign::create(['fan_id' => $data['uid']]);
             return response()->json('保存成功');
         }
 

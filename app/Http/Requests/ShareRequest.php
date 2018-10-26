@@ -16,7 +16,6 @@ class ShareRequest extends CommonRequest
     {
         return [
             'fan_id' => 'required|integer',
-            'friend_id' => 'required|integer',
         ];
     }
 }
