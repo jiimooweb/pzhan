@@ -94,7 +94,8 @@ class SignInController extends Controller
         if($save){
             $sign_histories=SignHistory::create(['fan_id'=>$data['fan_id'],
                 'sign_day'=> $data['last_day'],'content'=>$get_reward]);
-            return response()->json(['status' => 'success', 'msg' => '更新成功！']);
+            $new_sign=Sign::where('fan_id',$data['fan_id'])->first();
+            return response()->json(['status' => 'success', 'data' =>$get_reward ]);
         }
         return response()->json(['status' => 'error', 'msg' => '更新失败！']);
     }
