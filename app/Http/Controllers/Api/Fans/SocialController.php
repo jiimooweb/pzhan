@@ -29,7 +29,6 @@ class SocialController extends Controller
     public function list() 
     {
         $fan_id = request('fan_id') ?? Token::getUid();
-        dd($fan_id);
         $socials = Social::where('fan_id', $fan_id)->with(['photos','fan'])->withCount(['likeFans', 'comments', 'photos'])->orderBy('created_at', 'desc')->paginate(20);
         foreach($socials as &$social) {
             $social->like = $social->isLike($fan_id) ? 1 : 0;
