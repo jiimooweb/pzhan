@@ -108,12 +108,13 @@ class SocialController extends Controller
         
         if($comment) {
 
+            $social = Social::where('id', $data['social_id'])->first();
             $fan_id = request('fan_id') ?? Token::getUid(); 
 
-            if($data['to_fan_id'] > 0 && $fan_id != $data['to_fan_id']) {
+            if($fan_id != $social->fan_id) {
                 //添加通知
                 $notice = [
-                    'fan_id' => $data['to_fan_id'],
+                    'fan_id' => $social->fan_id,
                     'from_fan_id' => $fan_id,
                     'module_id' => $social->id,
                     'module' => Module::Social,
