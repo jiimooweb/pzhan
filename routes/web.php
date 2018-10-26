@@ -24,6 +24,10 @@ Route::group(['prefix' => 'wechat/token/'], function() {
     Route::post('getToken', 'Api\Fans\FanController@getToken');  //获取Token
 });
 
+Route::get('getBgIdByTime', function() {
+    return \App\Utils\Common::getBgIdByTime();
+});
+
 Route::get('/get', function() {
     $date = date('Y-m-d H:i:s', time());
     $date = strtotime($date);
@@ -77,6 +81,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('socials/{social}/like', 'Api\Fans\SocialController@like');
     Route::post('socials/uploadPhoto', 'Api\Fans\SocialController@uploadPhoto');
     Route::post('socials/deleteComment', 'Api\Fans\SocialController@deleteComment');
+    Route::get('socials/list', 'Api\Fans\SocialController@list');
     Route::post('socials/replys', 'Api\Fans\SocialController@replys');
     Route::post('socials/change', 'Api\Fans\SocialController@change');
     Route::post('socials/upload', 'Api\Fans\SocialController@upload');
