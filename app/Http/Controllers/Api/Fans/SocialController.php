@@ -114,6 +114,7 @@ class SocialController extends Controller
                 $notice = [
                     'fan_id' => $social->fan_id,
                     'from_fan_id' => $fan_id,
+                    'content' => $data['content'],
                     'module_id' => $social->id,
                     'module' => Module::Social,
                     'type' => 1
@@ -164,6 +165,7 @@ class SocialController extends Controller
                 $notice = [
                     'fan_id' => $social->fan_id,
                     'from_fan_id' => $fan_id,
+                    'content' => '点赞了你的动态',
                     'module_id' => $social->id,
                     'module' => Module::Social,
                     'type' => 0
