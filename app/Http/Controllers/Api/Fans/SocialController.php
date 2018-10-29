@@ -134,7 +134,7 @@ class SocialController extends Controller
 
         if($notice_fans) {
             foreach($notice_fans as $notice_fan) {
-                $notices[] = [
+                $notice = [
                     'fan_id' => $notice_fan,
                     'from_fan_id' => $fan_id,
                     'to_fan_id' => $data['to_fan_id'],
@@ -171,7 +171,7 @@ class SocialController extends Controller
 
         if($notice_fans) {
             foreach($notice_fans as $notice_fan) {
-                $notices[] = [
+                $notice = [
                     'fan_id' => $notice_fan,
                     'from_fan_id' => $fan_id,
                     'to_fan_id' => $data['to_fan_id'],
