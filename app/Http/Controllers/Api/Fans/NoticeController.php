@@ -15,12 +15,12 @@ class NoticeController extends Controller
     {
         $fan_id = request('fan_id') ?? Token::getUid();
         $notices = CommentNotice::where('fan_id',$fan_id)->with(['fan', 'fromFan', 'toFan'])->paginate(20); 
-        foreach($notices as &$notice)
-        if($notice->module == Module::Social) {
-            $notice->module = Social::where('id', $notice->module_id)->first(); 
+        foreach($notices as &$notice) {
+            if($notice->module == Module::Social) {
+                $notice->module_content = Social::where('id', $notice->module_id)->first(); 
+            }
         }
 
-        return response()->json(['status' => 'success', 'data' => $notices]);
-        // $socials = Social::with(['photos','fan'])->withCount(['likeFans', 'comments', 'photos'])->orderBy('created_at', 'desc')->paginate(20);       
+        return response()->json(['status' => 'success', 'data' => $notices]);  
     }
 }
