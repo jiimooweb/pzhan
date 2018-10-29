@@ -5,7 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use App\Models\Model;
 
-class Notice extends Model
+class CommentNotice extends Model
 {
     public function getCreatedAtAttribute($date)
     {
@@ -25,5 +25,10 @@ class Notice extends Model
     public function fromFan()
     {
         return $this->hasOne(Fan::class, 'id','from_fan_id')->select('id', 'nickname', 'avatarUrl');
+    }
+
+    public function toFan()
+    {
+        return $this->hasOne(Fan::class, 'id','toFan')->select('id', 'nickname', 'avatarUrl');
     }
 }
