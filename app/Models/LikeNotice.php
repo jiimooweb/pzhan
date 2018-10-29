@@ -22,4 +22,10 @@ class LikeNotice extends Model
         return $this->hasOne(Fan::class, 'id', 'fan_id')->select('id', 'nickname', 'avatarUrl');
     }
 
+    public function fromFan()
+    {
+        return $this->hasOne(Fan::class, 'id','from_fan_id')->select('id', 'nickname', 'avatarUrl');
+    }
+
+
 }
