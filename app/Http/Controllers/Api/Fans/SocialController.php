@@ -102,9 +102,10 @@ class SocialController extends Controller
 
     public function comment(Social $social)
     {
-        $data =request()->all();
+        $comment = request()->comment;
+        $notice_fan = request()->notice_fan;
 
-        $comment = SocialComment::create($data);
+        $comment = SocialComment::create($comment);
         
         if($comment) {
             $fan_id = request('fan_id') ?? Token::getUid(); 
