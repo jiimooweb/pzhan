@@ -17,7 +17,7 @@ class NoticeController extends Controller
         $notices = CommentNotice::where('fan_id',$fan_id)->with(['fan', 'fromFan', 'toFan'])->paginate(20); 
         foreach($notices as &$notice) {
             if($notice->module == Module::Social) {
-                $notice->module_content = Social::where('id', $notice->module_id)->first(); 
+                $notice->module_content = Social::where('id', $notice->module_id)->with('fan')->first(); 
             }
         }
 
