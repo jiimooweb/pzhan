@@ -155,7 +155,7 @@ class SocialController extends Controller
         $notice_fans = [];
         $data = request()->all();
         $fan_id = request('fan_id') ?? Token::getUid(); 
-        $comment_fan_id = SocialComment::find(request('comment_id'))['fan_id'];
+        $comment_fan_id = request('comment_fan_id');
         
         if($fan_id != $social->fan_id) {
             array_push($notice_fans, $social->fan_id); 
