@@ -119,7 +119,7 @@ class SocialController extends Controller
 
     public function addCommentNotice(Social $social) 
     {
-        $notices= [];
+        $notices_fans= [];
         $data = request()->all();
         $fan_id = request('fan_id') ?? Token::getUid(); 
 
@@ -132,7 +132,7 @@ class SocialController extends Controller
             $notices_fans[] = $data['to_fan_id'];
         }
 
-        if($notices) {
+        if($notices_fans) {
             foreach($notices_fans as $notice_fan) {
                 $notices[] = [
                     'fan_id' => $notice_fan,
@@ -152,7 +152,7 @@ class SocialController extends Controller
     }
 
     public function addReplyNotice(Social $social) {
-        $notices= [];
+        $notices_fans= [];
         $data = request()->all();
         $fan_id = request('fan_id') ?? Token::getUid(); 
         $comment_fan_id = SocialComment::find(request('comment_id'))['fan_id'];
@@ -169,7 +169,7 @@ class SocialController extends Controller
             $notices_fans[] = $data['to_fan_id'];
         }
 
-        if($notices) {
+        if($notices_fans) {
             foreach($notices_fans as $notice_fan) {
                 $notices[] = [
                     'fan_id' => $notice_fan,
