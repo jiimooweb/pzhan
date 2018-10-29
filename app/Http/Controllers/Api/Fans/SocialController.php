@@ -126,7 +126,7 @@ class SocialController extends Controller
         //(他人)评论动态
         if($fan_id != $social->fan_id) {
             $notice_fans[] = $social->fan_id;    
-        dd($notices_fans);
+            dd($notices_fans);
                     
         }
 
