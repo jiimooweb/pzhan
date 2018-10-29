@@ -11,7 +11,8 @@ use App\Http\Controllers\Controller;
 
 class NoticeController extends Controller
 {
-    public function index() {
+    public function index() 
+    {
         $fan_id = request('fan_id') ?? Token::getUid();
         $notices = Notice::where('fan_id',$fan_id)->with(['fan', 'fromFan'])->paginate(20); 
         foreach($notices as &$notice)

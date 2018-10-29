@@ -107,8 +107,6 @@ class SocialController extends Controller
         $comment = SocialComment::create($data);
         
         if($comment) {
-
-            $social = Social::where('id', $data['social_id'])->first();
             $fan_id = request('fan_id') ?? Token::getUid(); 
 
             if($fan_id != $social->fan_id) {
@@ -116,6 +114,7 @@ class SocialController extends Controller
                 $notice = [
                     'fan_id' => $social->fan_id,
                     'from_fan_id' => $fan_id,
+                    'content' => $data['content'],
                     'module_id' => $social->id,
                     'module' => Module::Social,
                     'type' => 1
@@ -131,7 +130,14 @@ class SocialController extends Controller
         
     }
 
-    public function replys() {
+    public function addReplyNotice() 
+    {
+        Notice::create(request()->all());
+        return response()->json(['status' => 'success']);
+    }
+
+    public function replys() 
+    {
         
         $comment = SocialComment::where('id', request()->id)->with(['fan', 'toFan'])->withCount('replys')->orderBy('created_at', 'asc')->first();
         $replys = SocialComment::where('pid', request()->id)->with(['fan', 'toFan'])->orderBy('created_at', 'asc')->get();
@@ -160,16 +166,20 @@ class SocialController extends Controller
         $like = SocialLike::create(['fan_id' => $fan_id, 'social_id' => $social->id]);
         
         if($like ) {
-            //添加通知
-            $notice = [
-                'fan_id' => $social->fan_id,
-                'from_fan_id' => $fan_id,
-                'module_id' => $social->id,
-                'module' => Module::Social,
-                'type' => 0
-            ];
 
-            Notice::create($notice);
+            if($fan_id != $social->fan_id) {
+                //添加通知
+                $notice = [
+                    'fan_id' => $social->fan_id,
+                    'from_fan_id' => $fan_id,
+                    'content' => '点赞了你的动态',
+                    'module_id' => $social->id,
+                    'module' => Module::Social,
+                    'type' => 0
+                ];
+
+                Notice::create($notice);
+            }
             
             return response()->json(['status' => 'success', 'data' => $like]);
         }
