@@ -83,6 +83,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('socials/deleteComment', 'Api\Fans\SocialController@deleteComment');
     Route::get('socials/list', 'Api\Fans\SocialController@list');
     Route::post('socials/{social}/addCommentNotice', 'Api\Fans\SocialController@addCommentNotice');
+    Route::post('socials/{social}/addReplyNotice', 'Api\Fans\SocialController@addReplyNotice');
     Route::post('socials/replys', 'Api\Fans\SocialController@replys');
     Route::post('socials/change', 'Api\Fans\SocialController@change');
     Route::post('socials/upload', 'Api\Fans\SocialController@upload');
