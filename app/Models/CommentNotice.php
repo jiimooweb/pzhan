@@ -29,6 +29,6 @@ class CommentNotice extends Model
 
     public function toFan()
     {
-        return $this->hasOne(Fan::class, 'id','toFan')->select('id', 'nickname', 'avatarUrl');
+        return $this->hasOne(Fan::class, 'id','to_fan_id')->select('id', 'nickname', 'avatarUrl');
     }
 }
