@@ -125,11 +125,11 @@ class SocialController extends Controller
 
         //(他人)评论动态
         if($fan_id != $social->fan_id) {
-            array_push($notice_fans,$social->fan_id);
+            array_push($notice_fans, $social->fan_id);
         }
 
         if($data['to_fan_id'] > 0 && $data['to_fan_id'] != $fan_id) {
-            array_push($notice_fans,$data['to_fan_id']);
+            array_push($notice_fans, $data['to_fan_id']);
         }
 
         if($notice_fans) {
@@ -158,15 +158,15 @@ class SocialController extends Controller
         $comment_fan_id = SocialComment::find(request('comment_id'))['fan_id'];
         
         if($fan_id != $social->fan_id) {
-            array_push($notice_fans,$social->fan_id); 
+            array_push($notice_fans, $social->fan_id); 
         }
 
-        if($fan_id != $comment_id) {
-            array_push($notice_fans,$comment_id);
+        if($fan_id != $comment_fan_id) {
+            array_push($notice_fans, $comment_fan_id);
         }
 
         if($data['to_fan_id'] > 0 && $data['to_fan_id'] != $fan_id) {
-            array_push($notice_fans,$data['to_fan_id']);
+            array_push($notice_fans, $data['to_fan_id']);
         }
 
         if($notice_fans) {
