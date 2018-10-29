@@ -131,8 +131,9 @@ class SocialController extends Controller
         if($data['to_fan_id'] > 0) {
             $notices_fans[] = $data['to_fan_id'];
         }
-        
+
         if($notices_fans) {
+            dd($notices_fans);
             foreach($notices_fans as $notice_fan) {
                 $notices[] = [
                     'fan_id' => $notice_fan,
