@@ -79,7 +79,7 @@ class SignInController extends Controller
             $data['continuity_day']=1;
             $data['task_day']=1;
         }
-        $reward_data=SignTask::where('day',$data['continuity_day'])->first();
+        $reward_data=SignTask::where('day',$data['task_day'])->first();
         switch ($reward_data->type){
             case 'point':
                 if($reward_data->method==2){
