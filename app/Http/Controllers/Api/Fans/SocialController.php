@@ -119,13 +119,16 @@ class SocialController extends Controller
 
     public function addCommentNotice(Social $social) 
     {
-        $notices_fans= [];
+        $notices_fans = [];
         $data = request()->all();
         $fan_id = request('fan_id') ?? Token::getUid(); 
 
         //(他人)评论动态
         if($fan_id != $social->fan_id) {
-            $notice_fans[] = $social->fan_id;    
+            $notice_fans[] = $social->fan_id;  
+            var_dump($fan_id);  
+            var_dump($social->fan_id);  
+            var_dump($fan_id);  
             dd($notices_fans);
                     
         }
