@@ -128,7 +128,7 @@ class SocialController extends Controller
             array_push($notice_fans,$social->fan_id);
         }
 
-        if($data['to_fan_id'] > 0) {
+        if($data['to_fan_id'] > 0 && $data['to_fan_id'] != $fan_id) {
             array_push($notice_fans,$data['to_fan_id']);
         }
 
@@ -165,7 +165,7 @@ class SocialController extends Controller
             array_push($notice_fans,$comment_id);
         }
 
-        if($data['to_fan_id'] > 0) {
+        if($data['to_fan_id'] > 0 && $data['to_fan_id'] != $fan_id) {
             array_push($notice_fans,$data['to_fan_id']);
         }
 
