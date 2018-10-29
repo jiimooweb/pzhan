@@ -117,7 +117,7 @@ class SocialController extends Controller
         
     }
 
-    public function addReplyNotice(Social $social) 
+    public function addCommentNotice(Social $social) 
     {
         $notices= [];
         $data = request()->all();
@@ -126,28 +126,10 @@ class SocialController extends Controller
         //(他人)评论动态
         if($fan_id != $social->fan_id) {
 
-            $notices[] = [
-                'fan_id' => $social->fan_id,
-                'from_fan_id' => $fan_id,
-                'to_fan_id' => $data['to_fan_id'],
-                'content' => $data['content'],
-                'module_id' => $social->id,
-                'module' => Module::Social,
-            ]; 
+            $notice_fans[] = $social->fan_id;
 
-            if($data['to_fan_id'] > 0) {
-
-                if($data['to_fan_id'] != $fan_id) {
-                    $notices[] = [
-                        'fan_id' => $data['to_fan_id'],
-                        'from_fan_id' => $fan_id,
-                        'to_fan_id' => $data['to_fan_id'],
-                        'content' => $data['content'],
-                        'module_id' => $social->id,
-                        'module' => Module::Social,
-                    ];  
-                }
-                
+            if($data['to_fan_id'] > 0 && $data['to_fan_id'] != $fan_id) {
+                $notice_fans[] = $data['to_fan_id'];
             }
             
         }
@@ -156,21 +138,22 @@ class SocialController extends Controller
         if($fan_id == $social->fan_id) {
 
             if($data['to_fan_id'] > 0 && $data['to_fan_id'] != $fan_id) {
-                $notices[] = [
-                    'fan_id' => $data['to_fan_id'],
-                    'from_fan_id' => $fan_id,
-                    'to_fan_id' => $data['to_fan_id'],
-                    'content' => $data['content'],
-                    'module_id' => $social->id,
-                    'module' => Module::Social,
-                ];
+                $notices_fans[] = $data['to_fan_id'];
             }
             
 
         }
 
         if($notices) {
-            foreach($notices as $notice) {
+            foreach($notices_fans as $notice_fan) {
+                $notices[] = [
+                    'fan_id' => $notice_fan,
+                    'from_fan_id' => $fan_id,
+                    'to_fan_id' => $data['to_fan_id'],
+                    'content' => $data['content'],
+                    'module_id' => $social->id,
+                    'module' => Module::Social,
+                ];  
                 CommentNotice::create($notice);
             }
         }
