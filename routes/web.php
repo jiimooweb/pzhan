@@ -90,6 +90,8 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::apiResource('socials', 'Api\Fans\SocialController');
 
     //通知
+    Route::get('notices/comment', 'Api\Fans\NoticeController@comment');
+    Route::get('notices/like', 'Api\Fans\NoticeController@like');
     Route::apiResource('notices', 'Api\Fans\NoticeController');
 
     //今日推荐
