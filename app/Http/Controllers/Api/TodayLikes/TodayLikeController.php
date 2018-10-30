@@ -31,7 +31,8 @@ class TodayLikeController extends Controller
     public function store()
     {
         $list = request(['today_id']);
-        $fanID = Token::getUid();
+//        $fanID = Token::getUid();
+        $fanID =2;
         $list['fan_id'] = $fanID;
         DB::beginTransaction();
         try {
@@ -48,7 +49,8 @@ class TodayLikeController extends Controller
     {
         $list = request(['today_id']);
         $tID = $list['today_id'];
-        $fanID = Token::getUid();
+//        $fanID = Token::getUid();
+        $fanID = 2;
         DB::beginTransaction();
         try {
             TodayLike::where([['today_id',$tID],['fan_id',$fanID]])->delete();
