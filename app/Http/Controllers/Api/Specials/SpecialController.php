@@ -29,7 +29,7 @@ class SpecialController extends Controller
 
     public function store()
     {
-        $list = request(['title', 'img_id','text', 'switch']);
+        $list = request(['title', 'img_id','text', 'switch','cover']);
         $list['img_id']=json_encode($list['img_id'],JSON_UNESCAPED_SLASHES);
         DB::beginTransaction();
         try {
@@ -44,7 +44,7 @@ class SpecialController extends Controller
 
     public function update()
     {
-        $list = request(['title', 'img_id', 'text', 'switch']);
+        $list = request(['title', 'img_id', 'text', 'switch','cover']);
         $list['img_id']=json_encode($list['img_id'],JSON_UNESCAPED_SLASHES);
         $id = request()->special;
         DB::beginTransaction();
