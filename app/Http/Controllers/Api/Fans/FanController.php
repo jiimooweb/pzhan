@@ -77,7 +77,8 @@ class FanController extends Controller
     }
 
     public function getUserInfo() {
-        $fan  = Fan::find(request('fan_id'));
+        $fan_id = request('fan_id') ?? Token::getUid();
+        $fan  = Fan::find();
         return response()->json(['status' => 'success','data' => $fan]);
     }
 }
