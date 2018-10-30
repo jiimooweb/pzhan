@@ -39,6 +39,7 @@ Route::get('/get', function() {
 Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('wechat/token/saveInfo', 'Api\Fans\FanController@saveInfo');  //存用户信息    
     Route::get('getUid', 'Api\Fans\FanController@getUid');  //获取用户fan_id
+    Route::get('getUserInfo', 'Api\Fans\FanController@getUserInfo');  //获取用户信息
     
     Route::post('qiniu/upload', 'Controller@upload');  //上传图片
     Route::post('qiniu/delete', 'Controller@delete');   //删除图片
