@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Fans;
 
 use App\Models\Photo;
+use App\Utils\Common;
 use App\Utils\Module;
 use App\Models\Notice;
 use App\Models\Social;
@@ -24,6 +25,11 @@ class SocialController extends Controller
         $socials = Social::with(['photos','fan'])->withCount(['likeFans', 'comments', 'photos'])->orderBy('created_at', 'desc')->paginate(10);
         foreach($socials as &$social) {
             $social->like = $social->isLike($fan_id) ? 1 : 0;
+            if($social->photos_count == 1) {
+                $social->img_type = Common::getImageType($social->photos[0]['url']);
+            }else {
+                $social->img_type = 0;
+            }
         }
         return response()->json(['status' => 'success', 'data' => $socials]);   
     }
@@ -34,6 +40,11 @@ class SocialController extends Controller
         $socials = Social::where('fan_id', $fan_id)->with(['photos','fan'])->withCount(['likeFans', 'comments', 'photos'])->orderBy('created_at', 'desc')->paginate(10);
         foreach($socials as &$social) {
             $social->like = $social->isLike($fan_id) ? 1 : 0;
+            if($social->photos_count == 1) {
+                $social->img_type = Common::getImageType($social->photos[0]['url']);
+            }else {
+                $social->img_type = 0;
+            }
         }
         return response()->json(['status' => 'success', 'data' => $socials]); 
     }

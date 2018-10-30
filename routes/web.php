@@ -35,6 +35,11 @@ Route::get('/get', function() {
     return \Carbon\Carbon::parse($date);
 });
 
+Route::get('/test', function() {
+    $image = \App\Utils\Common::getImageType('http://download.rdoorweb.com/pzhan/no_profile.png');
+    return $image;
+});
+
 
 Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('wechat/token/saveInfo', 'Api\Fans\FanController@saveInfo');  //存用户信息    
