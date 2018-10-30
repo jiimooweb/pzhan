@@ -50,7 +50,14 @@ class SignInController extends Controller
 
         return response()->json(['status' => 'error', 'msg' => '删除失败！']);
     }
-    
+
+    public function get_sign()
+    {
+        $fan_id=Token::getUid();
+        $sign_data=Sign::where('fan_id',$fan_id)->with('fan:id,point')->first();
+        return response()->json(['status' => 'success', 'data' =>$sign_data ]);
+    }
+
     public function signIn()
     {
         $data['fan_id']=Token::getUid();
@@ -72,7 +79,7 @@ class SignInController extends Controller
             $data['continuity_day']=1;
             $data['task_day']=1;
         }
-        $reward_data=SignTask::where('day',$data['continuity_day'])->first();
+        $reward_data=SignTask::where('day',$data['task_day'])->first();
         switch ($reward_data->type){
             case 'point':
                 if($reward_data->method==2){
@@ -94,9 +101,9 @@ class SignInController extends Controller
         if($save){
             $sign_histories=SignHistory::create(['fan_id'=>$data['fan_id'],
                 'sign_day'=> $data['last_day'],'content'=>$get_reward]);
-            $new_sign=Sign::where('fan_id',$data['fan_id'])->first();
+            $new_sign=Sign::where('fan_id',$data['fan_id'])->with('fan:id,point')->first();
             return response()->json(['status' => 'success',
-                'data' =>compact('new_sign','get_reward') ]);
+                'data' =>compact('new_sign','add_point') ]);
         }
         return response()->json(['status' => 'error', 'msg' => '更新失败！']);
     }

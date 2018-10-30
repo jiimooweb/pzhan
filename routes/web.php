@@ -39,6 +39,7 @@ Route::get('/get', function() {
 Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('wechat/token/saveInfo', 'Api\Fans\FanController@saveInfo');  //存用户信息    
     Route::get('getUid', 'Api\Fans\FanController@getUid');  //获取用户fan_id
+    Route::get('getUserInfo', 'Api\Fans\FanController@getUserInfo');  //获取用户信息
     
     Route::post('qiniu/upload', 'Controller@upload');  //上传图片
     Route::post('qiniu/delete', 'Controller@delete');   //删除图片
@@ -82,13 +83,16 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('socials/uploadPhoto', 'Api\Fans\SocialController@uploadPhoto');
     Route::post('socials/deleteComment', 'Api\Fans\SocialController@deleteComment');
     Route::get('socials/list', 'Api\Fans\SocialController@list');
-    Route::post('socials/addReplyNotice', 'Api\Fans\SocialController@addReplyNotice');
+    Route::post('socials/{social}/addCommentNotice', 'Api\Fans\SocialController@addCommentNotice');
+    Route::post('socials/{social}/addReplyNotice', 'Api\Fans\SocialController@addReplyNotice');
     Route::post('socials/replys', 'Api\Fans\SocialController@replys');
     Route::post('socials/change', 'Api\Fans\SocialController@change');
     Route::post('socials/upload', 'Api\Fans\SocialController@upload');
     Route::apiResource('socials', 'Api\Fans\SocialController');
 
     //通知
+    Route::get('notices/comment', 'Api\Fans\NoticeController@comment');
+    Route::get('notices/like', 'Api\Fans\NoticeController@like');
     Route::apiResource('notices', 'Api\Fans\NoticeController');
 
     //今日推荐
@@ -117,6 +121,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
 
     //签到
+    Route::get('get_sign','Api\Fans\SignInController@get_sign');
     Route::post('sign_in','Api\Fans\SignInController@signIn');
     Route::apiResource('sign_tasks','Api\Fans\SignInController');
     //粉丝收藏
