@@ -6,7 +6,9 @@ use App\Models\Picture;
 use App\Services\Qiniu;
 use App\Services\Token;
 use App\Models\PictureTag;
+use App\Models\LikePicture;
 use Illuminate\Http\Request;
+use App\Models\CollectPicture;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PictureRequest;
 
