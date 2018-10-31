@@ -96,10 +96,13 @@ class PictureController extends Controller
     public function destroy(Picture $picture)
     {
         // TODO:判断删除权限
+        $url = $picture->url;
         if($picture->delete()) {
 
             PictureTag::where('picture_id',$picture->id)->delete();
 
+            Qiniu::delete($url);
+            
             return response()->json(['status' => 'success', 'msg' => '删除成功！']);   
         }
 
