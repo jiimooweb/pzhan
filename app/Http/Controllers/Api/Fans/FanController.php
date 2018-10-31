@@ -63,12 +63,14 @@ class FanController extends Controller
 
     public function collect(Fan $fan)
     {
-        return response()->json(['status' => 'success','data' => $fan->collcetPictures]);
+        $collects = $fan->where('id',$fan->id)->collcetPictures->first();
+        return response()->json(['status' => 'success','data' => $collects]);
     }
 
     public function like(Fan $fan)
     {
-        return response()->json(['status' => 'success','data' => $fan->likePictures]);
+        $likes = $fan->where('id',$fan->id)->likePictures->first();
+        return response()->json(['status' => 'success','data' => $likes]);
     }
 
     public function getUid() 
