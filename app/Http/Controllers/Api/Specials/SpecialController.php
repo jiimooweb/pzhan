@@ -21,15 +21,15 @@ class SpecialController extends Controller
     {
         $id = request()->special;
         $data = Special::find($id);
+        $data->cover_img = Picture::find($data->cover);
         $imgIDS  = json_decode($data->img_id,true);
-        $imgs = Picture::whereIn('id',$imgIDS)->get();
-        $data->imgs = $imgs;
+        $data->imgs = Picture::whereIn('id',$imgIDS)->get();
         return response()->json(['status' => 'success', 'data' => $data]);
     }
 
     public function store()
     {
-        $list = request(['title', 'img_id','text', 'switch']);
+        $list = request(['title', 'img_id','text', 'switch','cover']);
         $list['img_id']=json_encode($list['img_id'],JSON_UNESCAPED_SLASHES);
         DB::beginTransaction();
         try {
@@ -44,7 +44,7 @@ class SpecialController extends Controller
 
     public function update()
     {
-        $list = request(['title', 'img_id', 'text', 'switch']);
+        $list = request(['title', 'img_id', 'text', 'switch','cover']);
         $list['img_id']=json_encode($list['img_id'],JSON_UNESCAPED_SLASHES);
         $id = request()->special;
         DB::beginTransaction();
@@ -93,5 +93,9 @@ class SpecialController extends Controller
 //        return response()->json(['status' => 'success', 'data' => $comments]);
 //    }
 
+//    public function miniIndex()
+//    {
+//
+//    }
 
 }
