@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Todays;
 
 use App\Models\Today;
 use App\Http\Controllers\Controller;
+use App\Services\Token;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -70,19 +71,17 @@ class TodayController extends Controller
     }
 
 
-
     public function getToday()
     {
-//         $today = Carbon::today();
-        $today = Carbon::parse('2019-02-02');
+//        $today = Carbon::parse('2019-02-02');
+        $today = Carbon::today();
         $year = $today->year;
         $month = $today->month;
         $day = $today->day;
         $monthf = $this->monthFormat($month);
         $years = [];
         $months = [];
-//        $fanID = Token::getUid();
-        $fanID = 2;
+        $fanID = Token::getUid();
         if ($year > 2018) {
             for ($i = $year; $i >= 2018; $i--) {
                 array_push($years, $i);
@@ -118,8 +117,9 @@ class TodayController extends Controller
         $caDate = Carbon::parse($reDate);
         $firstDay = Carbon::parse($reDate)->firstOfMonth();
         $lastDay = Carbon::parse($reDate)->lastOfMonth();
-        $today = Carbon::parse('2019-02-02');
-        $fanID = 2;
+//        $today = Carbon::parse('2019-02-02');
+        $today = Carbon::today();
+        $fanID = Token::getUid();
         if ($caDate->month == $today->month) {
             $data = Today::whereBetween('date', [$firstDay, $today])
                 ->withCount('todayLikes')
@@ -157,11 +157,12 @@ class TodayController extends Controller
     public function getDataByYearMonth()
     {
         $list = request(['year', 'month']);
-        $today = Carbon::parse('2019-02-02');
         $string = $list['year'] . '-' . $list['month'] . '-01';
         $firstDay = Carbon::parse($string);
         $lastDay = Carbon::parse($string)->lastOfMonth();
-        $fanID = 2;
+//        $today = Carbon::parse('2019-02-02');
+        $today = Carbon::today();
+        $fanID = Token::getUid();
 
         if ($today->month == $list['month'] && $today->year == $list['year']) {
             $data = Today::whereBetween('date', [$firstDay, $today])
@@ -200,11 +201,12 @@ class TodayController extends Controller
     public function getDataByYear()
     {
         $reYear = request('year');
-        $today = Carbon::parse('2019-02-02');
+//        $today = Carbon::parse('2019-02-02');
+        $today = Carbon::today();
+        $fanID = Token::getUid();
         $month = $today->month;
         $months = [];
-//        $fanID = Token::getUid();
-        $fanID = 2;
+
         if ($reYear > 2018) {
             for ($i = $month; $i > 0; $i--) {
                 array_push($months, $i);
@@ -214,7 +216,7 @@ class TodayController extends Controller
             $date['months'] = $months;
             $date['monthF'] = $this->monthFormat($month);
 
-            $firstDay = Carbon::parse('2019-02-02')->firstOfMonth();
+            $firstDay = Carbon::today()->firstOfMonth();
             $data = Today::whereBetween('date', [$firstDay, $today])
                 ->withCount('todayLikes')
                 ->withCount(['todayLikes as isLike' => function ($query) use ($fanID) {
