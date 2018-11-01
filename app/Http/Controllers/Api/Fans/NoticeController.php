@@ -18,7 +18,7 @@ class NoticeController extends Controller
         $commentNotices = CommentNotice::where(['fan_id'=>$fan_id,'status' => 0])->count();
         $likeNotices = LikeNotice::where(['fan_id'=>$fan_id,'status' => 0])->count(); 
         $noticeCount = $commentNotices + $likeNotices;
-        return response()->json(['status' => 'success', 'count' => $noticeCount]);  
+        return response()->json(['status' => 'success', 'count' => $noticeCount, 'like_count' => $likeNotices, 'comment_count' => $commentNotices]);  
     }
 
     public function comment() 
