@@ -100,18 +100,6 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::get('notices/like', 'Api\Fans\NoticeController@like');
     Route::apiResource('notices', 'Api\Fans\NoticeController');
 
-    //今日推荐
-    Route::post('todays/search','Api\Todays\TodayController@search');
-    Route::post('todays/delete','Api\Todays\TodayController@delete');
-    Route::apiResource('todays', 'Api\Todays\TodayController');
-    Route::apiResource('todayLikes', 'Api\TodayLikes\TodayLikeController');
-
-    // 专题
-    Route::apiResource('specials', 'Api\Specials\SpecialController');
-    Route::post('specials/switch','Api\Specials\SpecialController@updateSwitch');
-
-    // 新增专题评论
-    Route::post('specials/comment','Api\Specials\SpecialCommentController@store');
 
     // 评论管理
     Route::post('comments/query','Api\Comments\CommentController@queryComments');
@@ -123,7 +111,6 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('blacklist/ban', 'Api\Blacklists\BlacklistController@banList');
     Route::get('blacklist/seal', 'Api\Blacklists\BlacklistController@sealList');
     Route::apiResource('blacklist', 'Api\Blacklists\BlacklistController');
-
 
     //签到
     Route::get('get_sign','Api\Fans\SignInController@get_sign');
@@ -139,8 +126,31 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('show_report','Api\Blacklists\ReportController@show');
     Route::apiResource('report_causes','Api\Blacklists\ReportCauseController');
 
-
     //分享
     Route::post('share','Api\Fans\ShareController@share');
     Route::post('share_show','Api\Fans\ShareController@showShare');
+
+    //今日推荐
+    Route::get('todays/mini','Api\Todays\TodayController@getToday');
+    Route::post('todays/other','Api\Todays\TodayController@getOther');
+    Route::post('todays/month','Api\Todays\TodayController@getDataByYearMonth');
+    Route::post('todays/year','Api\Todays\TodayController@getDataByYear');
+    Route::post('todays/search','Api\Todays\TodayController@search');
+    Route::post('todays/delete','Api\Todays\TodayController@delete');
+    Route::apiResource('todays', 'Api\Todays\TodayController');
+
+    //今日点赞
+    Route::post('todayLikes/delete','Api\TodayLikes\TodayLikeController@delete');
+    Route::apiResource('todayLikes', 'Api\TodayLikes\TodayLikeController');
+
+    // 专题
+    Route::get('specials/mini','Api\Specials\SpecialController@miniIndex');
+    Route::post('specials/res','Api\Specials\SpecialController@getRes');
+    Route::post('specials/search','Api\Specials\SpecialController@doSearch');
+    Route::post('specials/switch','Api\Specials\SpecialController@updateSwitch');
+    Route::apiResource('specials', 'Api\Specials\SpecialController');
+
+    //专题评论
+    Route::get('specials/{special}/comments', 'Api\Specials\SpecialCommentController@getcomments');
+
 });
