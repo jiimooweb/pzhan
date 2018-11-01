@@ -19,6 +19,7 @@ class Qiniu
 
     public static function delete($url) 
     {
+        $url = parse_url($url)['path'];
         $filename = substr($url, 1, strlen($url));
         $disk = \zgldh\QiniuStorage\QiniuStorage::disk('qiniu');
         if($disk->delete($filename)) {

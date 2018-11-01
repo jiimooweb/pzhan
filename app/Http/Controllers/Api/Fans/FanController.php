@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Fans;
 
 use App\Models\Fan;
 use App\Models\Sign;
+use App\Models\Picture;
 use App\Services\Token;
 use EasyWeChat\Factory;
 use Illuminate\Http\Request;
@@ -63,12 +64,20 @@ class FanController extends Controller
 
     public function collect(Fan $fan)
     {
-        return response()->json(['status' => 'success','data' => $fan->collcetPictures]);
+        $picture_ids = $fan->collcetPictures->pluck('id');
+        $pictures = Picture::with(['tags'])->when($picture_ids, function($query) use ($picture_ids) {
+            return $query->whereIn('id', $picture_ids);
+        })->withCount(['likeFans', 'collectFans'])->paginate(15); 
+        return response()->json(['status' => 'success','data' => $pictures]);
     }
 
     public function like(Fan $fan)
     {
-        return response()->json(['status' => 'success','data' => $fan->likePictures]);
+        $picture_ids = $fan->likePictures->pluck('id');
+        $pictures = Picture::with(['tags'])->when($picture_ids, function($query) use ($picture_ids) {
+            return $query->whereIn('id', $picture_ids);
+        })->withCount(['likeFans', 'collectFans'])->paginate(15); 
+        return response()->json(['status' => 'success','data' => $pictures]);
     }
 
     public function getUid() 

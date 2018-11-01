@@ -66,6 +66,11 @@ class SocialController extends Controller
         $fan_id = request('fan_id') ?? Token::getUid();        
         $social = Social::where('id', request()->social)->with(['photos','fan'])->withCount(['photos','likeFans', 'comments'])->first();
         $social->like = $social->isLike($fan_id) ? 1 : 0;        
+        if($social->photos_count == 1) {
+            $social->img_type = Common::getImageType($social->photos[0]['url']);
+        }else {
+            $social->img_type = 0;
+        }        
         $status = $social ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $social]);   
     }

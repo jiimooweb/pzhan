@@ -6,7 +6,9 @@ use App\Models\Picture;
 use App\Services\Qiniu;
 use App\Services\Token;
 use App\Models\PictureTag;
+use App\Models\LikePicture;
 use Illuminate\Http\Request;
+use App\Models\CollectPicture;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PictureRequest;
 
@@ -96,10 +98,13 @@ class PictureController extends Controller
     public function destroy(Picture $picture)
     {
         // TODO:判断删除权限
+        $url = $picture->url;
         if($picture->delete()) {
 
             PictureTag::where('picture_id',$picture->id)->delete();
 
+            Qiniu::delete($url);
+            
             return response()->json(['status' => 'success', 'msg' => '删除成功！']);   
         }
 
@@ -163,7 +168,15 @@ class PictureController extends Controller
     {
         $fan_id = request('fan_id') ?? Token::getUid();                
         $limit = 15;
-        $pictures = Picture::withCount(['likeFans', 'collectFans'])->inRandomOrder()->limit($limit)->get(); 
+        $tag_id = request('tag_id');
+
+        if(isset($tag_id)) {
+            $picture_ids = PictureTag::where('tag_id',$tag_id)->get()->pluck('picture_id');
+        }
+
+        $pictures = Picture::with(['tags'])->when($picture_ids, function($query) use ($picture_ids) {
+            return $query->whereIn('id', $picture_ids);
+        })->withCount(['likeFans', 'collectFans'])->inRandomOrder()->limit($limit)->get(); 
 
         foreach($pictures as &$picture) {
             $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
@@ -177,7 +190,7 @@ class PictureController extends Controller
     {
         $fan_id = request('fan_id') ?? Token::getUid();
 
-        $picture = $picture->with(['tags' => function ($query){
+        $picture = $picture->where('id', $picture->id)->with(['tags' => function ($query){
             $query->select('tags.id', 'tags.name');
         }])->first();
 
