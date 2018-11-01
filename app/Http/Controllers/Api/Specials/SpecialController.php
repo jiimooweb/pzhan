@@ -102,12 +102,6 @@ class SpecialController extends Controller
         return response()->json(['status' => 'success', 'msg' => '修改成功！']);
     }
 
-//    public function miniIndex()
-//    {
-//        $comments = SpecialComment::where('special_id',request('special'))->with(['fan', 'toFan'])->orderBy('created_at', 'asc')->get();
-//        $comments = Common::getCommentTree($comments->toArray());
-//        return response()->json(['status' => 'success', 'data' => $comments]);
-//    }
 
     public function miniIndex()
     {
