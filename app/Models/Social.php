@@ -4,9 +4,19 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use App\Models\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class Social extends Model
 {
+    public static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('hidden', function(Builder $builder) {
+            $builder->where('hidden', 0);
+        });
+    }
+
     public function getCreatedAtAttribute($date)
     {
         $time = strtotime($date);

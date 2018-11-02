@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use App\Models\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SocialComment extends Model
@@ -11,6 +12,15 @@ class SocialComment extends Model
 
     use SoftDeletes;
     protected $dates = ['delete_at'];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('hidden', function(Builder $builder) {
+            $builder->where('hidden', 0);
+        });
+    }
 
     public function getCreatedAtAttribute($date)
     {
