@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Blacklists;
 
 use App\Models\Blacklist;
+use App\Services\Token;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -70,8 +71,9 @@ class blacklistController extends Controller
 
     public function isban()
     {
-        $list = request(['fan_id']);
-        $count = Blacklist::where([['fan_id',$list['fan_id'],['state',1]]])->orWhere('is_seal',1)->count();
+
+        $id = Token::getUid();
+        $count = Blacklist::where([['fan_id',$id],['state',1]])->orWhere('is_seal',1)->count();
         if($count>0){
             return response()->json(['status' => '1', 'msg' => '用户已被禁言/封号']);
         }else{
