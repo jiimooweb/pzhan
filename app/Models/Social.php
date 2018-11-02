@@ -7,6 +7,15 @@ use App\Models\Model;
 
 class Social extends Model
 {
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('age', function(Builder $builder) {
+            $builder->where('hidden', 0);
+        });
+    }
+
     public function getCreatedAtAttribute($date)
     {
         $time = strtotime($date);
