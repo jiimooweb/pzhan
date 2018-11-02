@@ -146,12 +146,13 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     // 专题
     Route::get('specials/mini','Api\Specials\SpecialController@miniIndex');
     Route::post('specials/res','Api\Specials\SpecialController@getRes');
-    Route::post('specials/search','Api\Specials\SpecialController@doSearch');
+    Route::post('specials/search','Api\Specials\SpecialConrtroller@doSearch');
     Route::post('specials/switch','Api\Specials\SpecialController@updateSwitch');
     Route::apiResource('specials', 'Api\Specials\SpecialController');
 
     //专题评论
     Route::get('specials/{special}/comments', 'Api\Specials\SpecialCommentController@getcomments');
     Route::post('specials/{special}/comment', 'Api\Specials\SpecialCommentController@comment');
+    Route::post('specials/replys', 'Api\Specials\SpecialCommentController@replys');
 
 });

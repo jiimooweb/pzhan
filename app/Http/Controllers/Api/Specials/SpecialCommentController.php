@@ -36,4 +36,14 @@ class SpecialCommentController extends Controller
 
     }
 
+    public function replys()
+    {
+
+        $comment = SpecialComment::where('id', request()->id)->with(['fan', 'toFan'])->withCount('replys')->orderBy('created_at', 'asc')->first();
+        $replys = SpecialComment::where('pid', request()->id)->with(['fan', 'toFan'])->orderBy('created_at', 'asc')->get();
+
+        return response()->json(['status' => 'success', 'comment' => $comment,'replys' => $replys]);
+
+    }
+
 }
