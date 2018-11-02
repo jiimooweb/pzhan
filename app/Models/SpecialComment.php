@@ -24,7 +24,7 @@ class SpecialComment extends Model
 
     public function replys()
     {
-        return $this->hasMany(SocialComment::class, 'pid', 'id');
+        return $this->hasMany(SpecialComment::class, 'pid', 'id');
     }
 
     public function blacklists()
