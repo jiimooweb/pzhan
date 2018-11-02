@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use App\Models\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class Social extends Model
 {
