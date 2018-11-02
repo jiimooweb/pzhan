@@ -59,5 +59,10 @@ class TagController extends Controller
         $tags = Tag::get();
         return response()->json(['status' => 'success', 'data' => $tags]);
     }
+
+    public function random() {
+        $tags = Tag::inRandomOrder()->limit(10)->get();
+        return response()->json(['status' => 'success', 'data' => $tags]);        
+    }
     
 }
