@@ -35,10 +35,16 @@ Route::get('/get', function() {
     return \Carbon\Carbon::parse($date);
 });
 
+Route::get('/test', function() {
+    $image = \App\Utils\Common::getImageType('http://download.rdoorweb.com/pzhan/no_profile.png');
+    return $image;
+});
+
 
 Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('wechat/token/saveInfo', 'Api\Fans\FanController@saveInfo');  //存用户信息    
     Route::get('getUid', 'Api\Fans\FanController@getUid');  //获取用户fan_id
+    Route::get('getUserInfo', 'Api\Fans\FanController@getUserInfo');  //获取用户信息
     
     Route::post('qiniu/upload', 'Controller@upload');  //上传图片
     Route::post('qiniu/delete', 'Controller@delete');   //删除图片
@@ -82,27 +88,18 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('socials/uploadPhoto', 'Api\Fans\SocialController@uploadPhoto');
     Route::post('socials/deleteComment', 'Api\Fans\SocialController@deleteComment');
     Route::get('socials/list', 'Api\Fans\SocialController@list');
-    Route::post('socials/addReplyNotice', 'Api\Fans\SocialController@addReplyNotice');
+    Route::post('socials/{social}/addCommentNotice', 'Api\Fans\SocialController@addCommentNotice');
+    Route::post('socials/{social}/addReplyNotice', 'Api\Fans\SocialController@addReplyNotice');
     Route::post('socials/replys', 'Api\Fans\SocialController@replys');
     Route::post('socials/change', 'Api\Fans\SocialController@change');
     Route::post('socials/upload', 'Api\Fans\SocialController@upload');
     Route::apiResource('socials', 'Api\Fans\SocialController');
 
     //通知
+    Route::get('notices/comment', 'Api\Fans\NoticeController@comment');
+    Route::get('notices/like', 'Api\Fans\NoticeController@like');
     Route::apiResource('notices', 'Api\Fans\NoticeController');
 
-    //今日推荐
-    Route::post('todays/search','Api\Todays\TodayController@search');
-    Route::post('todays/delete','Api\Todays\TodayController@delete');
-    Route::apiResource('todays', 'Api\Todays\TodayController');
-    Route::apiResource('todayLikes', 'Api\TodayLikes\TodayLikeController');
-
-    // 专题
-    Route::apiResource('specials', 'Api\Specials\SpecialController');
-    Route::post('specials/switch','Api\Specials\SpecialController@updateSwitch');
-
-    // 新增专题评论
-    Route::post('specials/comment','Api\Specials\SpecialCommentController@store');
 
     // 评论管理
     Route::post('comments/query','Api\Comments\CommentController@queryComments');
@@ -114,7 +111,6 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('blacklist/ban', 'Api\Blacklists\BlacklistController@banList');
     Route::get('blacklist/seal', 'Api\Blacklists\BlacklistController@sealList');
     Route::apiResource('blacklist', 'Api\Blacklists\BlacklistController');
-
 
     //签到
     Route::get('get_sign','Api\Fans\SignInController@get_sign');
@@ -130,8 +126,33 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('show_report','Api\Blacklists\ReportController@show');
     Route::apiResource('report_causes','Api\Blacklists\ReportCauseController');
 
-
     //分享
     Route::post('share','Api\Fans\ShareController@share');
     Route::post('share_show','Api\Fans\ShareController@showShare');
+
+    //今日推荐
+    Route::get('todays/mini','Api\Todays\TodayController@getToday');
+    Route::post('todays/other','Api\Todays\TodayController@getOther');
+    Route::post('todays/month','Api\Todays\TodayController@getDataByYearMonth');
+    Route::post('todays/year','Api\Todays\TodayController@getDataByYear');
+    Route::post('todays/search','Api\Todays\TodayController@search');
+    Route::post('todays/delete','Api\Todays\TodayController@delete');
+    Route::apiResource('todays', 'Api\Todays\TodayController');
+
+    //今日点赞
+    Route::post('todayLikes/delete','Api\TodayLikes\TodayLikeController@delete');
+    Route::apiResource('todayLikes', 'Api\TodayLikes\TodayLikeController');
+
+    // 专题
+    Route::get('specials/mini','Api\Specials\SpecialController@miniIndex');
+    Route::post('specials/res','Api\Specials\SpecialController@getRes');
+    Route::post('specials/search','Api\Specials\SpecialConrtroller@doSearch');
+    Route::post('specials/switch','Api\Specials\SpecialController@updateSwitch');
+    Route::apiResource('specials', 'Api\Specials\SpecialController');
+
+    //专题评论
+    Route::get('specials/{special}/comments', 'Api\Specials\SpecialCommentController@getcomments');
+    Route::post('specials/{special}/comment', 'Api\Specials\SpecialCommentController@comment');
+    Route::post('specials/replys', 'Api\Specials\SpecialCommentController@replys');
+
 });

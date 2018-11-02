@@ -3,13 +3,16 @@
 namespace App\Http\Controllers\Api\Fans;
 
 use App\Models\Photo;
+use App\Utils\Common;
 use App\Utils\Module;
 use App\Models\Notice;
 use App\Models\Social;
 use App\Services\Qiniu;
 use App\Services\Token;
+use App\Models\LikeNotice;
 use App\Models\SocialLike;
 use Illuminate\Http\Request;
+use App\Models\CommentNotice;
 use App\Models\SocialComment;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SocialRequest;
@@ -19,9 +22,14 @@ class SocialController extends Controller
     public function index() 
     {
         $fan_id = request('fan_id') ?? Token::getUid();
-        $socials = Social::with(['photos','fan'])->withCount(['likeFans', 'comments', 'photos'])->orderBy('created_at', 'desc')->paginate(20);
+        $socials = Social::with(['photos','fan'])->withCount(['likeFans', 'comments', 'photos'])->orderBy('created_at', 'desc')->paginate(10);
         foreach($socials as &$social) {
             $social->like = $social->isLike($fan_id) ? 1 : 0;
+            if($social->photos_count == 1) {
+                $social->img_type = Common::getImageType($social->photos[0]['url']);
+            }else {
+                $social->img_type = 0;
+            }
         }
         return response()->json(['status' => 'success', 'data' => $socials]);   
     }
@@ -29,9 +37,14 @@ class SocialController extends Controller
     public function list() 
     {
         $fan_id = request('fan_id') ?? Token::getUid();
-        $socials = Social::where('fan_id', $fan_id)->with(['photos','fan'])->withCount(['likeFans', 'comments', 'photos'])->orderBy('created_at', 'desc')->paginate(20);
+        $socials = Social::where('fan_id', $fan_id)->with(['photos','fan'])->withCount(['likeFans', 'comments', 'photos'])->orderBy('created_at', 'desc')->paginate(10);
         foreach($socials as &$social) {
             $social->like = $social->isLike($fan_id) ? 1 : 0;
+            if($social->photos_count == 1) {
+                $social->img_type = Common::getImageType($social->photos[0]['url']);
+            }else {
+                $social->img_type = 0;
+            }
         }
         return response()->json(['status' => 'success', 'data' => $socials]); 
     }
@@ -53,6 +66,11 @@ class SocialController extends Controller
         $fan_id = request('fan_id') ?? Token::getUid();        
         $social = Social::where('id', request()->social)->with(['photos','fan'])->withCount(['photos','likeFans', 'comments'])->first();
         $social->like = $social->isLike($fan_id) ? 1 : 0;        
+        if($social->photos_count == 1) {
+            $social->img_type = Common::getImageType($social->photos[0]['url']);
+        }else {
+            $social->img_type = 0;
+        }        
         $status = $social ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $social]);   
     }
@@ -102,26 +120,11 @@ class SocialController extends Controller
 
     public function comment(Social $social)
     {
-        $data =request()->all();
+        $comment = request()->all();
 
-        $comment = SocialComment::create($data);
+        $comment = SocialComment::create($comment);
         
         if($comment) {
-            $fan_id = request('fan_id') ?? Token::getUid(); 
-
-            if($fan_id != $social->fan_id) {
-                //添加通知
-                $notice = [
-                    'fan_id' => $social->fan_id,
-                    'from_fan_id' => $fan_id,
-                    'content' => $data['content'],
-                    'module_id' => $social->id,
-                    'module' => Module::Social,
-                    'type' => 1
-                ];
-
-                Notice::create($notice);
-            }
             
             return response()->json(['status' => 'success', 'data' => $comment->where('id', $comment->id)->with(['replys','fan', 'toFan'])->withCount(['replys'])->first()]);
         }
@@ -130,9 +133,76 @@ class SocialController extends Controller
         
     }
 
-    public function addReplyNotice() 
+    public function addCommentNotice(Social $social) 
     {
-        Notice::create(request()->all());
+        $notice_fans = [];
+        $data = request()->all();
+        $fan_id = request('fan_id') ?? Token::getUid(); 
+
+        //(他人)评论动态
+        if($fan_id != $social->fan_id) {
+            array_push($notice_fans, $social->fan_id);
+        }
+
+        if($data['to_fan_id'] > 0 && $data['to_fan_id'] != $fan_id) {
+            array_push($notice_fans, $data['to_fan_id']);
+        }
+
+        $notice_fans = array_unique($notice_fans);        
+
+        if($notice_fans) {
+            foreach($notice_fans as $notice_fan) {
+                $notice = [
+                    'fan_id' => $notice_fan,
+                    'from_fan_id' => $fan_id,
+                    'to_fan_id' => $data['to_fan_id'],
+                    'content' => $data['content'],
+                    'module_id' => $social->id,
+                    'module' => Module::Social,
+                ];  
+                CommentNotice::create($notice);
+            }
+        }
+       
+        return response()->json(['status' => 'success']);
+
+        
+    }
+
+    public function addReplyNotice(Social $social) {
+        $notice_fans = [];
+        $data = request()->all();
+        $fan_id = request('fan_id') ?? Token::getUid(); 
+        $comment_fan_id = request('comment_fan_id');
+        
+        if($fan_id != $social->fan_id) {
+            array_push($notice_fans, $social->fan_id); 
+        }
+
+        if($fan_id != $comment_fan_id) {
+            array_push($notice_fans, $comment_fan_id);
+        }
+
+        if($data['to_fan_id'] > 0 && $data['to_fan_id'] != $fan_id) {
+            array_push($notice_fans, $data['to_fan_id']);
+        }
+
+        $notice_fans = array_unique($notice_fans);
+
+        if($notice_fans) {
+            foreach($notice_fans as $notice_fan) {
+                $notice = [
+                    'fan_id' => $notice_fan,
+                    'from_fan_id' => $fan_id,
+                    'to_fan_id' => $data['to_fan_id'],
+                    'content' => $data['content'],
+                    'module_id' => $social->id,
+                    'module' => Module::Social,
+                ];  
+                CommentNotice::create($notice);
+            }
+        }
+       
         return response()->json(['status' => 'success']);
     }
 
@@ -172,13 +242,11 @@ class SocialController extends Controller
                 $notice = [
                     'fan_id' => $social->fan_id,
                     'from_fan_id' => $fan_id,
-                    'content' => '点赞了你的动态',
                     'module_id' => $social->id,
                     'module' => Module::Social,
-                    'type' => 0
                 ];
 
-                Notice::create($notice);
+                LikeNotice::create($notice);
             }
             
             return response()->json(['status' => 'success', 'data' => $like]);
