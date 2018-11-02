@@ -18,7 +18,7 @@ class ReportRequest extends CommonRequest
             'bereported_id' => 'required|integer',
             'comment' => 'required|integer',
             'type' => 'required',
-            'cause' => 'required|integer',
+            'cause' => 'required',
         ];
     }
 }
