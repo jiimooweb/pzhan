@@ -18,7 +18,7 @@ class ReportController extends Controller
     public function show()
     {
         $datas=Report::with('report_fan:id,nickname')
-            ->with('bereport_fan:id,nickname')->with('cause:id,comment');
+            ->with('bereport_fan:id,nickname');
         if(request('status')){
             $datas=$datas->where('status',request('status'));
         }
@@ -38,7 +38,7 @@ class ReportController extends Controller
     public function store(ReportRequest $request)
     {
         $data = request()->all();
-        //$data['	reporter_id']=Token::getUid();
+        $data['reporter_id']=Token::getUid();
         if(Report::create($data)) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);
         }
