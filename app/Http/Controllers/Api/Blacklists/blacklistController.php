@@ -68,12 +68,14 @@ class blacklistController extends Controller
         return response()->json(['status' => 'success', 'msg' => '删除成功！']);
     }
 
-    public function query()
+    public function isban()
     {
-        $list = request(['fan_id','day','state','reason','is_seal']);
+        $list = request(['fan_id']);
         $count = Blacklist::where([['fan_id',$list['fan_id'],['state',1]]])->orWhere('is_seal',1)->count();
         if($count>0){
             return response()->json(['status' => '1', 'msg' => '用户已被禁言/封号']);
+        }else{
+            return response()->json(['status' => '0', 'msg' => '用户正常']);
         }
     }
 }

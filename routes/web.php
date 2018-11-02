@@ -109,6 +109,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
    //黑名单
     
     Route::post('blacklist/ban', 'Api\Blacklists\BlacklistController@banList');
+    Route::post('blacklist/isban', 'Api\Blacklists\BlacklistController@isban');
     Route::get('blacklist/seal', 'Api\Blacklists\BlacklistController@sealList');
     Route::apiResource('blacklist', 'Api\Blacklists\BlacklistController');
 
@@ -145,7 +146,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
     // 专题
     Route::get('specials/mini','Api\Specials\SpecialController@miniIndex');
-    Route::post('specials/res','Api\Specials\SpecialController@getRes');
+    Route::post('specials/res','Api\Specials\SpecialCotroller@getRes');
     Route::post('specials/search','Api\Specials\SpecialConrtroller@doSearch');
     Route::post('specials/switch','Api\Specials\SpecialController@updateSwitch');
     Route::apiResource('specials', 'Api\Specials\SpecialController');
