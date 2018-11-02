@@ -146,8 +146,8 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
     // 专题
     Route::get('specials/mini','Api\Specials\SpecialController@miniIndex');
-    Route::post('specials/res','Api\Specials\SpecialCotroller@getRes');
-    Route::post('specials/search','Api\Specials\SpecialConrtroller@doSearch');
+    Route::post('specials/res','Api\Specials\SpecialController@getRes');
+    Route::post('specials/search','Api\Specials\SpecialController@doSearch');
     Route::post('specials/switch','Api\Specials\SpecialController@updateSwitch');
     Route::apiResource('specials', 'Api\Specials\SpecialController');
 
