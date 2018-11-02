@@ -7,7 +7,7 @@ use App\Models\Model;
 
 class Social extends Model
 {
-    protected static function boot()
+    public static function boot()
     {
         parent::boot();
 

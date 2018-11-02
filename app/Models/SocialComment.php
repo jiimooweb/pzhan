@@ -12,7 +12,7 @@ class SocialComment extends Model
     use SoftDeletes;
     protected $dates = ['delete_at'];
 
-    protected static function boot()
+    public static function boot()
     {
         parent::boot();
 
