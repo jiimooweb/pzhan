@@ -14,8 +14,6 @@ class SocialRequest extends CommonRequest
      */
     public function rules()
     {
-        return [
-            'content' => 'string'
-        ];
+        return [];
     }
 }
