@@ -23,4 +23,17 @@ class SpecialCommentController extends Controller
         return response()->json(['status' => 'success', 'data' => $data]);
     }
 
+    public function comment()
+    {
+        $comment = request()->all();
+        $comment = SpecialComment::create($comment);
+
+        if($comment) {
+            return response()->json(['status' => 'success', 'data' => $comment->where('id', $comment->id)->with(['replys','fan', 'toFan'])->withCount(['replys'])->first()]);
+        }
+
+        return response()->json(['status' => 'error']);
+
+    }
+
 }
