@@ -11,7 +11,7 @@ class Social extends Model
     {
         parent::boot();
 
-        static::addGlobalScope('age', function(Builder $builder) {
+        static::addGlobalScope('hidden', function(Builder $builder) {
             $builder->where('hidden', 0);
         });
     }
