@@ -146,6 +146,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::apiResource('todayLikes', 'Api\TodayLikes\TodayLikeController');
 
     // 专题
+    Route::get('specials/hot','Api\Specials\SpecialController@getHot');
     Route::get('specials/mini','Api\Specials\SpecialController@miniIndex');
     Route::post('specials/res','Api\Specials\SpecialController@getRes');
     Route::post('specials/search','Api\Specials\SpecialController@doSearch');

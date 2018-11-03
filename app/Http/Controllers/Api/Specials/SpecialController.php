@@ -123,4 +123,9 @@ class SpecialController extends Controller
         return response()->json(['data' => $data]);
     }
 
+    public function getHot() {
+        $data = Special::orderBy('created_at','desc')->limit(2)->get();
+        return response()->json(['data' => $data]);
+    }
+
 }
