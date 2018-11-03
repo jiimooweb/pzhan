@@ -176,7 +176,7 @@ class PictureController extends Controller
 
         $pictures = Picture::with(['tags'])->when($picture_ids, function($query) use ($picture_ids) {
             return $query->whereIn('id', $picture_ids);
-        })->withCount(['likeFans', 'collectFans'])->inRandomOrder()->limit($limit)->get(); 
+        })->withCount(['likeFans', 'collectFans'])->inRandomOrder()->paginate(15); 
 
         foreach($pictures as &$picture) {
             $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
