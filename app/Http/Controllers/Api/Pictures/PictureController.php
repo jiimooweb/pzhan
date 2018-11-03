@@ -169,12 +169,12 @@ class PictureController extends Controller
         $fan_id = request('fan_id') ?? Token::getUid();                
         $limit = 15;
         $tag_id = request('tag_id');
-
+        $picture_ids = null;
         if(isset($tag_id)) {
             $picture_ids = PictureTag::where('tag_id',$tag_id)->get()->pluck('picture_id');
         }
 
-        $pictures = Picture::with(['tags'])->when(isset($picture_ids), function($query) use ($picture_ids) {
+        $pictures = Picture::with(['tags'])->when($picture_ids, function($query) use ($picture_ids) {
             return $query->whereIn('id', $picture_ids);
         })->withCount(['likeFans', 'collectFans'])->inRandomOrder()->limit($limit)->get(); 
 
