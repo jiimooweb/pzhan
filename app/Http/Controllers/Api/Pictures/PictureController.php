@@ -168,15 +168,8 @@ class PictureController extends Controller
     {
         $fan_id = request('fan_id') ?? Token::getUid();                
         $limit = 15;
-        $tag_id = request('tag_id');
-        $picture_ids = null;
-        if(isset($tag_id)) {
-            $picture_ids = PictureTag::where('tag_id',$tag_id)->get()->pluck('picture_id');
-        }
 
-        $pictures = Picture::with(['tags'])->when($picture_ids, function($query) use ($picture_ids) {
-            return $query->whereIn('id', $picture_ids);
-        })->withCount(['likeFans', 'collectFans'])->inRandomOrder()->paginate(15); 
+        $pictures = Picture::with(['tags'])->withCount(['likeFans', 'collectFans'])->inRandomOrder()->paginate($limit); 
 
         foreach($pictures as &$picture) {
             $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
@@ -202,6 +195,28 @@ class PictureController extends Controller
         $recommends = PictureTag::getRecommends($picture->id);
         $status = $picture ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $picture, 'recommends' => $recommends]);   
+    }
+
+    public function getListByTags()
+    {
+        $fan_id = request('fan_id') ?? Token::getUid();                
+        $limit = 15;
+        $tag_id = request('tag_id');
+        $picture_ids = null;
+        if(isset($tag_id)) {
+            $picture_ids = PictureTag::where('tag_id',$tag_id)->get()->pluck('picture_id');
+        }
+
+        $pictures = Picture::with(['tags'])->when($picture_ids, function($query) use ($picture_ids) {
+            return $query->whereIn('id', $picture_ids);
+        })->withCount(['likeFans', 'collectFans'])->paginate(15); 
+
+        foreach($pictures as &$picture) {
+            $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
+            $picture->like = $picture->isLike($fan_id) ? 1 : 0;
+        }
+        
+        return response()->json(['status' => 'success', 'data' => $pictures]);
     }
 
     public function rank()
