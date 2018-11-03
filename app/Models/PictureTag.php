@@ -11,7 +11,7 @@ class PictureTag extends Model
 
     public $timestamps = false;
 
-    public static function getRecommends(int $picture_id, int $limit = 15) 
+    public static function getRecommends(int $picture_id, int $limit = 30) 
     {
         $tags = self::where('picture_id',$picture_id)->get()->pluck('tag_id');
         $picture_ids = self::whereIn('tag_id', $tags)->whereNotIn('picture_id', [$picture_id])->inRandomOrder()->limit($limit)->get()->pluck('picture_id');
