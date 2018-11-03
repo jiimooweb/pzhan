@@ -124,7 +124,7 @@ class SpecialController extends Controller
     }
 
     public function getHot() {
-        $data = Special::orderBy('created_at','desc')->limit(2)->get();
+        $data = Special::orderBy('created_at','desc')->with('cover_img')->limit(2)->get();
         return response()->json(['data' => $data]);
     }
 
