@@ -244,7 +244,7 @@ class PictureController extends Controller
         $hot = request('hot');
         $pictures = Picture::withCount(['likeFans', 'collectFans'])->when($collect, function($query) {
             return $query->orderBy('collect_fans_count', 'desc');
-        })->when($likeOrder, function($query) {
+        })->when($like, function($query) {
             return $query->orderBy('like_fans_count', 'desc');
         })->when($hot, function($query){
             return $query->orderBy('hot', 'desc');
