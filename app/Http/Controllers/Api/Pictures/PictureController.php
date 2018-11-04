@@ -167,7 +167,21 @@ class PictureController extends Controller
         return response()->json(['status' => 'error', 'msg' => '取消失败！']);  
     }
 
-    public function app_list()
+    public function appList()
+    {
+        $fan_id = request('fan_id') ?? Token::getUid();                
+
+        $pictures = Picture::with(['tags'])->withCount(['likeFans', 'collectFans'])->paginate(30); 
+
+        foreach($pictures as &$picture) {
+            $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
+            $picture->like = $picture->isLike($fan_id) ? 1 : 0;
+        }
+        
+        return response()->json(['status' => 'success', 'data' => $pictures]);
+    }
+
+    public function appRandomList()
     {
         $fan_id = request('fan_id') ?? Token::getUid();                
         $limit = 15;
@@ -182,7 +196,8 @@ class PictureController extends Controller
         return response()->json(['status' => 'success', 'data' => $pictures]);
     }
 
-    public function app_show(Picture $picture)
+
+    public function appShow(Picture $picture)
     {
         $fan_id = request('fan_id') ?? Token::getUid();
 

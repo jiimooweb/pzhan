@@ -52,9 +52,10 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     //图片
     /*** 小程序 ***/
     Route::get('pictures/rank', 'Api\Pictures\PictureController@rank');  //排行榜
-    Route::get('pictures/app_list', 'Api\Pictures\PictureController@app_list'); 
+    Route::get('pictures/app_list', 'Api\Pictures\PictureController@appList'); 
+    Route::get('pictures/random', 'Api\Pictures\PictureController@appRandomList'); 
     Route::get('pictures/getListByTags', 'Api\Pictures\PictureController@getListByTags'); 
-    Route::get('pictures/{picture}/app_show', 'Api\Pictures\PictureController@app_show'); 
+    Route::get('pictures/{picture}/app_show', 'Api\Pictures\PictureController@appShow'); 
     Route::post('pictures/{picture}/collect', 'Api\Pictures\PictureController@collect'); //收藏
     Route::post('pictures/{picture}/uncollect', 'Api\Pictures\PictureController@uncollect'); //取消收藏
     Route::post('pictures/{picture}/like', 'Api\Pictures\PictureController@like');  //点赞
