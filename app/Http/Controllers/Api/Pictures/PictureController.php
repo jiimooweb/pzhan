@@ -240,7 +240,7 @@ class PictureController extends Controller
     public function rank()
     {             
         $keyword = request('keyword');
-        $pictures = Picture::withCount(['likeFans', 'collectFans'])->when($keyword == 'collect', function($query) {
+        $pictures = Picture::with(['tags'])->withCount(['likeFans', 'collectFans'])->when($keyword == 'collect', function($query) {
             return $query->orderBy('collect_fans_count', 'desc');
         })->when($keyword == 'like', function($query) {
             return $query->orderBy('like_fans_count', 'desc');
