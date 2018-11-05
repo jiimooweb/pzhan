@@ -123,4 +123,10 @@ class SpecialController extends Controller
         return response()->json(['data' => $data]);
     }
 
+    public function homeAlbum()
+    {
+        $data = Special::where('switch',1)->with('cover_img')->limit(2);
+        return response()->json(['data' => $data]);
+    }
+
 }
