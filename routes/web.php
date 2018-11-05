@@ -137,7 +137,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
     //今日推荐
     Route::get('todays/mini','Api\Todays\TodayController@getToday');
-    Route::get('todays/date','Api\Todays\TodayController@getDate');
+    Route::post('todays/date','Api\Todays\TodayController@getDate');
     Route::post('todays/other','Api\Todays\TodayController@getOther');
     Route::post('todays/month','Api\Todays\TodayController@getDataByYearMonth');
     Route::post('todays/year','Api\Todays\TodayController@getDataByYear');
