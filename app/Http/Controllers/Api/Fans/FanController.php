@@ -71,6 +71,13 @@ class FanController extends Controller
         return response()->json(['status' => 'success','data' => $pictures]);
     }
 
+    public function collectId()
+    {
+        $fan_id = request('fan_id') ?? Token::getUid();                
+        $picture_ids = Fan::where('id', $fan_id)->collcetPictures->pluck('id');
+        return response()->json(['status' => 'success','data' => $picture_ids]);
+    }
+
     public function like(Fan $fan)
     {
         $picture_ids = $fan->likePictures->pluck('id');
@@ -78,6 +85,13 @@ class FanController extends Controller
             return $query->whereIn('id', $picture_ids);
         })->withCount(['likeFans', 'collectFans'])->paginate(15); 
         return response()->json(['status' => 'success','data' => $pictures]);
+    }
+
+    public function likeId()
+    {
+        $fan_id = request('fan_id') ?? Token::getUid();                
+        $picture_ids = Fan::where('id', $fan_id)->likePictures->pluck('id');
+        return response()->json(['status' => 'success','data' => $picture_ids]);
     }
 
     public function getUid() 
