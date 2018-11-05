@@ -55,6 +55,12 @@ class SignInController extends Controller
     {
         $fan_id=Token::getUid();
         $sign_data=Sign::where('fan_id',$fan_id)->with('fan:id,point')->first();
+        $now=Carbon::parse()->toDateString();
+        if($now==$sign_data->last_day){
+            $sign_data->signButtonFlag=false;
+        }else{
+            $sign_data->signButtonFlag=true;
+        }
         return response()->json(['status' => 'success', 'data' =>$sign_data ]);
     }
 
@@ -75,6 +81,8 @@ class SignInController extends Controller
             if($data['task_day']>$reward_day){
                 $data['task_day']=1;
             }
+        }else if($sign_data->last_day==Carbon::parse()->toDateString()){
+            return response()->json(['status' => 'error', 'msg' => '更新失败！']);
         }else{//断签 从第一天重新开始
             $data['continuity_day']=1;
             $data['task_day']=1;
