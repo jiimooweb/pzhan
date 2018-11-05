@@ -81,6 +81,8 @@ class SignInController extends Controller
             if($data['task_day']>$reward_day){
                 $data['task_day']=1;
             }
+        }else if($sign_data->last_day==Carbon::parse()->toDateString()){
+            return response()->json(['status' => 'error', 'msg' => '更新失败！']);
         }else{//断签 从第一天重新开始
             $data['continuity_day']=1;
             $data['task_day']=1;
