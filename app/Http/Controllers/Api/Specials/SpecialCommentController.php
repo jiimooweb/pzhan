@@ -46,4 +46,17 @@ class SpecialCommentController extends Controller
 
     }
 
+    public function deleteComment()
+    {
+        $delete_count = 0;
+        if(SpecialComment::where('id' ,request()->id)->delete()) {
+            $delete_count = SpecialComment::where('pid', request()->id)->delete();
+            return response()->json(['status' => 'success', 'count' => $delete_count + 1]);
+        }
+
+        return response()->json(['status' => 'error']);
+    }
+
+
+
 }

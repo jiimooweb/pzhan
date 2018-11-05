@@ -160,5 +160,6 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::get('specials/{special}/comments', 'Api\Specials\SpecialCommentController@getcomments');
     Route::post('specials/{special}/comment', 'Api\Specials\SpecialCommentController@comment');
     Route::post('specials/replys', 'Api\Specials\SpecialCommentController@replys');
+    Route::post('specials/deleteComment', 'Api\Specials\SpecialCommentController@deleteComment');
 
 });
