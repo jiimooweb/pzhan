@@ -83,8 +83,12 @@ class FanController extends Controller
     public function fanPicture()
     {
         $fan_id = request('fan_id') ?? Token::getUid();                
-        $collect_ids = Fan::where('id', $fan_id)->with(['collcetPictures'])->first();
-        $like_ids = Fan::where('id', $fan_id)->with(['likePictures'])->first();        
+        $collect_ids = Fan::where('id', $fan_id)->with(['collcetPictures' => function($query) {
+            $query->pluck('id');
+        }])->first();
+        $like_ids = Fan::where('id', $fan_id)->with(['likePictures'=> function($query) {
+            $query->pluck('id');
+        }])->first();        
         return response()->json(['status' => 'success','collect_ids' => $collect_ids,'like_ids' => $like_ids]);
     }
 
