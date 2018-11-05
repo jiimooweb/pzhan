@@ -123,9 +123,8 @@ class SpecialController extends Controller
         return response()->json(['data' => $data]);
     }
 
-    public function homeAlbum()
-    {
-        $data = Special::where('switch',1)->with('cover_img')->limit(2);
+    public function getHot() {
+        $data = Special::orderBy('created_at','desc')->with('cover_img')->limit(2)->get();
         return response()->json(['data' => $data]);
     }
 

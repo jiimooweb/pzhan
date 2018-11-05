@@ -52,8 +52,10 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     //图片
     /*** 小程序 ***/
     Route::get('pictures/rank', 'Api\Pictures\PictureController@rank');  //排行榜
-    Route::get('pictures/app_list', 'Api\Pictures\PictureController@app_list'); 
-    Route::get('pictures/{picture}/app_show', 'Api\Pictures\PictureController@app_show'); 
+    Route::get('pictures/app_list', 'Api\Pictures\PictureController@appList'); 
+    Route::get('pictures/random', 'Api\Pictures\PictureController@appRandomList'); 
+    Route::get('pictures/getListByTags', 'Api\Pictures\PictureController@getListByTags'); 
+    Route::get('pictures/{picture}/app_show', 'Api\Pictures\PictureController@appShow'); 
     Route::post('pictures/{picture}/collect', 'Api\Pictures\PictureController@collect'); //收藏
     Route::post('pictures/{picture}/uncollect', 'Api\Pictures\PictureController@uncollect'); //取消收藏
     Route::post('pictures/{picture}/like', 'Api\Pictures\PictureController@like');  //点赞
@@ -63,6 +65,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
     //标签
     Route::get('tags/all', 'Api\Tags\TagController@all');
+    Route::get('tags/random', 'Api\Tags\TagController@random');
     Route::apiResource('tags', 'Api\Tags\TagController');
 
     //轮播图
@@ -145,6 +148,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::apiResource('todayLikes', 'Api\TodayLikes\TodayLikeController');
 
     // 专题
+    Route::get('specials/hot','Api\Specials\SpecialController@getHot');
     Route::get('specials/mini','Api\Specials\SpecialController@miniIndex');
     Route::post('specials/res','Api\Specials\SpecialController@getRes');
     Route::post('specials/search','Api\Specials\SpecialController@doSearch');
