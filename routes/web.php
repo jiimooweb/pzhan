@@ -122,10 +122,9 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::apiResource('sign_tasks','Api\Fans\SignInController');
     //粉丝收藏
     Route::get('fans/{fan}/collect', 'Api\Fans\FanController@collect');  //收藏
-    Route::get('fans/{fan}/collect_id', 'Api\Fans\FanController@collectId');  //收藏
     //粉丝点赞
     Route::get('fans/{fan}/like', 'Api\Fans\FanController@like');  //点赞
-    Route::get('fans/{fan}/like_id', 'Api\Fans\FanController@likeId');  //点赞
+    Route::get('fans/fan_pictures', 'Api\Fans\FanController@fanPicture');  //点赞
 
     //举报
     Route::post('report','Api\Blacklists\ReportController@store');
