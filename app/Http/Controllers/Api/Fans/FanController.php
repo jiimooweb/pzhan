@@ -85,7 +85,7 @@ class FanController extends Controller
         $fan_id = request('fan_id') ?? Token::getUid();                
         $collect_ids = Fan::where('id', $fan_id)->collcetPictures->pluck('id');
         $like_ids = Fan::where('id', $fan_id)->likePictures->pluck('id');        
-        return response()->json(['status' => 'success','collect_id' => $collect_ids,'like_ids' => $like_ids]);
+        return response()->json(['status' => 'success','collect_ids' => $collect_ids,'like_ids' => $like_ids]);
     }
 
     public function getUid() 
