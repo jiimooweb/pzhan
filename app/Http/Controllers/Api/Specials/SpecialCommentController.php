@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\APi\Specials;
 
+use App\Models\CommentNotice;
 use App\Models\SpecialComment;
+use App\Services\Token;
+use App\Utils\Module;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -55,6 +58,34 @@ class SpecialCommentController extends Controller
         }
 
         return response()->json(['status' => 'error']);
+    }
+
+    public function addCommentNotice()
+    {
+        $notice_fans = [];
+        $data = request()->all();
+        $fan_id = request('fan_id') ?? Token::getUid();
+
+        if($data['to_fan_id'] > 0 && $data['to_fan_id'] != $fan_id) {
+            array_push($notice_fans, $data['to_fan_id']);
+        }
+
+        $notice_fans = array_unique($notice_fans);
+
+        if($notice_fans) {
+            foreach($notice_fans as $notice_fan) {
+                $notice = [
+                    'fan_id' => $notice_fan,
+                    'from_fan_id' => $fan_id,
+                    'to_fan_id' => $data['to_fan_id'],
+                    'content' => $data['content'],
+                    'module_id' => $data['module_id'],
+                    'module' => Module::Special,
+                ];
+                CommentNotice::create($notice);
+            }
+        }
+        return response()->json(['status' => 'success']);
     }
 
 
