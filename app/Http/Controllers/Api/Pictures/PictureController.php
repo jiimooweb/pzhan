@@ -171,7 +171,7 @@ class PictureController extends Controller
     {
         $fan_id = request('fan_id') ?? Token::getUid();                
 
-        $pictures = Picture::with(['tags'])->withCount(['likeFans', 'collectFans'])->paginate(30); 
+        $pictures = Picture::with(['tags'])->withCount(['likeFans', 'collectFans'])->orderBy('created_at', 'desc')->paginate(30); 
 
         foreach($pictures as &$picture) {
             $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;

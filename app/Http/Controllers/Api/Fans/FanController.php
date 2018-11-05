@@ -67,7 +67,7 @@ class FanController extends Controller
         $picture_ids = $fan->collcetPictures->pluck('id');
         $pictures = Picture::with(['tags'])->when($picture_ids, function($query) use ($picture_ids) {
             return $query->whereIn('id', $picture_ids);
-        })->withCount(['likeFans', 'collectFans'])->paginate(15); 
+        })->withCount(['likeFans', 'collectFans'])->orderBy('created_at', 'desc')->paginate(15); 
         return response()->json(['status' => 'success','data' => $pictures]);
     }
 
@@ -76,7 +76,7 @@ class FanController extends Controller
         $picture_ids = $fan->likePictures->pluck('id');
         $pictures = Picture::with(['tags'])->when($picture_ids, function($query) use ($picture_ids) {
             return $query->whereIn('id', $picture_ids);
-        })->withCount(['likeFans', 'collectFans'])->paginate(15); 
+        })->withCount(['likeFans', 'collectFans'])->orderBy('created_at', 'desc')->paginate(15); 
         return response()->json(['status' => 'success','data' => $pictures]);
     }
 
