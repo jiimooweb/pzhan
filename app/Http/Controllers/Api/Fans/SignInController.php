@@ -55,6 +55,12 @@ class SignInController extends Controller
     {
         $fan_id=Token::getUid();
         $sign_data=Sign::where('fan_id',$fan_id)->with('fan:id,point')->first();
+        $now=Carbon::parse()->toDateString();
+        if($now==$sign_data->last_day){
+            $sign_data->signButtonFlag=false;
+        }else{
+            $sign_data->signButtonFlag=true;
+        }
         return response()->json(['status' => 'success', 'data' =>$sign_data ]);
     }
 
