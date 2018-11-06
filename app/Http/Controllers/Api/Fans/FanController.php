@@ -64,10 +64,19 @@ class FanController extends Controller
 
     public function collect(Fan $fan)
     {
+        $page = request('page');
+        $offset = ($page - 1) * $page;
+        $limit = 15;
         $picture_ids = $fan->collcetPictures->pluck('id');
-        $pictures = Picture::with(['tags'])->when($picture_ids, function($query) use ($picture_ids) {
-            return $query->whereIn('id', $picture_ids);
-        })->withCount(['likeFans', 'collectFans'])->paginate(15); 
+        $picture_ids = array_slice($picture_ids, $offset, $limit);
+        $pictures = [];
+        
+        foreach($picture_ids as $pictures_id) {
+            $pictures[] = Picture::where('id', $picture_ids)->with(['tags'])->withCount(['likeFans', 'collectFans'])->first();
+        }
+        // $pictures = Picture::with(['tags'])->when($picture_ids, function($query) use ($picture_ids) {
+        //     return $query->whereIn('id', $picture_ids);
+        // })->withCount(['likeFans', 'collectFans'])->paginate(15); 
         return response()->json(['status' => 'success','data' => $pictures]);
     }
 
