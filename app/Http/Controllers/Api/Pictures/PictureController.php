@@ -251,5 +251,11 @@ class PictureController extends Controller
         return response()->json(['status' => 'success', 'data' => $pictures]);
         
     }
+
+    public function addHot(Picture $picture)
+    {
+        $picture->increment('hot', 1);  //增加一个热度 
+        return response()->json(['status' => 'success']);
+    }
     
 }
