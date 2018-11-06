@@ -63,7 +63,7 @@ class FanController extends Controller
     }
 
     public function fans() {
-        $status = request('status') ? request('status') : -1;
+        $status = request('status');
         $fans = Fan::when($status > -1, function($query) use ($status) {
             return $query->where('status', $status);
         })->paginate(30);
