@@ -68,7 +68,6 @@ class FanController extends Controller
             return $query->where('status', $status);
         })->paginate(30);
         return response()->json(['status' => 'success','data' => $fans]);
-        
     }
 
     public function collect(Fan $fan)
