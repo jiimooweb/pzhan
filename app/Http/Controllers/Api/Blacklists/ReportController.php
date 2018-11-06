@@ -48,7 +48,7 @@ class ReportController extends Controller
 
     public function verify()
     {
-        $report_id=request()->report;
+        $report_id=request()->report_id;
         $report_data=Report::find($report_id);
         if(request()->verify=='1'){
             switch ($report_data->type){
