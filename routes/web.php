@@ -126,6 +126,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::get('fans/{fan}/like', 'Api\Fans\FanController@like');  //点赞
 
     //举报
+    Route::post('verify','Api\Blacklists\ReportController@verify');
     Route::post('report','Api\Blacklists\ReportController@store');
     Route::post('show_report','Api\Blacklists\ReportController@show');
     Route::apiResource('report_causes','Api\Blacklists\ReportCauseController');
