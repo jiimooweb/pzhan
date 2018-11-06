@@ -65,7 +65,6 @@ class FanController extends Controller
     public function collect(Fan $fan)
     {
         $picture_ids = $fan->collcetPictures->pluck('id');
-        dd($picture_ids);
         $pictures = Picture::with(['tags'])->when($picture_ids, function($query) use ($picture_ids) {
             return $query->whereIn('id', $picture_ids);
         })->withCount(['likeFans', 'collectFans'])->paginate(15); 
