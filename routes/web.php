@@ -126,6 +126,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     //粉丝点赞
     Route::get('fans/{fan}/like', 'Api\Fans\FanController@like');  //点赞
     Route::get('fans/fan_pictures', 'Api\Fans\FanController@fanPicture');  //点赞
+    Route::get('fans', 'Api\Fans\FanController@fans');  //获取用户
 
     //举报
     Route::post('verify','Api\Blacklists\ReportController@verify');
