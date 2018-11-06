@@ -15,7 +15,7 @@ class CommentController extends Controller
     //
     public function index()
     {
-        $data = Paramate::where([['type','comment'],['switch',1]])->paginate(20);
+        $data = Paramate::where([['type','comment'],['switch',1]])->orderBy('created_at','desc')->paginate(20);
         return response()->json(['status' => 'success', 'data' => $data]);
     }
 
@@ -30,7 +30,8 @@ class CommentController extends Controller
             case $special:
                 $data = SpecialComment::where('content','like','%'.$key.'%')->with('fan')->with(['blacklists'=>function ($query){
                     $query->where('state',1)->orWhere('is_seal',1);
-                }])->paginate(20);
+                }])->orderBy('created_at','desc')->paginate(20);
+
                 $data->transform(function ($item,$key)use($special){
                      $item->module = $special;
                      return $item;
@@ -40,7 +41,8 @@ class CommentController extends Controller
             case $social:
                 $data = SocialComment::where('content','like','%'.$key.'%')->with('fan')->with(['blacklists'=>function ($query){
                     $query->where('state',1)->orWhere('is_seal',1);
-                }])->paginate(20);;
+                }])->orderBy('created_at','desc')->paginate(20);
+
                 $data->transform(function ($item,$key)use($social){
                     $item->module = $social;
                     return $item;
@@ -50,7 +52,7 @@ class CommentController extends Controller
             case 'all':
                 $dataSpecial = SpecialComment::where('content','like','%'.$key.'%')->with('fan')->with(['blacklists'=>function ($query){
                     $query->where('state',1)->orWhere('is_seal',1);
-                }])->paginate(20);
+                }])->orderBy('created_at','desc')->paginate(20);
 
                 $dataSpecial->transform(function ($item,$key)use($special){
                     $item->module = $special;
@@ -59,7 +61,7 @@ class CommentController extends Controller
 
                 $dataSocial = SocialComment::where('content','like','%'.$key.'%')->with('fan')->with(['blacklists'=>function ($query){
                     $query->where('state',1)->orWhere('is_seal',1);
-                }])->paginate(20);
+                }])->orderBy('created_at','desc')->paginate(20);
 
                 $dataSocial->transform(function ($item,$key)use($social){
                     $item->module = $social;

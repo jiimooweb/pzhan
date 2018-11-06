@@ -64,11 +64,18 @@ class FanController extends Controller
 
     public function collect(Fan $fan)
     {
-        $picture_ids = $fan->collcetPictures->pluck('id');
-        $pictures = Picture::with(['tags'])->when($picture_ids, function($query) use ($picture_ids) {
-            return $query->whereIn('id', $picture_ids);
-        })->withCount(['likeFans', 'collectFans'])->paginate(15); 
-        return response()->json(['status' => 'success','data' => $pictures]);
+        $page = request('page');
+        $limit = 15;        
+        $offset = ($page - 1) * $limit;
+        $picture_ids = $fan->collcetPictures->pluck('id')->toArray();
+        $total = count($picture_ids);
+        $picture_ids = array_slice($picture_ids, $offset, $limit);
+        $pictures = [];
+        $picture = new Picture();
+        foreach($picture_ids as $picture_id) {
+            $pictures[] = $picture->where('id', $picture_id)->with(['tags'])->withCount(['likeFans', 'collectFans'])->first();
+        }
+        return response()->json(['status' => 'success','data' => $pictures, 'total' => $total]);
     }
 
     public function like(Fan $fan)
@@ -76,8 +83,17 @@ class FanController extends Controller
         $picture_ids = $fan->likePictures->pluck('id');
         $pictures = Picture::with(['tags'])->when($picture_ids, function($query) use ($picture_ids) {
             return $query->whereIn('id', $picture_ids);
-        })->withCount(['likeFans', 'collectFans'])->paginate(15); 
+        })->withCount(['likeFans', 'collectFans'])->orderBy('created_at', 'desc')->paginate(15); 
         return response()->json(['status' => 'success','data' => $pictures]);
+    }
+
+    public function fanPicture()
+    {
+        $fan_id = request('fan_id') ?? Token::getUid();         
+        $fan = Fan::where('id', $fan_id)->first();       
+        $collect_ids = $fan->collcetPictures->pluck('id');
+        $like_ids = $fan->likePictures->pluck('id');
+        return response()->json(['status' => 'success','collect_ids' => $collect_ids,'like_ids' => $like_ids]);
     }
 
     public function getUid() 

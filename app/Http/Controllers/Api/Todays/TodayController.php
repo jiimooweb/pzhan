@@ -264,6 +264,77 @@ class TodayController extends Controller
 
     }
 
+    public function getDate()
+    {
+        $rdate = Carbon::parse(request('date'));
+        $rday = $rdate->day;
+        $rmonth = $rdate->month;
+        $ryear = $rdate->year;
+
+        $today = Carbon::today();
+        $year = $today->year;
+        $month = $today->month;
+        $day = $today->day;
+
+        $years = [];
+        $months = [];
+        $rmonths = [];
+        $fanID = Token::getUid();
+
+        if ($year > 2018) {
+            for ($i = $year; $i >= 2018; $i--) {
+                array_push($years, $i);
+            }
+            for ($i = $month; $i > 0; $i--) {
+                array_push($months, $i);
+            }
+
+            if($ryear==2019){
+                for ($i = $month; $i > 0; $i--) {
+                    array_push($rmonths, $i);
+                }
+            }else if($ryear==2018){
+                for ($i = 12; $i > 9; $i--) {
+                    array_push($rmonths, $i);
+                }
+            }
+        } else {
+            array_push($years, 2018);
+            for ($i = $month; $i > 9; $i--) {
+                array_push($rmonths, $i);
+                array_push($months, $i);
+            }
+        }
+
+        $data = Today::where('date', $rdate)->withCount('todayLikes')
+            ->withCount(['todayLikes as isLike' => function ($query) use ($fanID) {
+                $query->where('fan_ID', $fanID);
+            }])->with('picture')->get();
+
+        $tdata = Today::where('date', $today)->withCount('todayLikes')
+            ->withCount(['todayLikes as isLike' => function ($query) use ($fanID) {
+                $query->where('fan_ID', $fanID);
+            }])->with('picture')->get();
+
+        $date['tyear'] = $year;
+        $date['tmonth'] = $month;
+        $date['tday'] = $day;
+        $date['today'] = $today->toDateString();
+        $date['tmonths'] = $months;
+        $date['tdata'] =$tdata;
+
+        $date['years'] = $years;
+
+        $date['year'] = $ryear;
+        $date['month'] = $rmonth;
+        $date['day'] = $rday;
+        $date['monthF'] = $this->monthFormat($rmonth);
+        $date['date'] = $rdate->toDateString();
+        $date['months'] = $rmonths;
+
+        return response()->json(['data' => $data, 'date' => $date]);
+    }
+
     public function monthFormat($month)
     {
         switch ($month) {

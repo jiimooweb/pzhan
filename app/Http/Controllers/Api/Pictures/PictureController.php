@@ -171,7 +171,7 @@ class PictureController extends Controller
     {
         $fan_id = request('fan_id') ?? Token::getUid();                
 
-        $pictures = Picture::with(['tags'])->withCount(['likeFans', 'collectFans'])->paginate(30); 
+        $pictures = Picture::with(['tags'])->withCount(['likeFans', 'collectFans'])->orderBy('created_at', 'desc')->paginate(30); 
 
         foreach($pictures as &$picture) {
             $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
@@ -207,7 +207,7 @@ class PictureController extends Controller
 
         $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;  //是否收藏
         $picture->like = $picture->isLike($fan_id) ? 1 : 0;   //是否点赞
-        $picture->increment('hot', 1);  //增加一个热度           
+        // $picture->increment('hot', 1);  //增加一个热度           
         
         //相关推荐
         $recommends = PictureTag::getRecommends($picture->id);
@@ -240,7 +240,7 @@ class PictureController extends Controller
     public function rank()
     {             
         $keyword = request('keyword');
-        $pictures = Picture::withCount(['likeFans', 'collectFans'])->when($keyword == 'collect', function($query) {
+        $pictures = Picture::with(['tags'])->withCount(['likeFans', 'collectFans'])->when($keyword == 'collect', function($query) {
             return $query->orderBy('collect_fans_count', 'desc');
         })->when($keyword == 'like', function($query) {
             return $query->orderBy('like_fans_count', 'desc');
@@ -250,6 +250,13 @@ class PictureController extends Controller
 
         return response()->json(['status' => 'success', 'data' => $pictures]);
         
+    }
+
+    public function addHot(Picture $picture)
+    {
+        $picture->increment('hot', 1);  //增加一个热度 
+        $picture->increment('click', 1);  //增加一个点击 
+        return response()->json(['status' => 'success']);
     }
     
 }

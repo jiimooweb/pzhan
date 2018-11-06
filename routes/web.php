@@ -60,6 +60,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('pictures/{picture}/uncollect', 'Api\Pictures\PictureController@uncollect'); //取消收藏
     Route::post('pictures/{picture}/like', 'Api\Pictures\PictureController@like');  //点赞
     Route::post('pictures/{picture}/unlike', 'Api\Pictures\PictureController@unlike');  //取消赞
+    Route::get('pictures/{picture}/add_hot', 'Api\Pictures\PictureController@addHot');  //增加热度
     /*** 后台 ***/
     Route::apiResource('pictures', 'Api\Pictures\PictureController');
 
@@ -121,9 +122,10 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('sign_in','Api\Fans\SignInController@signIn');
     Route::apiResource('sign_tasks','Api\Fans\SignInController');
     //粉丝收藏
-    Route::get('fans/{fan}/collect', 'Api\Fans\FanController@collect');  //点赞
+    Route::get('fans/{fan}/collect', 'Api\Fans\FanController@collect');  //收藏
     //粉丝点赞
     Route::get('fans/{fan}/like', 'Api\Fans\FanController@like');  //点赞
+    Route::get('fans/fan_pictures', 'Api\Fans\FanController@fanPicture');  //点赞
 
     //举报
     Route::post('verify','Api\Blacklists\ReportController@verify');
@@ -137,6 +139,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
     //今日推荐
     Route::get('todays/mini','Api\Todays\TodayController@getToday');
+    Route::post('todays/date','Api\Todays\TodayController@getDate');
     Route::post('todays/other','Api\Todays\TodayController@getOther');
     Route::post('todays/month','Api\Todays\TodayController@getDataByYearMonth');
     Route::post('todays/year','Api\Todays\TodayController@getDataByYear');
@@ -159,6 +162,9 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     //专题评论
     Route::get('specials/{special}/comments', 'Api\Specials\SpecialCommentController@getcomments');
     Route::post('specials/{special}/comment', 'Api\Specials\SpecialCommentController@comment');
+    Route::post('specials/{special}/addCommentNotice', 'Api\Specials\SpecialCommentController@addCommentNotice');
+    Route::post('specials/{special}/addReplyNotice', 'Api\Specials\SpecialCommentController@addReplyNotice');
     Route::post('specials/replys', 'Api\Specials\SpecialCommentController@replys');
+    Route::post('specials/deleteComment', 'Api\Specials\SpecialCommentController@deleteComment');
 
 });

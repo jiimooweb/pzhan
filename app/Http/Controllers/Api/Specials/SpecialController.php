@@ -105,7 +105,7 @@ class SpecialController extends Controller
 
     public function miniIndex()
     {
-        $data = Special::where('switch',1)->with('cover_img')->paginate(18);
+        $data = Special::where('switch',1)->with('cover_img')->orderBy('created_at','desc')->paginate(18);
         return response()->json(['data' => $data]);
     }
 
@@ -124,7 +124,7 @@ class SpecialController extends Controller
     }
 
     public function getHot() {
-        $data = Special::where('switch',1)->orderBy('created_at','desc')->with('cover_img')->limit(2)->get();
+        $data = Special::where('switch',1)->with('cover_img')->orderBy('created_at','desc')->limit(2)->get();
         return response()->json(['data' => $data]);
     }
 
