@@ -65,8 +65,8 @@ class FanController extends Controller
     public function collect(Fan $fan)
     {
         $page = request('page');
-        $offset = ($page - 1) * $page;
-        $limit = 15;
+        $limit = 15;        
+        $offset = ($page - 1) * $limit;
         $picture_ids = $fan->collcetPictures->pluck('id')->toArray();
         $total = count($picture_ids);
         $picture_ids = array_slice($picture_ids, $offset, $limit);
