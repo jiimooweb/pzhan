@@ -8,7 +8,7 @@ class Fan extends Model
 {
     public function collcetPictures()
     {
-        return $this->belongsToMany(Picture::class, 'fan_collect_pictures', 'fan_id', 'picture_id')->orderBy('fan_collect_pictures.created_at', 'desc');
+        return $this->belongsToMany(Picture::class, 'fan_collect_pictures', 'fan_id', 'picture_id')->orderBy('fan_collect_pictures.created_at', 'asc');
     }
 
     public function likePictures()
