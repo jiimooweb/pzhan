@@ -37,4 +37,10 @@ class Report extends Model
         return $this->hasOne(SocialComment::class,
             'id', 'comment')->select(['content']);
     }
+
+    public function comment_sp()
+    {
+        return $this->hasOne(SpecialComment::class,
+            'id', 'comment')->select(['content']);
+    }
 }

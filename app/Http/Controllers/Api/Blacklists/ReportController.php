@@ -8,6 +8,7 @@ use App\Models\Report;
 use App\Models\Sign;
 use App\Models\Social;
 use App\Models\SocialComment;
+use App\Models\SpecialComment;
 use App\Services\Token;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -25,12 +26,19 @@ class ReportController extends Controller
         $datas=$datas->orderBy('status','asc')
             ->orderBy('created_at','desc')->paginate(20);
         foreach ($datas as $data){
-            if($data->type=="socials"){
-                $data->content=$data->comment_s;
-                unset($data->comment_s);
-            }else if($data->type=="social_comments"){
-                $data->content=$data->comment_sc;
-                unset($data->comment_sc);
+            switch ($data->type){
+                case 'socials':
+                    $data->content=$data->comment_s;
+                    unset($data->comment_s);
+                    break;
+                case 'social_comments':
+                    $data->content=$data->comment_sc;
+                    unset($data->comment_sc);
+                    break;
+                case 'special_comments':
+                    $data->content=$data->comment_sp;
+                    unset($data->comment_sp);
+                    break;
             }
         }
         return response()->json(['status' => 'success', 'data' => $datas]);
@@ -48,21 +56,25 @@ class ReportController extends Controller
 
     public function verify()
     {
-        $report_id=request()->report;
+        $report_id=request()->report_id;
         $report_data=Report::find($report_id);
         if(request()->verify=='1'){
             switch ($report_data->type){
                 case 'socials':
-                    $model=Social::class;
+                    $model=Social::where('id',$report_data->comment)
+                        ->update(['hidden'=>'1']);
                     break;
                 case 'social_comments':
-                    $model=SocialComment::class;
+                    $model=SocialComment::where('id',$report_data->comment)
+                        ->update(['hidden'=>'1']);
+                    break;
+                case 'special_comments':
+                    $model=SpecialComment::where('id',$report_data->comment)
+                        ->update(['hidden'=>'1']);
                     break;
             }
-            $social_updata=$model->where('id',$report_data->comments)
-                ->update(['hidden','1']);
         }
-        $updata=Report::where('id',$report_id)->updata(['status'=>'1']);
+        $updata=Report::where('id',$report_id)->update(['status'=>'1']);
         if($updata) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);
         }

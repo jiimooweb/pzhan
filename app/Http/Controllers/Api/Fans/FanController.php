@@ -62,6 +62,14 @@ class FanController extends Controller
         return response()->json(['isValid' => Token::verifyToken(request()->header('token'))]);
     }
 
+    public function fans() {
+        $status = request('status') ? request('status') : -1;
+        $fans = Fan::when($status > -1, function($query) use ($status) {
+            return $query->where('status', $status);
+        })->paginate(30);
+        return response()->json(['status' => 'success','data' => $fans]);
+    }
+
     public function collect(Fan $fan)
     {
         $page = request('page');
