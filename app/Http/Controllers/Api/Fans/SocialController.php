@@ -88,6 +88,9 @@ class SocialController extends Controller
     public function destroy()
     {
         if(Social::where('id', request()->social)->delete()) {
+            SocialComment::where('social_id', request()->social)->delete();
+            CommentNotice::where(['module' => Module::Social, 'module_id' => request()->social])->delete();
+            LikeNotice::where(['module' => Module::Social, 'module_id' => request()->social])->delete();
             return response()->json(['status' => 'success', 'msg' => '删除成功！']); 
         }
 
