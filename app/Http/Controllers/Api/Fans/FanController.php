@@ -72,7 +72,7 @@ class FanController extends Controller
         $pictures = [];
         
         foreach($picture_ids as $pictures_id) {
-            $pictures[] = Picture::where('id', $picture_ids)->with(['tags'])->withCount(['likeFans', 'collectFans'])->first();
+            $pictures[] = Picture::where('id', $picture_id)->with(['tags'])->withCount(['likeFans', 'collectFans'])->first();
         }
         // $pictures = Picture::with(['tags'])->when($picture_ids, function($query) use ($picture_ids) {
         //     return $query->whereIn('id', $picture_ids);
