@@ -67,7 +67,7 @@ class FanController extends Controller
         $page = request('page');
         $offset = ($page - 1) * $page;
         $limit = 15;
-        $picture_ids = $fan->collcetPictures->pluck('id');
+        $picture_ids = $fan->collcetPictures->pluck('id')->toArray();
         $picture_ids = array_slice($picture_ids, $offset, $limit);
         $pictures = [];
         
