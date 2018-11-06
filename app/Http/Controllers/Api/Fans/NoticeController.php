@@ -31,7 +31,7 @@ class NoticeController extends Controller
                 $notice->module_content = Social::where('id', $notice->module_id)->with('fan')->first(); 
             }
             if($notice->module == Module::Special) {
-                $notice->module_content = Special::where('id', $notice->module_id)->first();
+                $notice->module_content = Special::where('id', $notice->module_id)->with('cover_img')->first();
             }
         }
         CommentNotice::where(['fan_id' => $fan_id, 'status' => 0])->update(['status' => 1]);
