@@ -255,6 +255,7 @@ class PictureController extends Controller
     public function addHot(Picture $picture)
     {
         $picture->increment('hot', 1);  //增加一个热度 
+        $picture->increment('click', 1);  //增加一个点击 
         return response()->json(['status' => 'success']);
     }
     
