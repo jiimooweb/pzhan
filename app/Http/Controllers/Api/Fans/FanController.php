@@ -64,7 +64,7 @@ class FanController extends Controller
 
     public function fans() {
         $status = request('status') ? request('status') : -1;
-        $fans = Fan::when($satus > -1, function($query) use ($status) {
+        $fans = Fan::when($status > -1, function($query) use ($status) {
             return $query->where('status', $status);
         })->paginate(30);
         return response()->json(['status' => 'success','data' => $fans]);
