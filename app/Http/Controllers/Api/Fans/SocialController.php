@@ -221,7 +221,7 @@ class SocialController extends Controller
     {
         $delete_count = 0;
         if(SocialComment::where('id' ,request()->id)->delete()) {
-            $delete_count = SocialComment::where('pid', request()->id)->delete();
+            $delete_count = SocialComment::where('pid', request()->id)->forceDelete();
             return response()->json(['status' => 'success', 'count' => $delete_count + 1]);
         }
 
