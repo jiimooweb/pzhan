@@ -60,6 +60,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('pictures/{picture}/uncollect', 'Api\Pictures\PictureController@uncollect'); //取消收藏
     Route::post('pictures/{picture}/like', 'Api\Pictures\PictureController@like');  //点赞
     Route::post('pictures/{picture}/unlike', 'Api\Pictures\PictureController@unlike');  //取消赞
+    Route::get('pictures/{picture}/add_hot', 'Api\Pictures\PictureController@addHot');  //增加热度
     /*** 后台 ***/
     Route::apiResource('pictures', 'Api\Pictures\PictureController');
 
