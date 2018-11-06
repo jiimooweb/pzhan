@@ -68,6 +68,7 @@ class FanController extends Controller
         $offset = ($page - 1) * $page;
         $limit = 15;
         $picture_ids = $fan->collcetPictures->pluck('id')->toArray();
+        $total = count($picture_ids);
         $picture_ids = array_slice($picture_ids, $offset, $limit);
         $pictures = [];
         
@@ -77,7 +78,7 @@ class FanController extends Controller
         // $pictures = Picture::with(['tags'])->when($picture_ids, function($query) use ($picture_ids) {
         //     return $query->whereIn('id', $picture_ids);
         // })->withCount(['likeFans', 'collectFans'])->paginate(15); 
-        return response()->json(['status' => 'success','data' => $pictures]);
+        return response()->json(['status' => 'success','data' => $pictures, 'total' => $total]);
     }
 
     public function like(Fan $fan)
