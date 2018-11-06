@@ -25,7 +25,8 @@ class NoticeController extends Controller
     public function comment() 
     {
         $fan_id = request('fan_id') ?? Token::getUid();
-        $notices = CommentNotice::where('fan_id',$fan_id)->with(['fan', 'fromFan', 'toFan'])->orderBy('created_at', 'desc')->paginate(10); 
+        $notices = CommentNotice::where('fan_id',$fan_id)->with(['fan', 'fromFan', 'toFan'])->orderBy('created_at', 'desc')->paginate(10);
+        dd($notices);
         foreach($notices as &$notice) {
             if($notice->module == Module::Social) {
                 $notice->module_content = Social::where('id', $notice->module_id)->with('fan')->first(); 
