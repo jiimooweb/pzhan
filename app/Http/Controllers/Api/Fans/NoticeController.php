@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Fans;
 
+use App\Models\Special;
 use App\Utils\Module;
 use App\Models\Social;
 use App\Services\Token;
@@ -28,6 +29,9 @@ class NoticeController extends Controller
         foreach($notices as &$notice) {
             if($notice->module == Module::Social) {
                 $notice->module_content = Social::where('id', $notice->module_id)->with('fan')->first(); 
+            }
+            if($notice->module == Module::Special) {
+                $notice->module_content = Special::where('id', $notice->module_id)->with('fan')->first();
             }
         }
         CommentNotice::where(['fan_id' => $fan_id, 'status' => 0])->update(['status' => 1]);
