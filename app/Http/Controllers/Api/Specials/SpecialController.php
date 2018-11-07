@@ -22,7 +22,7 @@ class SpecialController extends Controller
     {
         $id = request()->special;
         $data =Special::where('id',$id)->with('imgs')->with('cover_img')->get();
-        return $data;
+        return response()->json(['status' => 'success', 'data' => $data]);
 
     }
 
