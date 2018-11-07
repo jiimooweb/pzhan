@@ -187,10 +187,10 @@ class PictureController extends Controller
 
     public function appRandomList()
     {
-        $fan_id = request('fan_id') ?? Token::getUid();                
+        $fan_id = request('fan_id') ?? Token::getUid();        
+        $random_picture_ids = request('random_picture_ids') ?? [];        
         $limit = 15;
 
-        $random_picture_ids =  \Cache::store('redis')->get('random_picture_'.$fan_id) ?? [];
         $pictures = Picture::when(count($random_picture_ids) > 0, function($query) use ($random_picture_ids){
             return $query->whereNotIn('id', $random_picture_ids);
         })->with(['tags'])->withCount(['likeFans', 'collectFans'])->inRandomOrder()->limit($limit)->get(); 
@@ -203,9 +203,6 @@ class PictureController extends Controller
         $picture_ids = $pictures->pluck('id')->toArray();
 
         $random_picture_ids = array_merge($random_picture_ids, $picture_ids);
-
-        \Cache::store('redis')->put('random_picture_'.$fan_id, $random_picture_ids, 1);
-        
         
         return response()->json(['status' => 'success', 'data' => $pictures,'random_picture_ids'=>$random_picture_ids]);
     }
