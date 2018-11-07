@@ -14,7 +14,7 @@ class SpecialController extends Controller
     //web
     public function index()
     {
-        $data = Special::paginate(20);
+        $data = Special::orderBy('created_at','desc')->paginate(20);
         return response()->json(['status' => 'success', 'data' => $data]);
     }
 
