@@ -14,14 +14,14 @@ class SpecialController extends Controller
     //web
     public function index()
     {
-        $data = Special::paginate(20);
+        $data = Special::orderBy('created_at','desc')->paginate(20);
         return response()->json(['status' => 'success', 'data' => $data]);
     }
 
     public function show()
     {
         $id = request()->special;
-        $data =Special::find($id)->with('imgs')->with('cover_img')->get();
+        $data =Special::where('id',$id)->with('imgs')->with('cover_img')->get();
         return $data;
 
     }
