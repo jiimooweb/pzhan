@@ -207,7 +207,7 @@ class PictureController extends Controller
         \Cache::store('redis')->put('random_picture_'.$fan_id, $random_picture_ids, 1);
         
         
-        return response()->json(['status' => 'success', 'data' => $pictures,'pic'=>$random_picture_ids]);
+        return response()->json(['status' => 'success', 'data' => $pictures,'random_picture_ids'=>$random_picture_ids]);
     }
 
 
