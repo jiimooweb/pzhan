@@ -20,7 +20,8 @@ class ReportController extends Controller
     {
         $datas=Report::with('report_fan:id,nickname')
             ->with('bereport_fan:id,nickname');
-        if(request('status')){
+        $status=request('status');
+        if(isset($status)){
             $datas=$datas->where('status',request('status'));
         }
         $datas=$datas->orderBy('status','asc')

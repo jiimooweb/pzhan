@@ -53,7 +53,7 @@ class SpecialCommentController extends Controller
     {
         $delete_count = 0;
         if(SpecialComment::where('id' ,request()->id)->delete()) {
-            $delete_count = SpecialComment::where('pid', request()->id)->delete();
+            $delete_count = SpecialComment::where('pid', request()->id)->forceDelete();
             return response()->json(['status' => 'success', 'count' => $delete_count + 1]);
         }
 
@@ -113,7 +113,7 @@ class SpecialCommentController extends Controller
                     'to_fan_id' => $data['to_fan_id'],
                     'content' => $data['content'],
                     'module_id' => $data['module_id'],
-                    'module' => Module::Social,
+                    'module' => Module::Special,
                 ];
                 CommentNotice::create($notice);
             }

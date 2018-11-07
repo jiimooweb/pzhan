@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Fans;
 
+use App\Models\Special;
 use App\Utils\Module;
 use App\Models\Social;
 use App\Services\Token;
@@ -24,10 +25,14 @@ class NoticeController extends Controller
     public function comment() 
     {
         $fan_id = request('fan_id') ?? Token::getUid();
-        $notices = CommentNotice::where('fan_id',$fan_id)->with(['fan', 'fromFan', 'toFan'])->orderBy('created_at', 'desc')->paginate(10); 
+        $notices = CommentNotice::where('fan_id',$fan_id)->with(['fan', 'fromFan', 'toFan'])->orderBy('created_at', 'desc')->paginate(10);
+
         foreach($notices as &$notice) {
             if($notice->module == Module::Social) {
                 $notice->module_content = Social::where('id', $notice->module_id)->with('fan')->first(); 
+            }
+            if($notice->module == Module::Special) {
+                $notice->module_content = Special::where('id', $notice->module_id)->with('cover_img')->first();
             }
         }
         CommentNotice::where(['fan_id' => $fan_id, 'status' => 0])->update(['status' => 1]);
