@@ -83,10 +83,12 @@ class PictureController extends Controller
     {
         $tags = $request->tags;
 
+        $picture_id = $picture->id;
+        
         if($picture->update($request->picture)){
             
             if($tags) {
-                PictureTag::where('picture_id',$picture->id)->delete();
+                PictureTag::where('picture_id', $picture_id)->delete();
 
                 foreach($tags as $tag) {
                     PictureTag::create(['tag_id' => $tag, 'picture_id' => $picture->id]);
