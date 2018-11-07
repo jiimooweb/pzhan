@@ -82,7 +82,7 @@ class SocialController extends Controller
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);               
         }
 
-        return response()->json(['status' => 'erro', 'msg' => '更新失败！']);                            
+        return response()->json(['status' => 'error', 'msg' => '更新失败！']);                            
     }
 
     public function destroy()
