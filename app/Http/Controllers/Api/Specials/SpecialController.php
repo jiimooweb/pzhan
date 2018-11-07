@@ -21,7 +21,7 @@ class SpecialController extends Controller
     public function show()
     {
         $id = request()->special;
-        $data =Special::find($id)->with('imgs')->with('cover_img');
+        $data =Special::where('id',$id)->with('imgs')->with('cover_img')->get();
         return $data;
 
     }
