@@ -84,7 +84,7 @@ class PictureController extends Controller
         $tags = $request->tags;
 
         $picture_id = $picture->id;
-        
+
         if($picture->update($request->picture)){
             
             if($tags) {
@@ -190,14 +190,24 @@ class PictureController extends Controller
         $fan_id = request('fan_id') ?? Token::getUid();                
         $limit = 15;
 
-        $pictures = Picture::with(['tags'])->withCount(['likeFans', 'collectFans'])->inRandomOrder()->paginate($limit); 
+        $random_picture_ids =  \Cache::store('redis')->get('random_picture_'.$fan_id) ?? [];
+        $pictures = Picture::when(count($random_picture_ids) > 0, function($query) use ($random_picture_ids){
+            return $query->whereNotIn('id', $random_picture_ids);
+        })->with(['tags'])->withCount(['likeFans', 'collectFans'])->inRandomOrder()->limit($limit)->get(); 
 
         foreach($pictures as &$picture) {
             $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
             $picture->like = $picture->isLike($fan_id) ? 1 : 0;
         }
+
+        $picture_ids = $pictures->pluck('id')->toArray();
+
+        $random_picture_ids = array_merge($random_picture_ids, $picture_ids);
+
+        \Cache::store('redis')->put('random_picture_'.$fan_id, $random_picture_ids, 1);
         
-        return response()->json(['status' => 'success', 'data' => $pictures]);
+        
+        return response()->json(['status' => 'success', 'data' => $pictures,'pic'=>$random_picture_ids]);
     }
 
 
