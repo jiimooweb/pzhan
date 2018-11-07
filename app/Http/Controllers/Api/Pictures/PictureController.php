@@ -189,7 +189,6 @@ class PictureController extends Controller
     {
         $fan_id = request('fan_id') ?? Token::getUid();        
         $random_picture_ids = request('random_picture_ids') ?? [];   
-        dd($random_picture_ids);     
         $limit = 15;
 
         $pictures = Picture::when(count($random_picture_ids) > 0, function($query) use ($random_picture_ids){
