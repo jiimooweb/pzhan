@@ -130,7 +130,11 @@ class TodayController extends Controller
                 ->withCount('todayLikes')
                 ->withCount(['todayLikes as isLike' => function ($query) use ($fanID) {
                     $query->where('fan_ID', $fanID);
-                }])->with('picture')->orderBy('date', 'desc')->get();
+                }])
+                ->with(['picture'=>function($query){
+                    $query->with('tags');
+                }])
+                ->orderBy('date', 'desc')->get();
             $data->transform(function ($item) {
                 $record = Carbon::parse($item->date);
                 $item->day = $record->day;
@@ -145,7 +149,11 @@ class TodayController extends Controller
                 ->withCount('todayLikes')
                 ->withCount(['todayLikes as isLike' => function ($query) use ($fanID) {
                     $query->where('fan_ID', $fanID);
-                }])->with('picture')->orderBy('date', 'desc')->get();
+                }])
+                ->with(['picture'=>function($query){
+                    $query->with('tags');
+                }])
+                ->orderBy('date', 'desc')->get();
             $data->transform(function ($item) {
                 $record = Carbon::parse($item->date);
                 $item->day = $record->day;
@@ -174,7 +182,11 @@ class TodayController extends Controller
                 ->withCount('todayLikes')
                 ->withCount(['todayLikes as isLike' => function ($query) use ($fanID) {
                     $query->where('fan_ID', $fanID);
-                }])->with('picture')->orderBy('date', 'desc')->get();
+                }])
+                ->with(['picture'=>function($query){
+                    $query->with('tags');
+                }])
+                ->orderBy('date', 'desc')->get();
             $data->transform(function ($item) {
                 $record = Carbon::parse($item->date);
                 $item->day = $record->day;
@@ -189,7 +201,11 @@ class TodayController extends Controller
                 ->withCount('todayLikes')
                 ->withCount(['todayLikes as isLike' => function ($query) use ($fanID) {
                     $query->where('fan_ID', $fanID);
-                }])->with('picture')->orderBy('date', 'desc')->get();
+                }])
+                ->with(['picture'=>function($query){
+                    $query->with('tags');
+                }])
+                ->orderBy('date', 'desc')->get();
             $data->transform(function ($item) {
                 $record = Carbon::parse($item->date);
                 $item->day = $record->day;
@@ -226,7 +242,11 @@ class TodayController extends Controller
                 ->withCount('todayLikes')
                 ->withCount(['todayLikes as isLike' => function ($query) use ($fanID) {
                     $query->where('fan_ID', $fanID);
-                }])->with('picture')->orderBy('date', 'desc')->get();
+                }])
+                ->with(['picture'=>function($query){
+                    $query->with('tags');
+                }])
+                ->orderBy('date', 'desc')->get();
             $data->transform(function ($item) {
                 $record = Carbon::parse($item->date);
                 $item->day = $record->day;
@@ -253,7 +273,11 @@ class TodayController extends Controller
                 ->withCount('todayLikes')
                 ->withCount(['todayLikes as isLike' => function ($query) use ($fanID) {
                     $query->where('fan_ID', $fanID);
-                }])->with('picture')->orderBy('date', 'desc')->get();
+                }])
+                ->with(['picture'=>function($query){
+                    $query->with('tags');
+                }])
+                ->orderBy('date', 'desc')->get();
             $data->transform(function ($item) {
                 $record = Carbon::parse($item->date);
                 $item->day = $record->day;
@@ -314,12 +338,19 @@ class TodayController extends Controller
         $data = Today::where('date', $rdate)->withCount('todayLikes')
             ->withCount(['todayLikes as isLike' => function ($query) use ($fanID) {
                 $query->where('fan_ID', $fanID);
-            }])->with('picture')->get();
+            }])
+            ->with(['picture'=>function($query){
+                $query->with('tags');
+            }])
+            ->get();
 
         $tdata = Today::where('date', $today)->withCount('todayLikes')
             ->withCount(['todayLikes as isLike' => function ($query) use ($fanID) {
                 $query->where('fan_ID', $fanID);
-            }])->with('picture')->get();
+            }])
+            ->with(['picture'=>function($query){
+                $query->with('tags');
+            }])->get();
 
         $date['tyear'] = $year;
         $date['tmonth'] = $month;
