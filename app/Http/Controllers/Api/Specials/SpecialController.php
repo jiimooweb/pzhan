@@ -112,7 +112,11 @@ class SpecialController extends Controller
     public function getRes()
     {
         $id = request('id');
-        $data = Special::where([['id',$id],['switch',1]])->with('imgs')->get();
+        $data = Special::where([['id',$id],['switch',1]])
+            ->with(['imgs'=>function($query){
+                $query->with('tags');
+            }])
+            ->get();
         return response()->json(['data' => $data]);
     }
 
