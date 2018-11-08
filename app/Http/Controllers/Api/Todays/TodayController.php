@@ -100,7 +100,12 @@ class TodayController extends Controller
         $data = Today::where('date', $today)->withCount('todayLikes')
             ->withCount(['todayLikes as isLike' => function ($query) use ($fanID) {
                 $query->where('fan_ID', $fanID);
-            }])->with('picture')->get();
+            }])
+            ->with(['picture'=>function($query){
+                $query->with('tags');
+            }])
+            ->get();
+
         $date['year'] = $year;
         $date['month'] = $month;
         $date['day'] = $day;
