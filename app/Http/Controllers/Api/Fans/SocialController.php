@@ -152,6 +152,7 @@ class SocialController extends Controller
         $notice_fans = array_unique($notice_fans);   
         if($notice_fans) {
             foreach($notice_fans as $notice_fan) {
+                
                 $notice = [
                     'fan_id' => $notice_fan,
                     'from_fan_id' => $fan_id,
@@ -160,7 +161,9 @@ class SocialController extends Controller
                     'module_id' => $social->id,
                     'module' => Module::Social,
                 ];  
+
                 CommentNotice::create($notice);
+                return $notice;
             }
         }
        
