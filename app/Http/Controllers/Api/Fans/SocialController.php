@@ -150,7 +150,7 @@ class SocialController extends Controller
         }
 
         $notice_fans = array_unique($notice_fans);        
-
+        return $notice_fans;
         if($notice_fans) {
             foreach($notice_fans as $notice_fan) {
                 $notice = [
