@@ -149,8 +149,7 @@ class SocialController extends Controller
             array_push($notice_fans, $data['to_fan_id']);
         }
 
-        $notice_fans = array_unique($notice_fans);        
-        return $notice_fans;
+        $notice_fans = array_unique($notice_fans);   
         if($notice_fans) {
             foreach($notice_fans as $notice_fan) {
                 $notice = [
