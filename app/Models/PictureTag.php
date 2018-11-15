@@ -18,7 +18,7 @@ class PictureTag extends Model
         $tags = self::where('picture_id',$picture_id)->get()->pluck('tag_id');
         $picture_ids = self::whereIn('tag_id', $tags)->whereNotIn('picture_id', [$picture_id])->inRandomOrder()->limit($limit)->get()->pluck('picture_id');
         
-        $recommends = Picture::whereIn('id', $picture_ids)->with(['tags'])->get();
+        $recommends = Picture::whereIn('id', $picture_ids)->with(['tags'])->withCount(['collectFans','likeFans'])->get();
         foreach($recommends as &$recommend) {
             $recommend->collect = $recommend->isCollect($fan_id) ? 1 : 0;
             $recommend->like = $recommend->isLike($fan_id) ? 1 : 0;
