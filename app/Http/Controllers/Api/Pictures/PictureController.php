@@ -267,8 +267,7 @@ class PictureController extends Controller
     }
 
     public function changeHidden(Picture $picture) {
-
-        dd($picture);
+        
         if($picture->hidden == 0) {
             $picture->hidden = 1;
         } else {
