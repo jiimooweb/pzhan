@@ -20,8 +20,8 @@ class PictureController extends Controller
         $tag_id = request('tag_id');
         $title = request('title');
         $author = request('author');
-        $collectOrder = request('collectOrder') ? 'asc' : 'desc';
-        $likeOrder = request('likeOrder') ? 'asc' : 'desc';
+        // $collectOrder = request('collectOrder') ? 'asc' : 'desc';
+        // $likeOrder = request('likeOrder') ? 'asc' : 'desc';
         $fan_id = request('fan_id') ?? Token::getUid();
         $picture_ids = null;
         if(isset($tag_id)) {
@@ -35,11 +35,7 @@ class PictureController extends Controller
             return $query->where('title', 'like', '%'.$title.'%');
         })->when($author, function($query) use ($author) {
             return $query->where('author', 'like', '%'.$author.'%');
-        })->withCount(['likeFans', 'collectFans'])->when($collectOrder, function($query) use ($collectOrder){
-            return $query->orderBy('collect_fans_count', $collectOrder);
-        })->when($likeOrder, function($query) use ($likeOrder){
-            return $query->orderBy('like_fans_count', $likeOrder);
-        })->paginate(30); 
+        })->withCount(['likeFans', 'collectFans'])->orderBy('created_at', 'desc')->paginate(30); 
         
         return response()->json(['status' => 'success', 'data' => $pictures]);
     }
