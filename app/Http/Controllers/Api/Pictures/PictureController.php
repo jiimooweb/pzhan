@@ -20,8 +20,8 @@ class PictureController extends Controller
         $tag_id = request('tag_id');
         $title = request('title');
         $author = request('author');
-        $collectOrder = request('collectOrder') ? 'asc' : 'desc';
-        $likeOrder = request('likeOrder') ? 'asc' : 'desc';
+        // $collectOrder = request('collectOrder') ? 'asc' : 'desc';
+        // $likeOrder = request('likeOrder') ? 'asc' : 'desc';
         $fan_id = request('fan_id') ?? Token::getUid();
         $picture_ids = null;
         if(isset($tag_id)) {
@@ -35,11 +35,7 @@ class PictureController extends Controller
             return $query->where('title', 'like', '%'.$title.'%');
         })->when($author, function($query) use ($author) {
             return $query->where('author', 'like', '%'.$author.'%');
-        })->withCount(['likeFans', 'collectFans'])->when($collectOrder, function($query) use ($collectOrder){
-            return $query->orderBy('collect_fans_count', $collectOrder);
-        })->when($likeOrder, function($query) use ($likeOrder){
-            return $query->orderBy('like_fans_count', $likeOrder);
-        })->paginate(30); 
+        })->withCount(['likeFans', 'collectFans'])->orderBy('created_at', 'desc')->paginate(30); 
         
         return response()->json(['status' => 'success', 'data' => $pictures]);
     }
@@ -175,7 +171,7 @@ class PictureController extends Controller
     {
         $fan_id = request('fan_id') ?? Token::getUid();                
 
-        $pictures = Picture::with(['tags'])->withCount(['likeFans', 'collectFans'])->orderBy('created_at', 'desc')->paginate(30); 
+        $pictures = Picture::with(['tags'])->withCount(['likeFans', 'collectFans'])->where('hidden', 0)->orderBy('created_at', 'desc')->paginate(30); 
 
         foreach($pictures as &$picture) {
             $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
@@ -193,7 +189,7 @@ class PictureController extends Controller
 
         $pictures = Picture::when(count($random_picture_ids) > 0, function($query) use ($random_picture_ids){
             return $query->whereNotIn('id', $random_picture_ids);
-        })->with(['tags'])->withCount(['likeFans', 'collectFans'])->inRandomOrder()->limit($limit)->get(); 
+        })->where('hidden', 0)->with(['tags'])->withCount(['likeFans', 'collectFans'])->inRandomOrder()->limit($limit)->get(); 
 
         foreach($pictures as &$picture) {
             $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
@@ -212,7 +208,7 @@ class PictureController extends Controller
     {
         $fan_id = request('fan_id') ?? Token::getUid();
 
-        $picture = $picture->where('id', $picture->id)->with(['tags' => function ($query){
+        $picture = $picture->where('id', $picture->id)->where('hidden', 0)->with(['tags' => function ($query){
             $query->select('tags.id', 'tags.name');
         }])->first();
 
@@ -251,7 +247,7 @@ class PictureController extends Controller
     public function rank()
     {             
         $keyword = request('keyword');
-        $pictures = Picture::with(['tags'])->withCount(['likeFans', 'collectFans'])->when($keyword == 'collect', function($query) {
+        $pictures = Picture::with(['tags'])->where('hidden', 0)->withCount(['likeFans', 'collectFans'])->when($keyword == 'collect', function($query) {
             return $query->orderBy('collect_fans_count', 'desc');
         })->when($keyword == 'like', function($query) {
             return $query->orderBy('like_fans_count', 'desc');
@@ -268,6 +264,32 @@ class PictureController extends Controller
         $picture->increment('hot', 1);  //增加一个热度 
         $picture->increment('click', 1);  //增加一个点击 
         return response()->json(['status' => 'success']);
+    }
+
+    public function changeHidden(Picture $picture) {
+
+        if($picture->hidden == 0) {
+            $picture->hidden = 1;
+        } else {
+            $picture->hidden = 0;
+        }
+
+        if($picture->save()) {
+            return response()->json(['status' => 'success']);
+        }
+
+        return response()->json(['status' => 'error']);        
+
+    }
+
+    public function changeStatus() {
+        
+        if(Picture::where('status',1)->update(['hidden' => request()->hidden])) {
+            return response()->json(['status' => 'success']);
+        }
+
+        return response()->json(['status' => 'error']); 
+        
     }
     
 }

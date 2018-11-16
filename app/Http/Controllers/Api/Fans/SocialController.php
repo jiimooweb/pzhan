@@ -149,18 +149,21 @@ class SocialController extends Controller
             array_push($notice_fans, $data['to_fan_id']);
         }
 
-        $notice_fans = array_unique($notice_fans);        
-
+        $notice_fans = array_unique($notice_fans);   
         if($notice_fans) {
+            
             foreach($notice_fans as $notice_fan) {
+                
                 $notice = [
                     'fan_id' => $notice_fan,
                     'from_fan_id' => $fan_id,
                     'to_fan_id' => $data['to_fan_id'],
                     'content' => $data['content'],
                     'module_id' => $social->id,
+                    'module_comment_id' => $data['module_comment_id'],                    
                     'module' => Module::Social,
                 ];  
+
                 CommentNotice::create($notice);
             }
         }
@@ -198,6 +201,7 @@ class SocialController extends Controller
                     'to_fan_id' => $data['to_fan_id'],
                     'content' => $data['content'],
                     'module_id' => $social->id,
+                    'module_comment_id' => $data['module_comment_id'],
                     'module' => Module::Social,
                 ];  
                 CommentNotice::create($notice);
@@ -207,6 +211,7 @@ class SocialController extends Controller
         return response()->json(['status' => 'success']);
     }
 
+ 
     public function replys() 
     {
         
@@ -221,6 +226,7 @@ class SocialController extends Controller
     {
         $delete_count = 0;
         if(SocialComment::where('id' ,request()->id)->delete()) {
+            CommentNotice::where('module_comment_id', request()->id)->delete();
             $delete_count = SocialComment::where('pid', request()->id)->forceDelete();
             return response()->json(['status' => 'success', 'count' => $delete_count + 1]);
         }
