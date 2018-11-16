@@ -15,7 +15,7 @@ class Picture extends Model
             $builder->where('hidden', 0);
         });
     }
-    
+
     public function tags()
     {
         return $this->belongsToMany(Tag::class, 'picture_tags', 'picture_id', 'tag_id');
