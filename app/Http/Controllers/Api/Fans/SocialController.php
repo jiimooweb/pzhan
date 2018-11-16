@@ -211,6 +211,12 @@ class SocialController extends Controller
         return response()->json(['status' => 'success']);
     }
 
+    public function deleteNotice() {
+        $comment_id = request('module_comment_id');
+        CommentNotice::where('module_comment_id', $comment_id)->delete();
+        return response()->json(['status' => 'success']);
+    }
+ 
     public function replys() 
     {
         
