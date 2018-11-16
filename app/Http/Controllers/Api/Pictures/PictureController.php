@@ -265,5 +265,17 @@ class PictureController extends Controller
         $picture->increment('click', 1);  //增加一个点击 
         return response()->json(['status' => 'success']);
     }
+
+    public function changeHidden(Picture $picture) {
+        if($picture->hidden == 0) {
+            $picture->hidden = 1;
+        } else {
+            $picture->hidden = 0;
+        }
+
+        $picture->save();
+
+        return response()->json(['status' => 'success']);
+    }
     
 }
