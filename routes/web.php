@@ -170,4 +170,8 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('specials/replys', 'Api\Specials\SpecialCommentController@replys');
     Route::post('specials/deleteComment', 'Api\Specials\SpecialCommentController@deleteComment');
 
+    //文章
+    Route::apiResource('articles', 'Api\Articles\ArticleController');
+    
+
 });
