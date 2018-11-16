@@ -266,7 +266,8 @@ class PictureController extends Controller
         return response()->json(['status' => 'success']);
     }
 
-    public function changeHidden(Picture $picture) {
+    public function changeHidden(Picture $picture) 
+    {
 
         if($picture->hidden == 0) {
             $picture->hidden = 1;
@@ -282,7 +283,8 @@ class PictureController extends Controller
 
     }
 
-    public function changeStatus() {
+    public function changeStatus() 
+    {
         
         if(Picture::where('status',1)->update(['hidden' => request()->hidden])) {
             return response()->json(['status' => 'success']);
@@ -290,6 +292,28 @@ class PictureController extends Controller
 
         return response()->json(['status' => 'error']); 
         
+    }
+
+    public function download(Picture $picture)
+    {
+        $url = $picture->url;
+        $url_arr = parse_url($url);
+        $ext = pathinfo($url_arr['path'], PATHINFO_EXTENSION);
+        $content = file_get_contents($url);
+        $path = storage_path('app/public').'/'. $picture->title.'_'. $picture->pic_id . '.' . $ext;
+        if(file_put_contents($path, $content) > 0) {
+            return response()->json(['status' => 'success', 'path' => $path]);
+        }
+
+        return response()->json(['status' => 'error']);         
+    }
+
+    public function delPic() 
+    {
+        $path = request('path');
+        $file_path = parse_url($path)['path'];
+        dd($file_path);
+        // $picture->title.'_'. $picture->pic_id . '.' . $ext;
     }
     
 }
