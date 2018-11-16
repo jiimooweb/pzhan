@@ -211,11 +211,6 @@ class SocialController extends Controller
         return response()->json(['status' => 'success']);
     }
 
-    public function deleteNotice() {
-        $comment_id = request('module_comment_id');
-        CommentNotice::where('module_comment_id', $comment_id)->delete();
-        return response()->json(['status' => 'success']);
-    }
  
     public function replys() 
     {
@@ -231,6 +226,7 @@ class SocialController extends Controller
     {
         $delete_count = 0;
         if(SocialComment::where('id' ,request()->id)->delete()) {
+            CommentNotice::where('module_comment_id', request()->id)->delete();
             $delete_count = SocialComment::where('pid', request()->id)->forceDelete();
             return response()->json(['status' => 'success', 'count' => $delete_count + 1]);
         }
