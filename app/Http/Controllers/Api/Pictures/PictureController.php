@@ -315,7 +315,8 @@ class PictureController extends Controller
         $url_arr = parse_url($url);
         $ext = pathinfo($url_arr['path'], PATHINFO_EXTENSION);
         $file = $picture->pic_id . '.' . $ext;
-        unlike(storage_path('app/public').'/'.$file);
+        $del_path = storage_path('app/public').'/'.$file;
+        unlink($del_path);
     }
     
 }
