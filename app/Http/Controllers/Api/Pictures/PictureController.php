@@ -27,7 +27,7 @@ class PictureController extends Controller
         if(isset($tag_id)) {
             $picture_ids = PictureTag::where('tag_id',$tag_id)->get()->pluck('picture_id');
         }
-        $pictures = Picture::with(['tags'])->when($pic_id > 0, function($query) use ($pic_id) {
+        $pictures = Picture::with(['tags'])->withoutGlobalScope('hidden')->when($pic_id > 0, function($query) use ($pic_id) {
             return $query->where('pic_id', $pic_id);
         })->when($picture_ids, function($query) use ($picture_ids) {
             return $query->whereIn('id', $picture_ids);
