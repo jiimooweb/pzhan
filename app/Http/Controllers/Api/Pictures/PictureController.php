@@ -300,7 +300,7 @@ class PictureController extends Controller
         $url_arr = parse_url($url);
         $ext = pathinfo($url_arr['path'], PATHINFO_EXTENSION);
         $content = file_get_contents($url);
-        $path = storage_path('app/public').'/'. $picture->title.'_'. $picture->pic_id . '.' . $ext;
+        $path = storage_path('app/public').'/'. $picture->pic_id . '.' . $ext;
         if(file_put_contents($path, $content) > 0) {
             return response()->json(['status' => 'success', 'path' => $path]);
         }
