@@ -302,18 +302,20 @@ class PictureController extends Controller
         $content = file_get_contents($url);
         $path = storage_path('app/public').'/'. $picture->pic_id . '.' . $ext;
         if(file_put_contents($path, $content) > 0) {
-            return response()->json(['status' => 'success', 'path' => $path]);
+            $ret = "https://www.rdoorweb.com/pzhan/storage/app/public/". $picture->pic_id . '.' . $ext;
+            return response()->json(['status' => 'success', 'url' => $ret]);
         }
 
         return response()->json(['status' => 'error']);         
     }
 
-    public function delPic() 
+    public function delPic(Picture $picture) 
     {
-        $path = request('path');
-        $file_path = parse_url($path)['path'];
-        dd($file_path);
-        // $picture->title.'_'. $picture->pic_id . '.' . $ext;
+        $url = $picture->url;
+        $url_arr = parse_url($url);
+        $ext = pathinfo($url_arr['path'], PATHINFO_EXTENSION);
+        $file = $picture->pic_id . '.' . $ext;
+        unlike(storage_path('app/public').'/'.$file);
     }
     
 }
