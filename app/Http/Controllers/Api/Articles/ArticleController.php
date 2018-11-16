@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Articles;
 
+use App\Models\Article;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -17,10 +18,10 @@ class ArticleController extends Controller
     }
 
 
-    public function store(ArticleRequest $request) 
+    public function store() 
     {   
         $data = request([
-            'title', 'author', 'click', 'content', 'thumb'
+            'title', 'author', 'click', 'content'
         ]);
         
         if(Article::create($data)) {
@@ -37,10 +38,10 @@ class ArticleController extends Controller
         return response()->json(['status' => $status, 'data' => $article]);
     }
 
-    public function update(ArticleRequest $request)
+    public function update()
     {
         $data = request([
-            'title', 'author', 'click', 'content', 'thumb'
+            'title', 'author', 'click', 'content'
         ]);
         
         if(Article::where('id', request()->article)->update($data)) {
