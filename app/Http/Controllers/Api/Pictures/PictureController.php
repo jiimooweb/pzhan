@@ -267,16 +267,29 @@ class PictureController extends Controller
     }
 
     public function changeHidden(Picture $picture) {
-        
+
         if($picture->hidden == 0) {
             $picture->hidden = 1;
         } else {
             $picture->hidden = 0;
         }
 
-        $picture->save();
+        if($picture->save()) {
+            return response()->json(['status' => 'success']);
+        }
 
-        return response()->json(['status' => 'success']);
+        return response()->json(['status' => 'error']);        
+
+    }
+
+    public function changeStatus() {
+        
+        if(Picture::where('status',1)->update(['hidden' => request()->hidden])) {
+            return response()->json(['status' => 'success']);
+        }
+
+        return response()->json(['status' => 'error']); 
+        
     }
     
 }
