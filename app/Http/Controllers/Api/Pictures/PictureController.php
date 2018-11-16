@@ -27,7 +27,7 @@ class PictureController extends Controller
         if(isset($tag_id)) {
             $picture_ids = PictureTag::where('tag_id',$tag_id)->get()->pluck('picture_id');
         }
-        $pictures = Picture::with(['tags'])->withoutGlobalScope('hidden')->when($pic_id > 0, function($query) use ($pic_id) {
+        $pictures = Picture::with(['tags'])->when($pic_id > 0, function($query) use ($pic_id) {
             return $query->where('pic_id', $pic_id);
         })->when($picture_ids, function($query) use ($picture_ids) {
             return $query->whereIn('id', $picture_ids);
@@ -171,7 +171,7 @@ class PictureController extends Controller
     {
         $fan_id = request('fan_id') ?? Token::getUid();                
 
-        $pictures = Picture::with(['tags'])->withCount(['likeFans', 'collectFans'])->orderBy('created_at', 'desc')->paginate(30); 
+        $pictures = Picture::with(['tags'])->withCount(['likeFans', 'collectFans'])->where('hidden', 0)->orderBy('created_at', 'desc')->paginate(30); 
 
         foreach($pictures as &$picture) {
             $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
@@ -189,7 +189,7 @@ class PictureController extends Controller
 
         $pictures = Picture::when(count($random_picture_ids) > 0, function($query) use ($random_picture_ids){
             return $query->whereNotIn('id', $random_picture_ids);
-        })->with(['tags'])->withCount(['likeFans', 'collectFans'])->inRandomOrder()->limit($limit)->get(); 
+        })->where('hidden', 0)->with(['tags'])->withCount(['likeFans', 'collectFans'])->inRandomOrder()->limit($limit)->get(); 
 
         foreach($pictures as &$picture) {
             $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
@@ -208,7 +208,7 @@ class PictureController extends Controller
     {
         $fan_id = request('fan_id') ?? Token::getUid();
 
-        $picture = $picture->where('id', $picture->id)->with(['tags' => function ($query){
+        $picture = $picture->where('id', $picture->id)->where('hidden', 0)->with(['tags' => function ($query){
             $query->select('tags.id', 'tags.name');
         }])->first();
 
@@ -247,7 +247,7 @@ class PictureController extends Controller
     public function rank()
     {             
         $keyword = request('keyword');
-        $pictures = Picture::with(['tags'])->withCount(['likeFans', 'collectFans'])->when($keyword == 'collect', function($query) {
+        $pictures = Picture::with(['tags'])->where('hidden', 0)->withCount(['likeFans', 'collectFans'])->when($keyword == 'collect', function($query) {
             return $query->orderBy('collect_fans_count', 'desc');
         })->when($keyword == 'like', function($query) {
             return $query->orderBy('like_fans_count', 'desc');

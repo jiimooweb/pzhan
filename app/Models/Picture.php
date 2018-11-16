@@ -11,9 +11,6 @@ class Picture extends Model
     {
         parent::boot();
 
-        static::addGlobalScope('hidden', function(Builder $builder) {
-            $builder->where('hidden', 0);
-        });
     }
 
     public function tags()
