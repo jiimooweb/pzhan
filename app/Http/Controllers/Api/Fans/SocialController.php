@@ -160,6 +160,7 @@ class SocialController extends Controller
                     'to_fan_id' => $data['to_fan_id'],
                     'content' => $data['content'],
                     'module_id' => $social->id,
+                    'module_comment_id' => $data['module_comment_id'],                    
                     'module' => Module::Social,
                 ];  
 
@@ -200,6 +201,7 @@ class SocialController extends Controller
                     'to_fan_id' => $data['to_fan_id'],
                     'content' => $data['content'],
                     'module_id' => $social->id,
+                    'module_comment_id' => $data['module_comment_id'],
                     'module' => Module::Social,
                 ];  
                 CommentNotice::create($notice);
