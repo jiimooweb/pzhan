@@ -232,7 +232,7 @@ class PictureController extends Controller
             $picture_ids = PictureTag::where('tag_id',$tag_id)->get()->pluck('picture_id');
         }
 
-        $pictures = Picture::with(['tags'])->when($picture_ids, function($query) use ($picture_ids) {
+        $pictures = Picture::with(['tags'])->where('hidden', 0)->when($picture_ids, function($query) use ($picture_ids) {
             return $query->whereIn('id', $picture_ids);
         })->withCount(['likeFans', 'collectFans'])->paginate(15); 
 
