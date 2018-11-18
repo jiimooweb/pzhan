@@ -185,7 +185,7 @@ class PictureController extends Controller
     {
         $fan_id = request('fan_id') ?? Token::getUid();        
         $random_picture_ids = request('random_picture_ids') ?? [];   
-        $limit = 15;
+        $limit = 20;
 
         $pictures = Picture::when(count($random_picture_ids) > 0, function($query) use ($random_picture_ids){
             return $query->whereNotIn('id', $random_picture_ids);
@@ -210,11 +210,11 @@ class PictureController extends Controller
 
         $picture = $picture->where('id', $picture->id)->where('hidden', 0)->with(['tags' => function ($query){
             $query->select('tags.id', 'tags.name');
-        }])->first();
+        }])->withCount(['likeFans', 'collectFans'])->first();
 
         $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;  //是否收藏
         $picture->like = $picture->isLike($fan_id) ? 1 : 0;   //是否点赞
-        // $picture->increment('hot', 1);  //增加一个热度           
+        $picture->increment('hot', 1);  //增加一个热度           
         
         //相关推荐
         $recommends = PictureTag::getRecommends($picture->id);
@@ -225,7 +225,7 @@ class PictureController extends Controller
     public function getListByTags()
     {
         $fan_id = request('fan_id') ?? Token::getUid();                
-        $limit = 15;
+        $limit = 20;
         $tag_id = request('tag_id');
         $picture_ids = null;
         if(isset($tag_id)) {
@@ -234,7 +234,7 @@ class PictureController extends Controller
 
         $pictures = Picture::with(['tags'])->where('hidden', 0)->when($picture_ids, function($query) use ($picture_ids) {
             return $query->whereIn('id', $picture_ids);
-        })->withCount(['likeFans', 'collectFans'])->paginate(15); 
+        })->withCount(['likeFans', 'collectFans'])->paginate($limit); 
 
         foreach($pictures as &$picture) {
             $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
