@@ -6,6 +6,13 @@ use App\Models\Model;
 
 class Picture extends Model
 {
+
+    public static function boot()
+    {
+        parent::boot();
+
+    }
+
     public function tags()
     {
         return $this->belongsToMany(Tag::class, 'picture_tags', 'picture_id', 'tag_id');

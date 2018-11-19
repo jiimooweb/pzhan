@@ -113,7 +113,7 @@ class SpecialCommentController extends Controller
                     'to_fan_id' => $data['to_fan_id'],
                     'content' => $data['content'],
                     'module_id' => $data['module_id'],
-                    'module' => Module::Social,
+                    'module' => Module::Special,
                 ];
                 CommentNotice::create($notice);
             }

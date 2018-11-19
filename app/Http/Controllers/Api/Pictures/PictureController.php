@@ -20,8 +20,8 @@ class PictureController extends Controller
         $tag_id = request('tag_id');
         $title = request('title');
         $author = request('author');
-        $collectOrder = request('collectOrder') ? 'asc' : 'desc';
-        $likeOrder = request('likeOrder') ? 'asc' : 'desc';
+        // $collectOrder = request('collectOrder') ? 'asc' : 'desc';
+        // $likeOrder = request('likeOrder') ? 'asc' : 'desc';
         $fan_id = request('fan_id') ?? Token::getUid();
         $picture_ids = null;
         if(isset($tag_id)) {
@@ -35,11 +35,7 @@ class PictureController extends Controller
             return $query->where('title', 'like', '%'.$title.'%');
         })->when($author, function($query) use ($author) {
             return $query->where('author', 'like', '%'.$author.'%');
-        })->withCount(['likeFans', 'collectFans'])->when($collectOrder, function($query) use ($collectOrder){
-            return $query->orderBy('collect_fans_count', $collectOrder);
-        })->when($likeOrder, function($query) use ($likeOrder){
-            return $query->orderBy('like_fans_count', $likeOrder);
-        })->paginate(30); 
+        })->withCount(['likeFans', 'collectFans'])->orderBy('created_at', 'desc')->paginate(30); 
         
         return response()->json(['status' => 'success', 'data' => $pictures]);
     }
@@ -62,11 +58,13 @@ class PictureController extends Controller
 
         $picture = Picture::create($request->picture);
 
+        $picture_id = $picture->id;
+
         if($picture) {
 
             if($tags) {
                 foreach($tags as $tag) {
-                    PictureTag::create(['tag_id' => $tag, 'picture_id' => $picture->id]);
+                    PictureTag::create(['tag_id' => $tag, 'picture_id' => $picture_id]);
                 }
             }
 
@@ -81,10 +79,12 @@ class PictureController extends Controller
     {
         $tags = $request->tags;
 
-        if($picture->update($request->picture)){
+        $picture_id = $picture->id;
 
+        if($picture->update($request->picture)){
+            
             if($tags) {
-                PictureTag::where('picture_id',$picture->id)->delete();
+                PictureTag::where('picture_id', $picture_id)->delete();
 
                 foreach($tags as $tag) {
                     PictureTag::create(['tag_id' => $tag, 'picture_id' => $picture->id]);
@@ -171,7 +171,7 @@ class PictureController extends Controller
     {
         $fan_id = request('fan_id') ?? Token::getUid();                
 
-        $pictures = Picture::with(['tags'])->withCount(['likeFans', 'collectFans'])->orderBy('created_at', 'desc')->paginate(30); 
+        $pictures = Picture::with(['tags'])->withCount(['likeFans', 'collectFans'])->where('hidden', 0)->orderBy('created_at', 'desc')->paginate(30); 
 
         foreach($pictures as &$picture) {
             $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
@@ -183,17 +183,24 @@ class PictureController extends Controller
 
     public function appRandomList()
     {
-        $fan_id = request('fan_id') ?? Token::getUid();                
-        $limit = 15;
+        $fan_id = request('fan_id') ?? Token::getUid();        
+        $random_picture_ids = request('random_picture_ids') ?? [];   
+        $limit = 20;
 
-        $pictures = Picture::with(['tags'])->withCount(['likeFans', 'collectFans'])->inRandomOrder()->paginate($limit); 
+        $pictures = Picture::when(count($random_picture_ids) > 0, function($query) use ($random_picture_ids){
+            return $query->whereNotIn('id', $random_picture_ids);
+        })->where('hidden', 0)->with(['tags'])->withCount(['likeFans', 'collectFans'])->inRandomOrder()->limit($limit)->get(); 
 
         foreach($pictures as &$picture) {
             $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
             $picture->like = $picture->isLike($fan_id) ? 1 : 0;
         }
+
+        $picture_ids = $pictures->pluck('id')->toArray();
+
+        $random_picture_ids = array_merge($random_picture_ids, $picture_ids);
         
-        return response()->json(['status' => 'success', 'data' => $pictures]);
+        return response()->json(['status' => 'success', 'data' => $pictures,'random_picture_ids'=>$random_picture_ids]);
     }
 
 
@@ -201,13 +208,14 @@ class PictureController extends Controller
     {
         $fan_id = request('fan_id') ?? Token::getUid();
 
-        $picture = $picture->where('id', $picture->id)->with(['tags' => function ($query){
+        $picture = $picture->where('id', $picture->id)->where('hidden', 0)->with(['tags' => function ($query){
             $query->select('tags.id', 'tags.name');
-        }])->first();
+        }])->withCount(['likeFans', 'collectFans'])->first();
 
         $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;  //是否收藏
         $picture->like = $picture->isLike($fan_id) ? 1 : 0;   //是否点赞
-        // $picture->increment('hot', 1);  //增加一个热度           
+        $picture->increment('hot', 1);  //增加一个热度           
+        $picture->increment('click', 1);  //增加一个点击      
         
         //相关推荐
         $recommends = PictureTag::getRecommends($picture->id);
@@ -218,16 +226,16 @@ class PictureController extends Controller
     public function getListByTags()
     {
         $fan_id = request('fan_id') ?? Token::getUid();                
-        $limit = 15;
+        $limit = 20;
         $tag_id = request('tag_id');
         $picture_ids = null;
         if(isset($tag_id)) {
             $picture_ids = PictureTag::where('tag_id',$tag_id)->get()->pluck('picture_id');
         }
 
-        $pictures = Picture::with(['tags'])->when($picture_ids, function($query) use ($picture_ids) {
+        $pictures = Picture::with(['tags'])->where('hidden', 0)->when($picture_ids, function($query) use ($picture_ids) {
             return $query->whereIn('id', $picture_ids);
-        })->withCount(['likeFans', 'collectFans'])->paginate(15); 
+        })->withCount(['likeFans', 'collectFans'])->paginate($limit); 
 
         foreach($pictures as &$picture) {
             $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
@@ -240,7 +248,7 @@ class PictureController extends Controller
     public function rank()
     {             
         $keyword = request('keyword');
-        $pictures = Picture::with(['tags'])->withCount(['likeFans', 'collectFans'])->when($keyword == 'collect', function($query) {
+        $pictures = Picture::with(['tags'])->where('hidden', 0)->withCount(['likeFans', 'collectFans'])->when($keyword == 'collect', function($query) {
             return $query->orderBy('collect_fans_count', 'desc');
         })->when($keyword == 'like', function($query) {
             return $query->orderBy('like_fans_count', 'desc');
@@ -257,6 +265,59 @@ class PictureController extends Controller
         $picture->increment('hot', 1);  //增加一个热度 
         $picture->increment('click', 1);  //增加一个点击 
         return response()->json(['status' => 'success']);
+    }
+
+    public function changeHidden(Picture $picture) 
+    {
+
+        if($picture->hidden == 0) {
+            $picture->hidden = 1;
+        } else {
+            $picture->hidden = 0;
+        }
+
+        if($picture->save()) {
+            return response()->json(['status' => 'success']);
+        }
+
+        return response()->json(['status' => 'error']);        
+
+    }
+
+    public function changeStatus() 
+    {
+        
+        if(Picture::where('status',1)->update(['hidden' => request()->hidden])) {
+            return response()->json(['status' => 'success']);
+        }
+
+        return response()->json(['status' => 'error']); 
+        
+    }
+
+    public function download(Picture $picture)
+    {
+        $url = $picture->url;
+        $url_arr = parse_url($url);
+        $ext = pathinfo($url_arr['path'], PATHINFO_EXTENSION);
+        $content = file_get_contents($url);
+        $path = storage_path('app/public').'/'. $picture->pic_id . '.' . $ext;
+        if(file_put_contents($path, $content) > 0) {
+            $ret = "https://www.rdoorweb.com/pzhan/storage/app/public/". $picture->pic_id . '.' . $ext;
+            return response()->json(['status' => 'success', 'url' => $ret]);
+        }
+
+        return response()->json(['status' => 'error']);         
+    }
+
+    public function delPic(Picture $picture) 
+    {
+        $url = $picture->url;
+        $url_arr = parse_url($url);
+        $ext = pathinfo($url_arr['path'], PATHINFO_EXTENSION);
+        $file = $picture->pic_id . '.' . $ext;
+        $del_path = storage_path('app/public').'/'.$file;
+        unlink($del_path);
     }
     
 }

@@ -18,4 +18,6 @@ class Today extends Model
     {
         return $this->hasOne(Picture::class,'id','img_id');
     }
+
+
 }
