@@ -41,13 +41,10 @@ class PictureController extends Controller
     }
 
     public function show(Picture $picture)
-    {
-        $fan_id = request('fan_id') ?? Token::getUid();        
+    {     
         $picture = $picture->where('id',$picture->id)->with(['tags' => function ($query){
             $query->select('tags.id', 'tags.name');
         }])->withCount(['likeFans', 'collectFans'])->first();    
-        $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;  //是否收藏
-        $picture->like = $picture->isLike($fan_id) ? 1 : 0;   //是否点赞     
         $status = $picture ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $picture]);   
     }
@@ -219,6 +216,29 @@ class PictureController extends Controller
         
         //相关推荐
         $recommends = PictureTag::getRecommends($picture->id);
+        $recommend_ids = $recommends->pluck('id');
+        $status = $picture ? 'success' : 'error';
+        return response()->json(['status' => $status, 'data' => $picture, 'recommends' => $recommends, 'recommend_ids' => $recommend_ids]);   
+    }
+
+    public function appShowByIds(Picture $picture)
+    {
+        $fan_id = request('fan_id') ?? Token::getUid();
+
+        $recommend_ids = request('recommend_ids');
+
+        $picture = $picture->where('id', $picture->id)->where('hidden', 0)->with(['tags' => function ($query){
+            $query->select('tags.id', 'tags.name');
+        }])->withCount(['likeFans', 'collectFans'])->first();
+
+        $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;  //是否收藏
+        $picture->like = $picture->isLike($fan_id) ? 1 : 0;   //是否点赞
+        $picture->increment('hot', 1);  //增加一个热度           
+        $picture->increment('click', 1);  //增加一个点击      
+        
+        //相关推荐
+        $recommends = PictureTag::getRecommendsByIds($recommend_ids);
+
         $status = $picture ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $picture, 'recommends' => $recommends]);   
     }

@@ -56,6 +56,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::get('pictures/getListByTags', 'Api\Pictures\PictureController@getListByTags'); 
     Route::get('pictures/{picture}/hidden', 'Api\Pictures\PictureController@changeHidden');  //改变隐藏
     Route::get('pictures/{picture}/app_show', 'Api\Pictures\PictureController@appShow'); 
+    Route::post('pictures/{picture}/app_show', 'Api\Pictures\PictureController@appShowByIds'); 
     Route::post('pictures/status', 'Api\Pictures\PictureController@changeStatus'); 
     Route::post('pictures/random', 'Api\Pictures\PictureController@appRandomList'); 
     Route::post('pictures/{picture}/del-pic', 'Api\Pictures\PictureController@delPic');
