@@ -81,7 +81,7 @@ class FanController extends Controller
         $pictures = [];
         $picture = new Picture();
         foreach($picture_ids as $picture_id) {
-            $picture = $picture->where('id', $picture_id)->with(['tags'])->withCount(['likeFans', 'collectFans'])->first();
+            $picture = $picture->where('id', $picture_id)->first();
             $picture->collect = 1;
             $pictures[] = $picture;
         }
