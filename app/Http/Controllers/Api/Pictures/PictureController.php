@@ -42,9 +42,13 @@ class PictureController extends Controller
 
     public function show(Picture $picture)
     {     
+        $fan_id = request('fan_id') ?? Token::getUid();
+        
         $picture = $picture->where('id',$picture->id)->with(['tags' => function ($query){
             $query->select('tags.id', 'tags.name');
         }])->withCount(['likeFans', 'collectFans'])->first();    
+        $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
+        $picture->like = $picture->isLike($fan_id) ? 1 : 0;
         $status = $picture ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $picture]);   
     }
