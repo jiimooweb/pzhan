@@ -13,6 +13,7 @@ use App\Services\Token;
 use App\Models\LikeNotice;
 use App\Models\SocialLike;
 use App\Models\PointHistory;
+use App\Models\SocialReward;
 use Illuminate\Http\Request;
 use App\Models\CommentNotice;
 use App\Models\SocialComment;
