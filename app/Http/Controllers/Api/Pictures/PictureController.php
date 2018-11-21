@@ -339,14 +339,14 @@ class PictureController extends Controller
         $fan = Fan::find($fan_id);
         DownloadPicture::create(['fan_id' => $fan_id, 'picture_id' => $picture->id]);
         $flag = false;
-        if(request()->type == 0) {
+        if($type == 0) {
             if($fan->point >= $picture->point) {
                 $fan->decrement('point', $picture->point); 
                 $flag = true;
             }
         } else {
             $date = date('Y-m-d', time());
-            $share_count = FanShare::whereDate('created_at', $date)->count();
+            $share_count = FanShare::where('fan_id', $fan_id)->whereDate('created_at', $date)->count();
             if($share_count < 5) {
                 FanShare::create(['fan_id', $fan_id]);  
                 $flag = true;                        
