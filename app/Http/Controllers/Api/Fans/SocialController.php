@@ -63,6 +63,7 @@ class SocialController extends Controller
             $socialReward = SocialReward::whereDate('created_at', $date)->count();
             if($socialReward == 0) {
                 $point = rand(5,50);
+                
                 SocialReward::create(['fan_id' => $data['fan_id'], 'social_id' => $social->id, 'point' => $point]);
                 Fan::where('id', $data['fan_id'])->increment('point', $point);
                 PointHistory::create([

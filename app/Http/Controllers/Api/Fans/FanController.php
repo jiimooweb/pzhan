@@ -88,6 +88,24 @@ class FanController extends Controller
         return response()->json(['status' => 'success','data' => $pictures, 'total' => $total]);
     }
 
+    public function download(Fan $fan)
+    {
+        $page = request('page');
+        $limit = 15;        
+        $offset = ($page - 1) * $limit;
+        $picture_ids = $fan->downloadPictures->pluck('id')->toArray();
+        $total = count($picture_ids);
+        $picture_ids = array_slice($picture_ids, $offset, $limit);
+        $pictures = [];
+        $picture = new Picture();
+        foreach($picture_ids as $picture_id) {
+            $picture = $picture->where('id', $picture_id)->first();
+            $picture->collect = 1;
+            $pictures[] = $picture;
+        }
+        return response()->json(['status' => 'success','data' => $pictures, 'total' => $total]);
+    }
+
     public function like(Fan $fan)
     {
         $picture_ids = $fan->likePictures->pluck('id');
@@ -104,6 +122,13 @@ class FanController extends Controller
         $collect_ids = $fan->collcetPictures->pluck('id');
         $like_ids = $fan->likePictures->pluck('id');
         return response()->json(['status' => 'success','collect_ids' => $collect_ids,'like_ids' => $like_ids]);
+    }
+
+    public function getPointAndShareCount(Fan $fan)
+    {
+        $date = date('Y-m-d', time());
+        $share_count = FanShare::whereDate('created_at', $date)->count();
+        return response()->json(['status' => 'success','point' => $fan->point,'share_count' => 5 - $share_count]);
     }
 
     public function getUid() 

@@ -237,8 +237,6 @@ class PictureController extends Controller
 
         $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;  //是否收藏
         $picture->like = $picture->isLike($fan_id) ? 1 : 0;   //是否点赞
-        $picture->increment('hot', 1);  //增加一个热度           
-        $picture->increment('click', 1);  //增加一个点击      
         
         //相关推荐
         $recommends = PictureTag::getRecommendsByIds($recommend_ids);

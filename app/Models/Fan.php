@@ -16,6 +16,11 @@ class Fan extends Model
         return $this->belongsToMany(Picture::class, 'fan_like_pictures', 'fan_id', 'picture_id')->distinct()->orderBy('fan_like_pictures.created_at', 'desc');
     }
 
+    public function downloadPictures()
+    {
+        return $this->belongsToMany(Picture::class, 'fan_download_pictures', 'fan_id', 'picture_id')->distinct()->orderBy('fan_download_pictures.created_at', 'desc');
+    }
+
     public function album()
     {
         return $this->hasMany(Album::class);
