@@ -130,7 +130,7 @@ class FanController extends Controller
         $fan_id = request('fan_id') ?? Token::getUid();     
         $fan = Fan::find($fan_id);
         $date = date('Y-m-d', time());
-        $share_count = FanShare::whereDate('created_at', $date)->count();
+        $share_count = FanShare::where('fan_id', $fan_id)->whereDate('created_at', $date)->count();
         return response()->json(['status' => 'success','point' => $fan->point,'share_count' => 5 - $share_count]);
     }
 
