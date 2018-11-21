@@ -35,7 +35,7 @@ class PictureController extends Controller
             return $query->where('title', 'like', '%'.$title.'%');
         })->when($author, function($query) use ($author) {
             return $query->where('author', 'like', '%'.$author.'%');
-        })->withCount(['likeFans', 'collectFans'])->orderBy('created_at', 'desc')->paginate(30); 
+        })->withCount(['likeFans', 'collectFans', 'downloadFans'])->orderBy('created_at', 'desc')->paginate(30); 
         
         return response()->json(['status' => 'success', 'data' => $pictures]);
     }
@@ -49,6 +49,7 @@ class PictureController extends Controller
         }])->withCount(['likeFans', 'collectFans'])->first();    
         $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
         $picture->like = $picture->isLike($fan_id) ? 1 : 0;
+        $picture->download = $picture->isDownload($fan_id) ? 1 : 0;
         $status = $picture ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $picture]);   
     }
@@ -176,7 +177,6 @@ class PictureController extends Controller
 
         foreach($pictures as &$picture) {
             $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
-            $picture->like = $picture->isLike($fan_id) ? 1 : 0;
         }
         
         return response()->json(['status' => 'success', 'data' => $pictures]);
@@ -194,7 +194,6 @@ class PictureController extends Controller
 
         foreach($pictures as &$picture) {
             $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
-            $picture->like = $picture->isLike($fan_id) ? 1 : 0;
         }
 
         $picture_ids = $pictures->pluck('id')->toArray();
@@ -215,6 +214,8 @@ class PictureController extends Controller
 
         $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;  //是否收藏
         $picture->like = $picture->isLike($fan_id) ? 1 : 0;   //是否点赞
+        $picture->download = $picture->isDownload($fan_id) ? 1 : 0; //是否下载
+        
         $picture->increment('hot', 1);  //增加一个热度           
         $picture->increment('click', 1);  //增加一个点击      
         
@@ -237,6 +238,7 @@ class PictureController extends Controller
 
         $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;  //是否收藏
         $picture->like = $picture->isLike($fan_id) ? 1 : 0;   //是否点赞
+        $picture->download = $picture->isDownload($fan_id) ? 1 : 0; //是否下载
         
         //相关推荐
         $recommends = PictureTag::getRecommendsByIds($recommend_ids);
@@ -261,7 +263,6 @@ class PictureController extends Controller
 
         foreach($pictures as &$picture) {
             $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
-            $picture->like = $picture->isLike($fan_id) ? 1 : 0;
         }
         
         return response()->json(['status' => 'success', 'data' => $pictures]);
@@ -306,6 +307,17 @@ class PictureController extends Controller
 
     }
 
+    public function hiddenChangeAll() 
+    {
+
+        $hidden = request('hidden');
+
+        Picture::update(['hidden' => $hidden]);
+
+        return response()->json(['status' => 'success']);        
+
+    }
+
     public function changeStatus() 
     {
         
@@ -319,17 +331,24 @@ class PictureController extends Controller
 
     public function download(Picture $picture)
     {
-        $url = $picture->url;
-        $url_arr = parse_url($url);
-        $ext = pathinfo($url_arr['path'], PATHINFO_EXTENSION);
-        $content = file_get_contents($url);
-        $path = storage_path('app/public').'/'. $picture->pic_id . '.' . $ext;
-        if(file_put_contents($path, $content) > 0) {
-            $ret = "https://www.rdoorweb.com/pzhan/storage/app/public/". $picture->pic_id . '.' . $ext;
-            return response()->json(['status' => 'success', 'url' => $ret]);
+        $fan_id = request('fan_id') ?? Token::getUid();       
+        $fan = Fan::find($fan_id);
+        $flag = false;
+        if(request()->type == 0) {
+            if($fan->point >= $picture->point) {
+                $fan->decrement('point', $picture->point); 
+                $flag = true;
+            }
+        } else {
+            $date = date('Y-m-d', time());
+            $share_count = FanShare::whereDate('created_at', $date)->count();
+            if($share_count < 5) {
+                FanShare::create(['fan_id', $fan_id]);  
+                $flag = true;                        
+            }
         }
-
-        return response()->json(['status' => 'error']);         
+    
+        return response()->json(['status' => 'status', 'flag' => $flag]);         
     }
 
     public function delPic(Picture $picture) 

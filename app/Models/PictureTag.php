@@ -21,7 +21,6 @@ class PictureTag extends Model
         $recommends = Picture::whereIn('id', $picture_ids)->where('hidden', 0)->get();
         foreach($recommends as &$recommend) {
             $recommend->collect = $recommend->isCollect($fan_id) ? 1 : 0;
-            $recommend->like = $recommend->isLike($fan_id) ? 1 : 0;
         }
         
         return $recommends;
@@ -33,7 +32,6 @@ class PictureTag extends Model
         $recommends = Picture::whereIn('id', $recommend_ids)->where('hidden', 0)->get();
         foreach($recommends as &$recommend) {
             $recommend->collect = $recommend->isCollect($fan_id) ? 1 : 0;
-            $recommend->like = $recommend->isLike($fan_id) ? 1 : 0;
         }
         
         return $recommends;

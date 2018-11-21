@@ -28,6 +28,11 @@ class Picture extends Model
         return LikePicture::where(['fan_id' => $fan_id, 'picture_id' => $this->id ])->exists();
     }
 
+    public function isDownload(int $fan_id) 
+    {
+        return downloadPicture::where(['fan_id' => $fan_id, 'picture_id' => $this->id ])->exists();
+    }
+
     public function collect(int $fan_id) 
     {
         return $this->hasOne(CollectPicture::class)->where(['fan_id' => $fan_id, 'picture_id' => $this->id ]);
@@ -46,6 +51,11 @@ class Picture extends Model
     public function likeFans() 
     {
         return $this->belongsToMany(Fan::class, 'fan_like_pictures', 'picture_id', 'fan_id');
+    }
+
+    public function downloadFans() 
+    {
+        return $this->belongsToMany(Fan::class, 'fan_download_pictures', 'picture_id', 'fan_id');
     }
 
     public static function refershRank()
