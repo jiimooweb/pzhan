@@ -176,7 +176,7 @@ class PictureController extends Controller
     {
         $fan_id = request('fan_id') ?? Token::getUid();                
 
-        $pictures = Picture::with(['tags'])->withCount(['likeFans', 'collectFans'])->where('hidden', 0)->orderBy('created_at', 'desc')->paginate(30); 
+        $pictures = Picture::where('hidden', 0)->orderBy('created_at', 'desc')->paginate(30); 
 
         foreach($pictures as &$picture) {
             $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
@@ -193,7 +193,7 @@ class PictureController extends Controller
 
         $pictures = Picture::when(count($random_picture_ids) > 0, function($query) use ($random_picture_ids){
             return $query->whereNotIn('id', $random_picture_ids);
-        })->where('hidden', 0)->with(['tags'])->withCount(['likeFans', 'collectFans'])->inRandomOrder()->limit($limit)->get(); 
+        })->where('hidden', 0)->inRandomOrder()->limit($limit)->get(); 
 
         foreach($pictures as &$picture) {
             $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
