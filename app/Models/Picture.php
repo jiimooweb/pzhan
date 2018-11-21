@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Model;
+use App\Models\DownloadPicture;
 
 class Picture extends Model
 {
@@ -30,7 +31,7 @@ class Picture extends Model
 
     public function isDownload(int $fan_id) 
     {
-        return downloadPicture::where(['fan_id' => $fan_id, 'picture_id' => $this->id ])->exists();
+        return DownloadPicture::where(['fan_id' => $fan_id, 'picture_id' => $this->id ])->exists();
     }
 
     public function collect(int $fan_id) 
