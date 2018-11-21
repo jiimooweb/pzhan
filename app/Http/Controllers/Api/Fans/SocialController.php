@@ -63,8 +63,7 @@ class SocialController extends Controller
             if($socialReward == 0) {
                 $ponit = rand(5,50);
                 SocialReward::create(['fan_id' => $data['fan_id'], 'social_id' => $social->id, 'point' => $point]);
-                $fan = Fan::where('id', $data['fan_id'])->first();
-                $fan->increment('point', $ponit);
+                Fan::where('id', $data['fan_id'])->increment('point', $ponit);
                 PointHistory::create([
                     'fan_id' => $data['fan_id'],
                     'state' => 1,
