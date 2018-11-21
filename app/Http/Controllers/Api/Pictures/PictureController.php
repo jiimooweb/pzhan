@@ -352,7 +352,7 @@ class PictureController extends Controller
             }
         }
     
-        return response()->json(['status' => 'status', 'flag' => $flag]);         
+        return response()->json(['status' => 'success', 'flag' => $flag]);         
     }
 
     public function delPic(Picture $picture) 
