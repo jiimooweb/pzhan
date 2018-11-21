@@ -7,6 +7,7 @@ use App\Models\Sign;
 use App\Models\Picture;
 use App\Services\Token;
 use EasyWeChat\Factory;
+use App\Models\FanShare;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
