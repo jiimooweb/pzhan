@@ -45,7 +45,6 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('wechat/token/saveInfo', 'Api\Fans\FanController@saveInfo');  //存用户信息    
     Route::get('getUid', 'Api\Fans\FanController@getUid');  //获取用户fan_id
     Route::get('getUserInfo', 'Api\Fans\FanController@getUserInfo');  //获取用户信息
-    Route::get('fan/point-and-share-count', 'Api\Fans\FanController@getPointAndShareCount');  //获取用户信息
     
     Route::post('qiniu/upload', 'Controller@upload');  //上传图片
     Route::post('qiniu/delete', 'Controller@delete');   //删除图片
@@ -129,7 +128,9 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::apiResource('sign_tasks','Api\Fans\SignInController');
     //粉丝收藏
     Route::get('fans/{fan}/collect', 'Api\Fans\FanController@collect');  //收藏
+    Route::get('fans/{fan}/download', 'Api\Fans\FanController@download');  //收藏
     //粉丝点赞
+    Route::get('fan/point-and-share-count', 'Api\Fans\FanController@getPointAndShareCount');      
     Route::get('fans/{fan}/like', 'Api\Fans\FanController@like');  //点赞
     Route::get('fans/fan_pictures', 'Api\Fans\FanController@fanPicture');  //点赞
     Route::get('fans', 'Api\Fans\FanController@fans');  //获取用户
