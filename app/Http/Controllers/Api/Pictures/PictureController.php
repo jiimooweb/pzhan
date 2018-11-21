@@ -9,6 +9,7 @@ use App\Models\PictureTag;
 use App\Models\LikePicture;
 use Illuminate\Http\Request;
 use App\Models\CollectPicture;
+use App\Models\DownloadPicture;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PictureRequest;
 
@@ -333,6 +334,7 @@ class PictureController extends Controller
     {
         $fan_id = request('fan_id') ?? Token::getUid();       
         $fan = Fan::find($fan_id);
+        DownloadPicture::create(['fan_id' => $fan_id, 'picture_id' => $picture->id]);
         $flag = false;
         if(request()->type == 0) {
             if($fan->point >= $picture->point) {
