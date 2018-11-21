@@ -124,8 +124,10 @@ class FanController extends Controller
         return response()->json(['status' => 'success','collect_ids' => $collect_ids,'like_ids' => $like_ids]);
     }
 
-    public function getPointAndShareCount(Fan $fan)
+    public function getPointAndShareCount()
     {
+        $fan_id = request('fan_id') ?? Token::getUid();     
+        $fan = Fan::find($fan_id);
         $date = date('Y-m-d', time());
         $share_count = FanShare::whereDate('created_at', $date)->count();
         return response()->json(['status' => 'success','point' => $fan->point,'share_count' => 5 - $share_count]);
