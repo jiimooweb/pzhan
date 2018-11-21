@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api\Pictures;
 
+use App\Models\Fan;
 use App\Models\Picture;
 use App\Services\Qiniu;
 use App\Services\Token;
+use App\Models\FanShare;
 use App\Models\PictureTag;
 use App\Models\LikePicture;
 use Illuminate\Http\Request;
