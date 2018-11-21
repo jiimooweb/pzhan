@@ -61,7 +61,6 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('pictures/{picture}/app_show', 'Api\Pictures\PictureController@appShowByIds'); 
     Route::post('pictures/status', 'Api\Pictures\PictureController@changeStatus'); 
     Route::post('pictures/random', 'Api\Pictures\PictureController@appRandomList'); 
-    Route::post('pictures/{picture}/del-pic', 'Api\Pictures\PictureController@delPic');
     Route::post('pictures/{picture}/download', 'Api\Pictures\PictureController@download');
     Route::post('pictures/{picture}/collect', 'Api\Pictures\PictureController@collect'); //收藏
     Route::post('pictures/{picture}/uncollect', 'Api\Pictures\PictureController@uncollect'); //取消收藏

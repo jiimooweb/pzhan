@@ -334,7 +334,8 @@ class PictureController extends Controller
 
     public function download(Picture $picture)
     {
-        $fan_id = request('fan_id') ?? Token::getUid();       
+        $fan_id = request('fan_id') ?? Token::getUid();     
+        $type = request('type');  
         $fan = Fan::find($fan_id);
         DownloadPicture::create(['fan_id' => $fan_id, 'picture_id' => $picture->id]);
         $flag = false;
@@ -354,15 +355,4 @@ class PictureController extends Controller
     
         return response()->json(['status' => 'success', 'flag' => $flag]);         
     }
-
-    public function delPic(Picture $picture) 
-    {
-        $url = $picture->url;
-        $url_arr = parse_url($url);
-        $ext = pathinfo($url_arr['path'], PATHINFO_EXTENSION);
-        $file = $picture->pic_id . '.' . $ext;
-        $del_path = storage_path('app/public').'/'.$file;
-        unlink($del_path);
-    }
-    
 }
