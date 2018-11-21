@@ -101,7 +101,7 @@ class FanController extends Controller
         $picture = new Picture();
         foreach($picture_ids as $picture_id) {
             $picture = $picture->where('id', $picture_id)->first();
-            $picture->collect = 1;
+            $picture->collect = $picture->isCollect($fan->id) ? 1 : 0;
             $pictures[] = $picture;
         }
         return response()->json(['status' => 'success','data' => $pictures, 'total' => $total]);
