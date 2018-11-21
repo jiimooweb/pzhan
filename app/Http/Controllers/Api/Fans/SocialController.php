@@ -58,7 +58,7 @@ class SocialController extends Controller
         $social = Social::create($data);
         if($social) {
             $ponit = 0;
-            $date = data('Y-m-d', time());
+            $date = date('Y-m-d', time());
             $socialReward = SocialReward::whereDate('created_at', $date)->count();
             if($socialReward == 0) {
                 $ponit = rand(5,50);
