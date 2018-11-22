@@ -255,6 +255,7 @@ class PictureController extends Controller
         $fan_id = request('fan_id') ?? Token::getUid();                
         $limit = 20;
         $tag_id = request('tag_id');
+        Tag::where('id', $tag_id)->increment('click', 1);
         $picture_ids = null;
         if(isset($tag_id)) {
             $picture_ids = PictureTag::where('tag_id',$tag_id)->get()->pluck('picture_id');
