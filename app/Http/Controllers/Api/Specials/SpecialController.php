@@ -111,12 +111,16 @@ class SpecialController extends Controller
 
     public function getRes()
     {
+        $fan_id = request('fan_id') ?? Token::getUid();
         $id = request('id');
         $data = Special::where([['id',$id],['switch',1]])
             ->with(['imgs'=>function($query){
                 $query->with('tags');
             }])
             ->get();
+        foreach($data->imgs as $img) {
+            $data->imgs->collect = $img->isCollect($fan_id) ? 1 : 0;
+        }
         return response()->json(['data' => $data]);
     }
 
