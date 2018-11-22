@@ -11,7 +11,7 @@ class Qiniu
         $bool = $disk->put($fileName, file_get_contents($file->getRealPath()));
         // 判断是否上传成功
         if ($bool) {
-            return $disk->downloadUrl($fileName);
+            return $disk->downloadUrl($fileName, 'https');
         }
 
         return false;

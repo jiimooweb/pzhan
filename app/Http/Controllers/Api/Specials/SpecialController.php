@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Api\Specials;
 
-use App\Http\Controllers\Controller;
 use App\Models\Picture;
 use App\Models\Special;
+use App\Services\Token;
 use App\Models\SpecialImg;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 
 class SpecialController extends Controller
@@ -111,12 +112,16 @@ class SpecialController extends Controller
 
     public function getRes()
     {
+        $fan_id = request('fan_id') ?? Token::getUid();
         $id = request('id');
         $data = Special::where([['id',$id],['switch',1]])
             ->with(['imgs'=>function($query){
                 $query->with('tags');
             }])
-            ->get();
+            ->first();
+        foreach($data->imgs as &$img) {
+            $img->collect = $img->isCollect($fan_id) ? 1 : 0;
+        }
         return response()->json(['data' => $data]);
     }
 

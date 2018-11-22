@@ -7,6 +7,7 @@ use App\Models\Sign;
 use App\Models\Picture;
 use App\Services\Token;
 use EasyWeChat\Factory;
+use App\Models\FanShare;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
@@ -81,7 +82,27 @@ class FanController extends Controller
         $pictures = [];
         $picture = new Picture();
         foreach($picture_ids as $picture_id) {
-            $pictures[] = $picture->where('id', $picture_id)->with(['tags'])->withCount(['likeFans', 'collectFans'])->first();
+            $picture = $picture->where('id', $picture_id)->first();
+            $picture->collect = 1;
+            $pictures[] = $picture;
+        }
+        return response()->json(['status' => 'success','data' => $pictures, 'total' => $total]);
+    }
+
+    public function download(Fan $fan)
+    {
+        $page = request('page');
+        $limit = 15;        
+        $offset = ($page - 1) * $limit;
+        $picture_ids = $fan->downloadPictures->pluck('id')->toArray();
+        $total = count($picture_ids);
+        $picture_ids = array_slice($picture_ids, $offset, $limit);
+        $pictures = [];
+        $picture = new Picture();
+        foreach($picture_ids as $picture_id) {
+            $picture = $picture->where('id', $picture_id)->first();
+            $picture->collect = $picture->isCollect($fan->id) ? 1 : 0;
+            $pictures[] = $picture;
         }
         return response()->json(['status' => 'success','data' => $pictures, 'total' => $total]);
     }
@@ -102,6 +123,15 @@ class FanController extends Controller
         $collect_ids = $fan->collcetPictures->pluck('id');
         $like_ids = $fan->likePictures->pluck('id');
         return response()->json(['status' => 'success','collect_ids' => $collect_ids,'like_ids' => $like_ids]);
+    }
+
+    public function getPointAndShareCount()
+    {
+        $fan_id = request('fan_id') ?? Token::getUid();     
+        $fan = Fan::find($fan_id);
+        $date = date('Y-m-d', time());
+        $share_count = FanShare::where('fan_id', $fan_id)->whereDate('created_at', $date)->count();
+        return response()->json(['status' => 'success','point' => $fan->point,'share_count' => 5 - $share_count]);
     }
 
     public function getUid() 

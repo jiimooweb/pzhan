@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Fans;
 
+use App\Models\Fan;
 use App\Models\Photo;
 use App\Utils\Common;
 use App\Utils\Module;
@@ -11,6 +12,8 @@ use App\Services\Qiniu;
 use App\Services\Token;
 use App\Models\LikeNotice;
 use App\Models\SocialLike;
+use App\Models\PointHistory;
+use App\Models\SocialReward;
 use Illuminate\Http\Request;
 use App\Models\CommentNotice;
 use App\Models\SocialComment;
@@ -55,7 +58,23 @@ class SocialController extends Controller
         $data['fan_id'] = request('fan_id') ?? Token::getUid(); 
         $social = Social::create($data);
         if($social) {
-            return response()->json(['status' => 'success', 'data' => $social->where('id', $social->id)->with(['photos','fan'])->withCount(['likeFans', 'comments', 'photos'])->first()]);
+            $point = 0;
+            $date = date('Y-m-d', time());
+            $socialReward = SocialReward::where('fan_id', $data['fan_id'])->whereDate('created_at', $date)->count();
+            if($socialReward == 0) {
+                $point = rand(5,50);
+
+                SocialReward::create(['fan_id' => $data['fan_id'], 'social_id' => $social->id, 'point' => $point]);
+                Fan::where('id', $data['fan_id'])->increment('point', $point);
+                PointHistory::create([
+                    'fan_id' => $data['fan_id'],
+                    'state' => 1,
+                    'point' => $point,
+                    'tag' => 'social',
+                    'comment' => '每日首次发布动态获得:' .$point. '积分'
+                ]);
+            }
+            return response()->json(['status' => 'success', 'data' => $social->where('id', $social->id)->with(['photos','fan'])->withCount(['likeFans', 'comments', 'photos'])->first(), 'point' => $point]);
         }
 
         return response()->json(['status' => 'error', 'msg' => '新增失败！']);                           

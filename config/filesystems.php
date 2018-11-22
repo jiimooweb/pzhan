@@ -67,7 +67,7 @@ return [
             'driver'  => 'qiniu',
             'domains' => [
                 'default'   => env('QINIU_DOMAIN'), 
-                'https'     => '',         //你的HTTPS域名
+                'https'     => env('QINIU_DOMAIN'),         //你的HTTPS域名
                 'custom'    => '', 
             ],
             'access_key'=> env('QINIU_ACCESS_KEY'),  //AccessKey

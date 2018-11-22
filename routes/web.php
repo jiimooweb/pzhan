@@ -56,8 +56,11 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::get('pictures/getListByTags', 'Api\Pictures\PictureController@getListByTags'); 
     Route::get('pictures/{picture}/hidden', 'Api\Pictures\PictureController@changeHidden');  //改变隐藏
     Route::get('pictures/{picture}/app_show', 'Api\Pictures\PictureController@appShow'); 
+    Route::post('pictures/hidden', 'Api\Pictures\PictureController@hiddenChangeAll');  //改变全部图片隐藏
+    Route::post('pictures/{picture}/app_show', 'Api\Pictures\PictureController@appShowByIds'); 
     Route::post('pictures/status', 'Api\Pictures\PictureController@changeStatus'); 
     Route::post('pictures/random', 'Api\Pictures\PictureController@appRandomList'); 
+    Route::post('pictures/{picture}/download', 'Api\Pictures\PictureController@download');
     Route::post('pictures/{picture}/collect', 'Api\Pictures\PictureController@collect'); //收藏
     Route::post('pictures/{picture}/uncollect', 'Api\Pictures\PictureController@uncollect'); //取消收藏
     Route::post('pictures/{picture}/like', 'Api\Pictures\PictureController@like');  //点赞
@@ -69,6 +72,8 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     //标签
     Route::get('tags/all', 'Api\Tags\TagController@all');
     Route::get('tags/random', 'Api\Tags\TagController@random');
+    Route::post('tags/{tag}/hidden', 'Api\Tags\TagController@changeHidden');
+    Route::post('tags/hidden', 'Api\Tags\TagController@changeHiddenAll');
     Route::apiResource('tags', 'Api\Tags\TagController');
 
     //轮播图
@@ -125,7 +130,9 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::apiResource('sign_tasks','Api\Fans\SignInController');
     //粉丝收藏
     Route::get('fans/{fan}/collect', 'Api\Fans\FanController@collect');  //收藏
+    Route::get('fans/{fan}/download', 'Api\Fans\FanController@download');  //收藏
     //粉丝点赞
+    Route::get('fan/point-and-share-count', 'Api\Fans\FanController@getPointAndShareCount');      
     Route::get('fans/{fan}/like', 'Api\Fans\FanController@like');  //点赞
     Route::get('fans/fan_pictures', 'Api\Fans\FanController@fanPicture');  //点赞
     Route::get('fans', 'Api\Fans\FanController@fans');  //获取用户
@@ -175,3 +182,4 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     
 
 });
+
