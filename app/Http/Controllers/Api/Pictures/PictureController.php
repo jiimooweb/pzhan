@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Pictures;
 
 use App\Models\Fan;
+use App\Models\Tag;
 use App\Models\Picture;
 use App\Services\Qiniu;
 use App\Services\Token;
