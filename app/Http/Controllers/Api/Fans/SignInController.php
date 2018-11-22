@@ -55,6 +55,7 @@ class SignInController extends Controller
     {
         $fan_id=Token::getUid();
         $sign_data=Sign::where('fan_id',$fan_id)->with('fan:id,point')->first();
+        dd($sign_data);
         if(count($sign_data)>0){
             $now=Carbon::parse()->toDateString();
             if($now==$sign_data->last_day){
