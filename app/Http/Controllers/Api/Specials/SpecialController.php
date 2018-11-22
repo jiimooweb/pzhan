@@ -118,7 +118,7 @@ class SpecialController extends Controller
             ->with(['imgs'=>function($query){
                 $query->with('tags');
             }])
-            ->get();
+            ->first();
         // dd($data);
         // foreach($data->imgs as $img) {
         //     $data->imgs->collect = $img->isCollect($fan_id) ? 1 : 0;
