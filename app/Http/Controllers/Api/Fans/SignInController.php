@@ -71,7 +71,7 @@ class SignInController extends Controller
         $data['fan_id']=Token::getUid();
         $data['last_day']=Carbon::now()->toDateString();
         $sign_data=Sign::where('fan_id',$data['fan_id'])->first();
-        if(count($sign_data)==0){
+        if($sign_data->count() == 0){
             Sign::create(['fan_id'=>$data['fan_id']]);
             $sign_data=Sign::where('fan_id',$data['fan_id'])->first();
         }
