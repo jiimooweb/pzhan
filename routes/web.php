@@ -72,6 +72,8 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     //标签
     Route::get('tags/all', 'Api\Tags\TagController@all');
     Route::get('tags/random', 'Api\Tags\TagController@random');
+    Route::post('tags/{tag}/hidden', 'Api\Tags\TagController@changeHidden');
+    Route::post('tags/hidden', 'Api\Tags\TagController@changeHiddenAll');
     Route::apiResource('tags', 'Api\Tags\TagController');
 
     //轮播图
