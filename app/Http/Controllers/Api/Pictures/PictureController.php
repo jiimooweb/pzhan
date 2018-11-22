@@ -211,7 +211,7 @@ class PictureController extends Controller
     {
         $fan_id = request('fan_id') ?? Token::getUid();
 
-        $picture = $picture->where('id', $picture->id)->where('hidden', 0)->with(['tags' => function ($query){
+        $picture = $picture->where('id', $picture->id)->with(['tags' => function ($query){
             $query->select('tags.id', 'tags.name');
         }])->withCount(['likeFans', 'collectFans'])->first();
 
