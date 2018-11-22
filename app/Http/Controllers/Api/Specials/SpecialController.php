@@ -119,10 +119,9 @@ class SpecialController extends Controller
                 $query->with('tags');
             }])
             ->first();
-        // dd($data);
-        // foreach($data->imgs as $img) {
-        //     $data->imgs->collect = $img->isCollect($fan_id) ? 1 : 0;
-        // }
+        foreach($data->imgs as $img) {
+            $data->imgs->collect = $img->isCollect($fan_id) ? 1 : 0;
+        }
         return response()->json(['data' => $data]);
     }
 
