@@ -31,4 +31,10 @@ class Controller extends BaseController
 
         return response()->json(['status' => 'error', 'msg' => '删除失败']);
     }
+
+    public function getToken() 
+    {
+        $fileName = request('file_name');
+        return Qiniu::getToken($fileName);
+    }
 }
