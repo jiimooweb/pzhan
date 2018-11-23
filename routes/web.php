@@ -47,9 +47,9 @@ Route::group(['middleware' => ['cors']], function () {
     Route::get('getUid', 'Api\Fans\FanController@getUid');  //获取用户fan_id
     Route::get('getUserInfo', 'Api\Fans\FanController@getUserInfo');  //获取用户信息
     
+    Route::post('qiniu/token', 'Controller@getToken');   //获取token    
     Route::post('qiniu/upload', 'Controller@upload');  //上传图片
     Route::post('qiniu/delete', 'Controller@delete');   //删除图片
-    Route::get('qiniu/token', 'Controller@getToken');   //删除图片
 
     //图片
     /*** 小程序 ***/
