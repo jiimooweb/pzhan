@@ -31,6 +31,7 @@ class Qiniu
     public static function getToken($fileName) 
     {
         $fileName = date('Ymd',time()).'/'.$fileName;
+        dd($fileName);
         $disk = \zgldh\QiniuStorage\QiniuStorage::disk('qiniu');     
         return $disk->uploadToken($fileName);
     }
