@@ -354,6 +354,10 @@ class PictureController extends Controller
                 $flag = true;                        
             }
         }
+
+        if($flag) {
+            $picture->increment('hot', 10);  //增加一个热度           
+        }
     
         return response()->json(['status' => 'success', 'flag' => $flag]);         
     }
