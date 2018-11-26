@@ -25,7 +25,6 @@ class PictureController extends Controller
         $title = request('title');
         $author = request('author');
         $collectOrder = request('order') ?? 'created_at';
-        // $likeOrder = request('likeOrder') ? 'asc' : 'desc';
         $fan_id = request('fan_id') ?? Token::getUid();
         $picture_ids = null;
         if(isset($tag_id)) {
