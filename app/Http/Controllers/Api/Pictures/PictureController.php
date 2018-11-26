@@ -356,7 +356,16 @@ class PictureController extends Controller
         }
 
         if($flag) {
-            $picture->increment('hot', 10);  //增加一个热度           
+            $picture->increment('hot', 10);  //增加一个热度  
+            if($point > 0) {
+                PointHistory::create([
+                    'fan_id' => $data['fan_id'],
+                    'state' => -1,
+                    'point' => $point,
+                    'tag' => 'social',
+                    'comment' => '下载积分消费:' .$point. '积分'
+                ]);  
+            }      
         }
     
         return response()->json(['status' => 'success', 'flag' => $flag]);         
