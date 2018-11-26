@@ -39,7 +39,7 @@ class PictureController extends Controller
             return $query->where('title', 'like', '%'.$title.'%');
         })->when($author, function($query) use ($author) {
             return $query->where('author', 'like', '%'.$author.'%');
-        })->withCount(['likeFans', 'collectFans', 'downloadFans'])->orderBy('created_at', 'desc')->paginate(30); 
+        })->withCount(['likeFans', 'collectFans', 'downloadFans'])->orderBy($collectOrder, 'desc')->paginate(30); 
         
         return response()->json(['status' => 'success', 'data' => $pictures]);
     }
