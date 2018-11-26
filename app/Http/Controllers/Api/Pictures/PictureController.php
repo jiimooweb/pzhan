@@ -339,7 +339,7 @@ class PictureController extends Controller
         $fan_id = request('fan_id') ?? Token::getUid();     
         $type = request('type');  
         $fan = Fan::find($fan_id);
-        DownloadPicture::create(['fan_id' => $fan_id, 'picture_id' => $picture->id]);
+        DownloadPicture::firstOrCreate(['fan_id' => $fan_id, 'picture_id' => $picture->id]);
         $flag = false;
         if($type == 0) {
             if($fan->point >= $picture->point) {
