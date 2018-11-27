@@ -344,7 +344,9 @@ class PictureController extends Controller
             DownloadPicture::firstOrCreate(['fan_id' => $fan_id, 'picture_id' => $picture->id]);
             if($type == 0) {
                 if($fan->point >= $picture->point) {
-                    $fan->decrement('point', $picture->point); 
+                    if($picture->point > 0) {
+                        $fan->decrement('point', $picture->point);                         
+                    }
                     $flag = true;
                 }
             } else {
