@@ -391,6 +391,7 @@ class PictureController extends Controller
         $pictures = null;
         if(count($tag_ids)) {
             $picture_ids = PictureTag::whereIn('tag_id',$tag_ids)->orderBy('id', $order)->get()->pluck('picture_id')->toArray();
+            $total = count($picture_ids);
             $picture_ids = array_slice($picture_ids, $offset, $limit); 
             $pictures = Picture::whereIn('id', $picture_ids)->get();
             foreach($pictures as &$picture) {
@@ -399,7 +400,7 @@ class PictureController extends Controller
             
         }     
 
-        return response()->json(['status' => 'success', 'data' => $pictures, 'total' => count($picture_ids)]);
+        return response()->json(['status' => 'success', 'data' => $pictures, 'total' => $total]);
         
     }
 }
