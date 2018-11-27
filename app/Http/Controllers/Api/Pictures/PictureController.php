@@ -368,6 +368,8 @@ class PictureController extends Controller
                     ]);  
                 }      
             }
+        } else {
+            $flag = true;
         }
         
     
