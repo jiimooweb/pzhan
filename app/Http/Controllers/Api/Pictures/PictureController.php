@@ -399,7 +399,7 @@ class PictureController extends Controller
             
         }     
 
-        return response()->json(['status' => 'success', 'data' => $pictures]);
+        return response()->json(['status' => 'success', 'data' => $pictures, 'total' => count($picture_ids)]);
         
     }
 }
