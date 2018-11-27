@@ -53,6 +53,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
     //图片
     /*** 小程序 ***/
+    Route::get('pictures/search', 'Api\Pictures\PictureController@search');  //排行榜
     Route::get('pictures/rank', 'Api\Pictures\PictureController@rank');  //排行榜
     Route::get('pictures/app_list', 'Api\Pictures\PictureController@appList'); 
     Route::get('pictures/getListByTags', 'Api\Pictures\PictureController@getListByTags'); 
@@ -72,6 +73,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::apiResource('pictures', 'Api\Pictures\PictureController');
 
     //标签
+    Route::get('tags/hot', 'Api\Tags\TagController@getHots');
     Route::get('tags/all', 'Api\Tags\TagController@all');
     Route::get('tags/random', 'Api\Tags\TagController@random');
     Route::post('tags/{tag}/hidden', 'Api\Tags\TagController@changeHidden');

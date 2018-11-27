@@ -377,4 +377,29 @@ class PictureController extends Controller
     
         return response()->json(['status' => 'success', 'flag' => $flag]);         
     }
+
+    public function search()
+    {
+        $fan_id = request('fan_id') ?? Token::getUid();                        
+        $limit = 20;
+        $page = request('page') ?? 1;
+        $offset = $limit * ($page - 1);
+        $keyword = request('keyword');
+        $order = request('order') ? 'desc' : 'asc';
+        $tag_ids = Tag::where('name', 'like','%'.$keyword.'%')->get()->pluck('id')->toArray();
+        $picture_ids = [];
+        $pictures = null;
+        if(count($tag_ids)) {
+            $picture_ids = PictureTag::whereIn('tag_id',$tag_ids)->orderBy('id', $order)->get()->pluck('picture_id')->toArray();
+            $picture_ids = array_slice($picture_ids, $offset, $limit); 
+            $pictures = Picture::whereIn('id', $picture_ids)->get();
+            foreach($pictures as &$picture) {
+                $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
+            }
+            
+        }     
+
+        return response()->json(['status' => 'success', 'data' => $pictures]);
+        
+    }
 }
