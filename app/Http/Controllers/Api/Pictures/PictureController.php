@@ -389,9 +389,10 @@ class PictureController extends Controller
         $tag_ids = Tag::where('name', 'like','%'.$keyword.'%')->get()->pluck('id')->toArray();
         $picture_ids = [];
         $pictures = null;
+        $total = 0;
         if(count($tag_ids)) {
             $picture_ids = PictureTag::whereIn('tag_id',$tag_ids)->orderBy('id', $order)->get()->pluck('picture_id')->toArray();
-            $total = count($picture_ids) ?? 0;
+            $total = count($picture_ids);
             $picture_ids = array_slice($picture_ids, $offset, $limit); 
             $pictures = Picture::whereIn('id', $picture_ids)->get();
             foreach($pictures as &$picture) {
