@@ -337,35 +337,39 @@ class PictureController extends Controller
     {
         $fan_id = request('fan_id') ?? Token::getUid();     
         $type = request('type');  
+        $flag = false;        
         $fan = Fan::find($fan_id);
-        DownloadPicture::firstOrCreate(['fan_id' => $fan_id, 'picture_id' => $picture->id]);
-        $flag = false;
-        if($type == 0) {
-            if($fan->point >= $picture->point) {
-                $fan->decrement('point', $picture->point); 
-                $flag = true;
+        $count = DownloadPicture::where(['fan_id' => $fan_id, 'picture_id' => $picture->id])->count();
+        if($count == 0) {
+            DownloadPicture::firstOrCreate(['fan_id' => $fan_id, 'picture_id' => $picture->id]);
+            if($type == 0) {
+                if($fan->point >= $picture->point) {
+                    $fan->decrement('point', $picture->point); 
+                    $flag = true;
+                }
+            } else {
+                $date = date('Y-m-d', time());
+                $share_count = FanShare::where('fan_id', $fan_id)->whereDate('created_at', $date)->count();
+                if($share_count < 5) {
+                    $fans = FanShare::create(['fan_id' => $fan_id]);  
+                    $flag = true;                        
+                }
             }
-        } else {
-            $date = date('Y-m-d', time());
-            $share_count = FanShare::where('fan_id', $fan_id)->whereDate('created_at', $date)->count();
-            if($share_count < 5) {
-                $fans = FanShare::create(['fan_id' => $fan_id]);  
-                $flag = true;                        
+    
+            if($flag) {
+                $picture->increment('hot', 10);  //增加一个热度  
+                if($point > 0) {
+                    PointHistory::create([
+                        'fan_id' => $data['fan_id'],
+                        'state' => -1,
+                        'point' => $point,
+                        'tag' => 'social',
+                        'comment' => '下载积分消费:' .$point. '积分'
+                    ]);  
+                }      
             }
         }
-
-        if($flag) {
-            $picture->increment('hot', 10);  //增加一个热度  
-            if($point > 0) {
-                PointHistory::create([
-                    'fan_id' => $data['fan_id'],
-                    'state' => -1,
-                    'point' => $point,
-                    'tag' => 'social',
-                    'comment' => '下载积分消费:' .$point. '积分'
-                ]);  
-            }      
-        }
+        
     
         return response()->json(['status' => 'success', 'flag' => $flag]);         
     }
