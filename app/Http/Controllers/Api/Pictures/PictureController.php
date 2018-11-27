@@ -385,7 +385,7 @@ class PictureController extends Controller
         $page = request('page') ?? 1;
         $offset = $limit * ($page - 1);
         $keyword = request('keyword');
-        $order = request('order') ? 'desc' : 'asc';
+        $order = request('order') ? 'asc' : 'desc';
         $tag_ids = Tag::where('name', 'like','%'.$keyword.'%')->get()->pluck('id')->toArray();
         $picture_ids = [];
         $pictures = null;
