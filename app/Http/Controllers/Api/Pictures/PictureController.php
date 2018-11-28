@@ -363,7 +363,7 @@ class PictureController extends Controller
                 $picture->increment('hot', 10);  //增加一个热度  
                 if($picture->point > 0) {
                     PointHistory::create([
-                        'fan_id' => $data['fan_id'],
+                        'fan_id' => $fan_id,
                         'state' => -1,
                         'point' => $picture->point,
                         'tag' => 'social',
