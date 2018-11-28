@@ -10,6 +10,7 @@ use App\Services\Token;
 use App\Models\FanShare;
 use App\Models\PictureTag;
 use App\Models\LikePicture;
+use App\Models\PointHistory;
 use Illuminate\Http\Request;
 use App\Models\CollectPicture;
 use App\Models\DownloadPicture;
