@@ -13,7 +13,7 @@ class TodayController extends Controller
 
     public function index()
     {
-        $data = Today::with('picture')->withCount('todayLikes')->orderBy('today_likes_count','created_at', 'DESC')->paginate(20);
+        $data = Today::with('picture')->withCount('todayLikes')->orderBy('created_at', 'DESC')->paginate(20);
 
         return response()->json(['status' => 'success', 'data' => $data]);
     }
