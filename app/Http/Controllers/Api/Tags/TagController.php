@@ -82,5 +82,14 @@ class TagController extends Controller
         Tag::update(['hidden' => $hidden]);
         return response()->json(['status' => 'success']);     
     }
+
+    public function getHots()
+    {
+        $tags = Tag::where('hidden', 0)->orderBy('click','desc')->limit(50)->get()->toArray();
+        shuffle($tags);
+        $tags = array_slice($tags, 0, 15);
+        return response()->json(['status' => 'success', 'data' => $tags]);        
+
+    }
     
 }

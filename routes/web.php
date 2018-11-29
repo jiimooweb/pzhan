@@ -41,16 +41,19 @@ Route::get('/test', function() {
 });
 
 
+
 Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('wechat/token/saveInfo', 'Api\Fans\FanController@saveInfo');  //存用户信息    
     Route::get('getUid', 'Api\Fans\FanController@getUid');  //获取用户fan_id
     Route::get('getUserInfo', 'Api\Fans\FanController@getUserInfo');  //获取用户信息
     
+    Route::post('qiniu/token', 'Controller@getToken');   //获取token    
     Route::post('qiniu/upload', 'Controller@upload');  //上传图片
     Route::post('qiniu/delete', 'Controller@delete');   //删除图片
 
     //图片
     /*** 小程序 ***/
+    Route::get('pictures/search', 'Api\Pictures\PictureController@search');  //排行榜
     Route::get('pictures/rank', 'Api\Pictures\PictureController@rank');  //排行榜
     Route::get('pictures/app_list', 'Api\Pictures\PictureController@appList'); 
     Route::get('pictures/getListByTags', 'Api\Pictures\PictureController@getListByTags'); 
@@ -70,6 +73,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::apiResource('pictures', 'Api\Pictures\PictureController');
 
     //标签
+    Route::get('tags/hot', 'Api\Tags\TagController@getHots');
     Route::get('tags/all', 'Api\Tags\TagController@all');
     Route::get('tags/random', 'Api\Tags\TagController@random');
     Route::post('tags/{tag}/hidden', 'Api\Tags\TagController@changeHidden');

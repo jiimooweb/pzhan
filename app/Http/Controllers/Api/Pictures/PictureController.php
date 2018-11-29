@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Api\Pictures;
 
 use App\Models\Fan;
+use App\Models\Tag;
 use App\Models\Picture;
 use App\Services\Qiniu;
 use App\Services\Token;
 use App\Models\FanShare;
 use App\Models\PictureTag;
 use App\Models\LikePicture;
+use App\Models\PointHistory;
 use Illuminate\Http\Request;
 use App\Models\CollectPicture;
 use App\Models\DownloadPicture;
@@ -23,8 +25,7 @@ class PictureController extends Controller
         $tag_id = request('tag_id');
         $title = request('title');
         $author = request('author');
-        // $collectOrder = request('collectOrder') ? 'asc' : 'desc';
-        // $likeOrder = request('likeOrder') ? 'asc' : 'desc';
+        $collectOrder = request('order') ?? 'created_at';
         $fan_id = request('fan_id') ?? Token::getUid();
         $picture_ids = null;
         if(isset($tag_id)) {
@@ -38,7 +39,7 @@ class PictureController extends Controller
             return $query->where('title', 'like', '%'.$title.'%');
         })->when($author, function($query) use ($author) {
             return $query->where('author', 'like', '%'.$author.'%');
-        })->withCount(['likeFans', 'collectFans', 'downloadFans'])->orderBy('created_at', 'desc')->paginate(30); 
+        })->withCount(['likeFans', 'collectFans', 'downloadFans'])->orderBy($collectOrder, 'desc')->paginate(30); 
         
         return response()->json(['status' => 'success', 'data' => $pictures]);
     }
@@ -211,7 +212,7 @@ class PictureController extends Controller
     {
         $fan_id = request('fan_id') ?? Token::getUid();
 
-        $picture = $picture->where('id', $picture->id)->where('hidden', 0)->with(['tags' => function ($query){
+        $picture = $picture->where('id', $picture->id)->with(['tags' => function ($query){
             $query->select('tags.id', 'tags.name');
         }])->withCount(['likeFans', 'collectFans'])->first();
 
@@ -255,6 +256,7 @@ class PictureController extends Controller
         $fan_id = request('fan_id') ?? Token::getUid();                
         $limit = 20;
         $tag_id = request('tag_id');
+        Tag::where('id', $tag_id)->increment('click', 1);
         $picture_ids = null;
         if(isset($tag_id)) {
             $picture_ids = PictureTag::where('tag_id',$tag_id)->get()->pluck('picture_id');
@@ -336,23 +338,71 @@ class PictureController extends Controller
     {
         $fan_id = request('fan_id') ?? Token::getUid();     
         $type = request('type');  
+        $flag = false;        
         $fan = Fan::find($fan_id);
-        DownloadPicture::create(['fan_id' => $fan_id, 'picture_id' => $picture->id]);
-        $flag = false;
-        if($type == 0) {
-            if($fan->point >= $picture->point) {
-                $fan->decrement('point', $picture->point); 
-                $flag = true;
+        $count = DownloadPicture::where(['fan_id' => $fan_id, 'picture_id' => $picture->id])->count();
+        if($count == 0) {
+            DownloadPicture::firstOrCreate(['fan_id' => $fan_id, 'picture_id' => $picture->id]);
+            if($type == 0) {
+                if($fan->point >= $picture->point) {
+                    if($picture->point > 0) {
+                        $fan->decrement('point', $picture->point);                         
+                    }
+                    $flag = true;
+                }
+            } else {
+                $date = date('Y-m-d', time());
+                $share_count = FanShare::where('fan_id', $fan_id)->whereDate('created_at', $date)->count();
+                if($share_count < 5) {
+                    $fans = FanShare::create(['fan_id' => $fan_id]);  
+                    $flag = true;                        
+                }
+            }
+    
+            if($flag) {
+                $picture->increment('hot', 10);  //增加一个热度  
+                if($picture->point > 0) {
+                    PointHistory::create([
+                        'fan_id' => $fan_id,
+                        'state' => -1,
+                        'point' => $picture->point,
+                        'tag' => 'social',
+                        'comment' => '下载积分消费:' .$picture->point. '积分'
+                    ]);  
+                }      
             }
         } else {
-            $date = date('Y-m-d', time());
-            $share_count = FanShare::where('fan_id', $fan_id)->whereDate('created_at', $date)->count();
-            if($share_count < 5) {
-                $fans = FanShare::create(['fan_id' => $fan_id]);  
-                $flag = true;                        
-            }
+            $flag = true;
         }
+        
     
         return response()->json(['status' => 'success', 'flag' => $flag]);         
+    }
+
+    public function search()
+    {
+        $fan_id = request('fan_id') ?? Token::getUid();                        
+        $limit = 20;
+        $page = request('page') ?? 1;
+        $offset = $limit * ($page - 1);
+        $keyword = request('keyword');
+        $order = request('order') ? 'asc' : 'desc';
+        $tag_ids = Tag::where('name', 'like','%'.$keyword.'%')->get()->pluck('id')->toArray();
+        $picture_ids = [];
+        $pictures = [];
+        $total = 0;
+        if(count($tag_ids)) {
+            $picture_ids = PictureTag::whereIn('tag_id',$tag_ids)->orderBy('id', $order)->get()->pluck('picture_id')->toArray();
+            $total = count($picture_ids);
+            $picture_ids = array_slice($picture_ids, $offset, $limit); 
+            $pictures = Picture::whereIn('id', $picture_ids)->get();
+            foreach($pictures as &$picture) {
+                $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
+            }
+            
+        }     
+
+        return response()->json(['status' => 'success', 'data' => $pictures, 'total' => $total]);
+        
     }
 }
