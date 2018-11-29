@@ -34,6 +34,7 @@ class ArticleController extends Controller
     public function show()
     {
         $article = Article::find(request()->article);
+        $article->increment('click', 1);
         $status = $article ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $article]);
     }

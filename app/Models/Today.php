@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class Today extends Model
 {
@@ -17,6 +18,14 @@ class Today extends Model
     public function picture()
     {
         return $this->hasOne(Picture::class,'id','img_id');
+    }
+    public static function boot() {
+        parent::boot();
+
+        static::addGlobalScope('is_up', function(Builder $builder) {
+            $builder->where('is_up','!=',0);
+        });
+
     }
 
 

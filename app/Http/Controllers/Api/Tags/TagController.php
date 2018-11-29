@@ -60,9 +60,36 @@ class TagController extends Controller
         return response()->json(['status' => 'success', 'data' => $tags]);
     }
 
-    public function random() {
-        $tags = Tag::inRandomOrder()->limit(10)->get();
+    public function random() 
+    {
+        $tags = Tag::where('hidden', 0)->inRandomOrder()->limit(10)->get();
         return response()->json(['status' => 'success', 'data' => $tags]);        
+    }
+
+    public function changeHidden(Tag $tag) 
+    {
+        $tag->hidden = request('hidden');
+        if($tag->save()) {
+            return response()->json(['status' => 'success']);        
+        }
+
+        return response()->json(['status' => 'error']);        
+    }
+
+    public function changeHiddenAll() 
+    {
+        $hidden = request('hidden');        
+        Tag::update(['hidden' => $hidden]);
+        return response()->json(['status' => 'success']);     
+    }
+
+    public function getHots()
+    {
+        $tags = Tag::where('hidden', 0)->orderBy('click','desc')->limit(50)->get()->toArray();
+        shuffle($tags);
+        $tags = array_slice($tags, 0, 15);
+        return response()->json(['status' => 'success', 'data' => $tags]);        
+
     }
     
 }
