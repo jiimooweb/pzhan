@@ -114,6 +114,11 @@ class SpecialController extends Controller
     {
         $fan_id = request('fan_id') ?? Token::getUid();
         $id = request('id');
+
+        DB::transaction(function () use($id){
+           Special::where('id',$id)->increment('visits');
+        });
+
         $data = Special::where([['id',$id],['switch',1]])
             ->with(['imgs'=>function($query){
                 $query->with('tags');
@@ -122,6 +127,7 @@ class SpecialController extends Controller
         foreach($data->imgs as &$img) {
             $img->collect = $img->isCollect($fan_id) ? 1 : 0;
         }
+
         return response()->json(['data' => $data]);
     }
 
