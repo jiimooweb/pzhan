@@ -106,7 +106,7 @@ class SpecialController extends Controller
 
     public function miniIndex()
     {
-        $data = Special::where('switch',1)->orderBy('created_at','desc')->paginate(18);
+        $data = Special::where('switch',1)->orderBy('created_at','desc')->paginate(10);
         return response()->json(['data' => $data]);
     }
 
