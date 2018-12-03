@@ -353,7 +353,7 @@ class PictureController extends Controller
             } else {
                 $date = date('Y-m-d', time());
                 $share_count = FanShare::where('fan_id', $fan_id)->whereDate('created_at', $date)->count();
-                if($share_count < 5) {
+                if($share_count < 10) {
                     $fans = FanShare::create(['fan_id' => $fan_id]);  
                     $flag = true;                        
                 }
