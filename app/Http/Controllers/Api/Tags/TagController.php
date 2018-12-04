@@ -79,7 +79,7 @@ class TagController extends Controller
     public function changeHiddenAll() 
     {
         $hidden = request('hidden');        
-        Tag::update(['hidden' => $hidden]);
+        Tag::where('id', '>', 0)->update(['hidden' => $hidden]);
         return response()->json(['status' => 'success']);     
     }
 

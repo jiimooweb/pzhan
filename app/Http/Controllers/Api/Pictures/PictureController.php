@@ -317,7 +317,7 @@ class PictureController extends Controller
 
         $hidden = request('hidden');
 
-        Picture::update(['hidden' => $hidden]);
+        Picture::where('id', '>', 0)->update(['hidden' => $hidden]);
 
         return response()->json(['status' => 'success']);        
 
