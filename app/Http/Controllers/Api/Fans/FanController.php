@@ -68,7 +68,7 @@ class FanController extends Controller
         $fans = Fan::when($status > -1, function($query) use ($status) {
             return $query->where('status', $status);
         })->paginate(30);
-        $today = Fan::whereData('created_at', date('Y-m-d',time()))->get();
+        $today = Fan::whereDate('created_at', date('Y-m-d',time()))->get();
         return response()->json(['status' => 'success','data' => $fans, 'today' => $today]);
     }
 
