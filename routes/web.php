@@ -197,6 +197,7 @@ Route::get('shares','Api\Ads\AdController@share')->name('share');
 Route::get('share', function() {
     // $url = route('share');
     $url = 'http://www.baidu.com';
+    
     $result = \iBrand\Miniprogram\Poster\MiniProgramShareImg::generateShareImage($url);
     return $result;
 });
