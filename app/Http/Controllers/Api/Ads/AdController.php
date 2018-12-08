@@ -50,5 +50,12 @@ class AdController extends Controller
         $ads = Ad::where('hidden', 0)->get();
         return response()->json(['status' => 'success', 'data' => $ads]); 
     }
+
+
+    public function share()
+    {
+        //你的业务逻辑代码，获取到相关数据
+        return view('share');
+    }
 }
 
