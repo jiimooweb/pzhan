@@ -6,7 +6,101 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
+
+<style>
+    body{
+        background: #000;
+    }
+
+    .content {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .wapper {
+        width: 300px;     
+        display: flex;
+        flex-direction: column;
+    }
+
+    .img {
+        width: 100%;
+        height: auto;
+    }
+
+    .info {
+        width: 100%;
+        /* height: 150px; */
+        background: #fff;
+        padding: 15px;
+        box-sizing: border-box;
+    }
+
+    .title {
+        color:#606266;
+        font-size: 14px;
+        text-align: center;
+    }
+
+    .mini {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        
+        align-items: center;
+        margin-top: 7px;
+    }
+
+    .qrcode {
+        height: 90px;
+        width: 90px;
+    }
+
+    .tips {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        height: 100%;
+        margin-left: 15px;
+
+    }
+
+    .logo {
+        height: 25px;
+        width: auto;
+        
+    }
+    
+    .tip {
+        font-size: 12px;
+        font-weight: 500;
+        color: #67C23A;
+        margin-top: 5px;
+    }
+
+</style>
 <body>
-    <img src="{{$picture->url}}">
+    <div class="content">
+        <div class="wapper">
+            <img class="img" src="{{$picture->url}}">
+            <div class="info">
+                <div class="title">
+                    {{$picture->title}} 
+                </div>
+                <div class="mini">
+                    <img class="qrcode" src="https://download.rdoorweb.com/pzhan/gh_061d94cac93e_258.jpg" alt="">
+                    <div class="tips">
+                        <img class="logo" src="https://download.rdoorweb.com/pzhan/pz_logo.png" alt="">
+                        <div class="tip">长按识别免费下载该图片</div>
+                    </div>
+                </div>
+            </div>
+        </div>  
+        
+    </div>
 </body>
 </html>
