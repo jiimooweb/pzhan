@@ -49,6 +49,7 @@
     .mini {
         margin-top: 7px;
         padding:0 16px 0 16px;
+        background-color: #fff;        
     }
 
     .qrcode {
