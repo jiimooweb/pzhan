@@ -54,15 +54,15 @@
     }
 
     .qrcode {
-        height: 80px;
-        width: 80px;
+        height: 85px;
+        width: 85px;
         float: left;
     }
 
     .tips {
         float: right;
         height: 100%;
-        margin-top: 14px;
+        margin-top: 18px;
     }
 
     .logo {
