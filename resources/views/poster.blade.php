@@ -33,7 +33,7 @@
     .info {
         width: 100%;
         /* height: 150px; */
-        padding: 15px;
+        padding: 5px 15px 20px;
         box-sizing: border-box;
         background-color: #fff;
 
