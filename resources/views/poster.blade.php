@@ -8,12 +8,10 @@
 </head>
 
 <style>
-    html {
-        padding:0;
-        margin: 0;
-    }
     body{
         background: #000;
+        padding:0;
+        margin: 0;
     }
 
     .content {
