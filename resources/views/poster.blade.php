@@ -62,11 +62,11 @@
     .tips {
         float: right;
         height: 100%;
-        margin-top: 18px;
+        margin-top: 14px;
     }
 
     .logo {
-        height: 30px;
+        height: 25px;
         width: auto;
         
     }
