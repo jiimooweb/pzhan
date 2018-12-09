@@ -192,3 +192,29 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
 });
 
+Route::get('qrcode', function() {
+    $id = request('id');
+    $picture = Picture::find($id);
+
+    $config =  [
+        'app_id' => config('wechat.mini_program.default.app_id'),
+        'secret' => config('wechat.mini_program.default.secret'),
+        'response_type' => 'array',
+        'log' => [
+            'level' => 'debug',
+            'file' => config('wechat.defaults.log.file'),
+        ],
+    ];
+    
+    $app = Factory::miniProgram($config);
+
+    $response = $app->app_code->getUnlimit(1048, [
+        'page' => '/pages/priveiw/priveiw?id=' + $id
+    ]);
+    // $response 成功时为 EasyWeChat\Kernel\Http\StreamResponse 实例，失败为数组或你指定的 API 返回类型
+    
+    if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
+        $filename = $response->saveAs(storage_path('app/public/qrcode'), $picture->pic_id . '.png');
+    }
+});
+
