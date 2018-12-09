@@ -46,27 +46,21 @@
     }
 
     .mini {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        
-        align-items: center;
         margin-top: 7px;
+        padding:0 16px 0 16px;
     }
 
     .qrcode {
         height: 90px;
         width: 90px;
+        float: left;
     }
 
     .tips {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
+        float: right;
         height: 100%;
-        margin-left: 15px;
-
+        margin-top: 18px;
+        margin-left: 15px;        
     }
 
     .logo {
@@ -79,7 +73,6 @@
         font-size: 12px;
         font-weight: 500;
         color: #67C23A;
-        margin-top: 5px;
     }
 
 </style>
