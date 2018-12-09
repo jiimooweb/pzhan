@@ -192,7 +192,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
 });
 
-Route::get('qrcode', function() {
+Route::any('qrcode', function() {
     $id = request('id');
     $picture = \App\Models\Picture::find($id);
 
