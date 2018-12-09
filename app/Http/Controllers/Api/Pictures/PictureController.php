@@ -7,6 +7,7 @@ use App\Models\Tag;
 use App\Models\Picture;
 use App\Services\Qiniu;
 use App\Services\Token;
+use EasyWeChat\Factory;
 use App\Models\FanShare;
 use App\Models\PictureTag;
 use App\Models\LikePicture;
