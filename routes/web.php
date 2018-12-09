@@ -211,6 +211,8 @@ Route::get('qrcode', function() {
     $response = $app->app_code->getUnlimit(1048, [
         'page' => '/pages/priveiw/priveiw?id=' . $id
     ]);
+
+    dd($response);
     // $response 成功时为 EasyWeChat\Kernel\Http\StreamResponse 实例，失败为数组或你指定的 API 返回类型
     
     if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
