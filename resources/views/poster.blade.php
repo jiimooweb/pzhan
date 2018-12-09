@@ -43,6 +43,7 @@
         color:#606266;
         font-size: 14px;
         text-align: center;
+        font-size: 200;
     }
 
     .mini {
