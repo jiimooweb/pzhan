@@ -412,7 +412,7 @@ class PictureController extends Controller
         $id = request('id');
         $picture = Picture::find($id);
 
-        return view('poster', compact('pictuer'));
+        return view('poster', compact('picture'));
     }
 
     public function poster(Picture $picture)
