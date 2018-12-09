@@ -435,7 +435,6 @@ class PictureController extends Controller
             $filename = $response->saveAs(storage_path('app/public/qrcode'), $picture->pic_id . '.png');
             $filename = storage_path('app/public/qrcode') . '/' . $filename;
         }
-        
         return view('poster', compact('picture','fan', 'filename'));
     }
 
