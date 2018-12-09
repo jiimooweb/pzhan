@@ -47,7 +47,7 @@
     }
 
     .mini {
-        height:100px;
+        height:85px;
         margin-top: 7px;
         padding:0 20px 0 20px;
         background-color: #fff;        
