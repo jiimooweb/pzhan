@@ -209,7 +209,7 @@ Route::any('qrcode', function() {
     $app = \EasyWeChat\Factory::miniProgram($config);
 
     $response = $app->app_code->getUnlimit("id=1", [
-        'path' => 'pages/preview/preview'
+        'page' => 'pages/preview/preview'
     ]);
     // $response =  $app->app_code->get('pages/preview/preview?id=' . $id);
     // $response 成功时为 EasyWeChat\Kernel\Http\StreamResponse 实例，失败为数组或你指定的 API 返回类型
