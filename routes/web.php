@@ -206,7 +206,7 @@ Route::get('qrcode', function() {
         ],
     ];
     
-    $app = Factory::miniProgram($config);
+    $app = \EasyWeChat\Factory::miniProgram($config);
 
     $response = $app->app_code->getUnlimit(1048, [
         'page' => '/pages/priveiw/priveiw?id=' + $id
