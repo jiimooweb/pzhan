@@ -12,7 +12,7 @@
         background: #000;
         padding:0;
         margin: 0;
-        background-color: #fff;
+        background-color: #f1f1f1;
     }
 
     .content {
@@ -48,13 +48,13 @@
 
     .mini {
         margin-top: 7px;
-        padding:0 16px 0 16px;
+        padding:0 20px 0 20px;
         background-color: #fff;        
     }
 
     .qrcode {
-        height: 90px;
-        width: 90px;
+        height: 80px;
+        width: 80px;
         float: left;
     }
 
@@ -62,11 +62,10 @@
         float: right;
         height: 100%;
         margin-top: 18px;
-        margin-left: 15px;        
     }
 
     .logo {
-        height: 25px;
+        height: 20px;
         width: auto;
         
     }
