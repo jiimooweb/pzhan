@@ -194,7 +194,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
 Route::get('qrcode', function() {
     $id = request('id');
-    $picture = Picture::find($id);
+    $picture = \App\Models\Picture::find($id);
 
     $config =  [
         'app_id' => config('wechat.mini_program.default.app_id'),
