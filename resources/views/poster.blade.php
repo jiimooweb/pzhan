@@ -87,7 +87,7 @@
                     {{$picture->title}} 
                 </div>
                 <div class="mini">
-                    <img class="qrcode" src="https://download.rdoorweb.com/pzhan/gh_061d94cac93e_258.jpg" alt="">
+                    <img class="qrcode" src="{{$filename}}" alt="">
                     <div class="tips">
                         <img class="logo" src="https://download.rdoorweb.com/pzhan/pz_logo.png" alt="">
                         <div class="tip">长按识别免费下载该图片</div>
