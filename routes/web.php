@@ -40,8 +40,8 @@ Route::get('/test', function() {
     return $image;
 });
 
-Route::get('pictures/poster','Api\Pictures\PictureControlle@createPoster')->name('poster'); //生成海报页面   
-Route::get('pictures/{picture}/poster','Api\Pictures\PictureControlle@poster');//生成海报   
+Route::get('pictures/poster','Api\Pictures\PictureController@createPoster')->name('poster'); //生成海报页面   
+Route::get('pictures/{picture}/poster','Api\Pictures\PictureController@poster');//生成海报   
 
 Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('wechat/token/saveInfo', 'Api\Fans\FanController@saveInfo');  //存用户信息    
