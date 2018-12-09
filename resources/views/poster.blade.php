@@ -14,10 +14,6 @@
 
     .content {
         width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
     }
 
     .wapper {
@@ -37,6 +33,7 @@
         padding: 15px;
         box-sizing: border-box;
         background-color: #fff;
+
     }
 
     .title {
