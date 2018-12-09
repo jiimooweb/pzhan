@@ -208,7 +208,7 @@ Route::get('qrcode', function() {
     
     $app = \EasyWeChat\Factory::miniProgram($config);
 
-    $response = $app->app_code->getUnlimit("id=$id", [
+    $response = $app->app_code->getUnlimit("id=1", [
         'path' => 'pages/preview/preview'
     ]);
     // $response =  $app->app_code->get('pages/preview/preview?id=' . $id);
