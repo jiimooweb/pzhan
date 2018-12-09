@@ -411,8 +411,6 @@ class PictureController extends Controller
         //你的业务逻辑代码，获取到相关数据
         $id = request('id');
         $picture = Picture::find($id);
-        $fan = Fan::find(3);
-        
         return view('poster', compact('picture','fan'));
     }
 
