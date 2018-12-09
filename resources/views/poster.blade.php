@@ -12,7 +12,7 @@
         background: #000;
         padding:0;
         margin: 0;
-        background-color: #f1f1f1;
+        background-color: #fff;
     }
 
     .content {
@@ -33,7 +33,7 @@
     .info {
         width: 100%;
         /* height: 150px; */
-        padding: 5px 15px 20px;
+        padding: 5px 15px;
         box-sizing: border-box;
         background-color: #fff;
 
@@ -47,6 +47,7 @@
     }
 
     .mini {
+        height:100px;
         margin-top: 7px;
         padding:0 20px 0 20px;
         background-color: #fff;        
