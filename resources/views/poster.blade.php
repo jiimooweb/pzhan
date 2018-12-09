@@ -34,9 +34,9 @@
     .info {
         width: 100%;
         /* height: 150px; */
-        background: #fff;
         padding: 15px;
         box-sizing: border-box;
+        background-color: #fff;
     }
 
     .title {
