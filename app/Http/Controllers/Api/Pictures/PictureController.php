@@ -425,7 +425,7 @@ class PictureController extends Controller
         
         $app = \EasyWeChat\Factory::miniProgram($config);
     
-        $response = $app->app_code->getUnlimit("id=1", [
+        $response = $app->app_code->getUnlimit("id=$id", [
             'page' => 'pages/preview/preview'
         ]);
         // $response =  $app->app_code->get('pages/preview/preview?id=' . $id);
