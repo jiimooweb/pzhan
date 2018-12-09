@@ -215,7 +215,9 @@ Route::get('qrcode', function() {
     
     if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
         $filename = $response->saveAs(storage_path('app/public/qrcode'), $picture->pic_id . '.png');
-        dd($filename);
     }
+
+    dd($filename);
+    
 });
 
