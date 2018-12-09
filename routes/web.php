@@ -216,7 +216,7 @@ Route::get('qrcode', function() {
     // $response 成功时为 EasyWeChat\Kernel\Http\StreamResponse 实例，失败为数组或你指定的 API 返回类型
     
     if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
-        $filename = $response->saveAs(storage_path('app/public/qrcode'), $picture->pic_id . '.png');
+        $filename = $response->saveAs(storage_path('app/public'), $picture->pic_id . '.png');
     }
 });
 
