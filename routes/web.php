@@ -40,7 +40,8 @@ Route::get('/test', function() {
     return $image;
 });
 
-
+Route::get('pictures/poster','Api\Pictures\PictureControlle@createPoster')->name('poster'); //生成海报页面   
+Route::get('pictures/{picture}/poster','Api\Pictures\PictureControlle@poster');//生成海报   
 
 Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('wechat/token/saveInfo', 'Api\Fans\FanController@saveInfo');  //存用户信息    
@@ -69,6 +70,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('pictures/{picture}/like', 'Api\Pictures\PictureController@like');  //点赞
     Route::post('pictures/{picture}/unlike', 'Api\Pictures\PictureController@unlike');  //取消赞
     Route::get('pictures/{picture}/add_hot', 'Api\Pictures\PictureController@addHot');  //增加热度
+    
     /*** 后台 ***/
     Route::apiResource('pictures', 'Api\Pictures\PictureController');
 
@@ -190,13 +192,3 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
 });
 
-Route::get('shares','Api\Ads\AdController@share')->name('share');
-
-
-
-Route::get('share', function() {
-    $url = route('share');
-
-    $result = \iBrand\Miniprogram\Poster\MiniProgramShareImg::generateShareImage($url);
-    return $result;
-});

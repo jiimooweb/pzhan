@@ -404,4 +404,21 @@ class PictureController extends Controller
         return response()->json(['status' => 'success', 'data' => $pictures, 'limit' => $limit]);
         
     }
+
+
+    public function createPoster()
+    {
+        //你的业务逻辑代码，获取到相关数据
+        $id = request('id');
+        $picture = Picture::find($id);
+
+        return view('poster', compact('pictuer'));
+    }
+
+    public function poster(Picture $picture)
+    {
+        $url = route('poster', ['id' => $picture->id]);
+        $result = \iBrand\Miniprogram\Poster\MiniProgramShareImg::generateShareImage($url);
+        return $result;
+    }
 }

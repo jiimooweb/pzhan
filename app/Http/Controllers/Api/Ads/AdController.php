@@ -52,10 +52,5 @@ class AdController extends Controller
     }
 
 
-    public function share()
-    {
-        //你的业务逻辑代码，获取到相关数据
-        return view('share');
-    }
 }
 
