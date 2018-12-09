@@ -433,7 +433,7 @@ class PictureController extends Controller
         
         if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
             $filename = $response->saveAs(storage_path('app/public/qrcode'), $picture->pic_id . '.png');
-            $filename = storage_path('app/public/qrcode') . '/' . $filename;
+            $filename = env('APP_URL') . '/storage/app/public/qrcode/' .$filename;
         }
         return view('poster', compact('picture','fan', 'filename'));
     }
