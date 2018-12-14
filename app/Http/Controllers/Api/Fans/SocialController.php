@@ -142,7 +142,7 @@ class SocialController extends Controller
     {
         $comment = request()->all();
 
-        $comment = SocialComment::create($comment);
+        $comment = SocialComment::firstOrCreate($comment);
         
         if($comment) {
             
@@ -184,7 +184,7 @@ class SocialController extends Controller
                     'module' => Module::Social,
                 ];  
 
-                CommentNotice::create($notice);
+                CommentNotice::firstOrCreate($notice);
             }
         }
        
@@ -224,7 +224,7 @@ class SocialController extends Controller
                     'module_comment_id' => $data['module_comment_id'],
                     'module' => Module::Social,
                 ];  
-                CommentNotice::create($notice);
+                CommentNotice::firstOrCreate($notice);
             }
         }
        
@@ -260,7 +260,7 @@ class SocialController extends Controller
 
         $fan_id = request('fan_id') ?? Token::getUid(); 
         
-        $like = SocialLike::create(['fan_id' => $fan_id, 'social_id' => $social->id]);
+        $like = SocialLike::firstOrCreate(['fan_id' => $fan_id, 'social_id' => $social->id]);
         
         if($like ) {
 
@@ -273,7 +273,7 @@ class SocialController extends Controller
                     'module' => Module::Social,
                 ];
 
-                LikeNotice::create($notice);
+                LikeNotice::firstOrCreate($notice);
             }
             
             return response()->json(['status' => 'success', 'data' => $like]);
