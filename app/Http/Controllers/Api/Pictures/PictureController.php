@@ -289,7 +289,7 @@ class PictureController extends Controller
             $pictures = \Cache::store('redis')->get('hotRank');
         }
 
-        $pictures = array_slice($pictures, $offset, $limit); 
+        $pictures = ['data' => array_slice($pictures, $offset, $limit)]; 
         
         // $pictures = Picture::with(['tags'])->where('hidden', 0)->withCount(['likeFans', 'collectFans'])->when($keyword == 'collect', function($query) {
         //     return $query->orderBy('collect_fans_count', 'desc');
