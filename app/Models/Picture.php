@@ -62,15 +62,15 @@ class Picture extends Model
     public static function refershRank()
     {   
         //收藏排行
-        $collectRank = self::withCount(['collectFans'])->orderBy('collect_fans_count', 'desc')->limit(100)->get();
+        $collectRank = self::where('hidden', 0)->withCount(['collectFans'])->orderBy('collect_fans_count', 'desc')->limit(100)->get()->toArray();
         \Cache::store('redis')->put('collectRank', $collectRank, 30);
 
         //点赞排行
-        $likeRank = self::withCount(['likeFans'])->orderBy('like_fans_count', 'desc')->limit(100)->get();
+        $likeRank = self::where('hidden', 0)->withCount(['likeFans'])->orderBy('like_fans_count', 'desc')->limit(100)->get()->toArray();
         \Cache::store('redis')->put('likeRank', $likeRank, 30);
 
         //热度排行
-        $hotRank = self::orderBy('hot', 'desc')->limit(100)->get();
+        $hotRank = self::where('hidden', 0)->orderBy('hot', 'desc')->limit(100)->get()->toArray();
         \Cache::store('redis')->put('hotRank', $hotRank, 30);
     }
 

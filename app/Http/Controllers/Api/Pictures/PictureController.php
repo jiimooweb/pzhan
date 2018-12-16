@@ -277,13 +277,27 @@ class PictureController extends Controller
     public function rank()
     {             
         $keyword = request('keyword');
-        $pictures = Picture::with(['tags'])->where('hidden', 0)->withCount(['likeFans', 'collectFans'])->when($keyword == 'collect', function($query) {
-            return $query->orderBy('collect_fans_count', 'desc');
-        })->when($keyword == 'like', function($query) {
-            return $query->orderBy('like_fans_count', 'desc');
-        })->when($keyword == 'hot', function($query){
-            return $query->orderBy('hot', 'desc');
-        })->paginate(20);
+        $limit = 20;
+        $page = request('page') ?? 1;
+        $offset = $limit * ($page - 1);
+
+        if($keyword == 'collect') {
+            $pictures = \Cache::store('redis')->get('collectRank');
+        }else if($keyword == 'like') {
+            $pictures = \Cache::store('redis')->get('likeRank');
+        }else {
+            $pictures = \Cache::store('redis')->get('hotRank');
+        }
+
+        $pictures = array_slice($pictures, $offset, $limit); 
+        
+        // $pictures = Picture::with(['tags'])->where('hidden', 0)->withCount(['likeFans', 'collectFans'])->when($keyword == 'collect', function($query) {
+        //     return $query->orderBy('collect_fans_count', 'desc');
+        // })->when($keyword == 'like', function($query) {
+        //     return $query->orderBy('like_fans_count', 'desc');
+        // })->when($keyword == 'hot', function($query){
+        //     return $query->orderBy('hot', 'desc');
+        // })->paginate(20);
 
         return response()->json(['status' => 'success', 'data' => $pictures]);
         
