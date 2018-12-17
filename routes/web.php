@@ -188,6 +188,9 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     //广告
     Route::get('ads/app', 'Api\Ads\AdController@app');
     Route::apiResource('ads', 'Api\Ads\AdController');
+    //公告
+    Route::get('announcements/app', 'Api\Ads\AnnouncementController@app');
+    Route::apiResource('announcements', 'Api\Ads\AnnouncementController');
     
 
 });
