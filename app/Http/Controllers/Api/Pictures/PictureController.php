@@ -412,9 +412,12 @@ class PictureController extends Controller
         $pictures = [];
         if(count($tag_ids)) {
             $picture_ids = PictureTag::whereIn('tag_id',$tag_ids)->orderBy('id', $order)->get()->pluck('picture_id')->toArray();
+            
             $picture_ids = array_unique($picture_ids);
             $picture_ids = array_slice($picture_ids, $offset, $limit); 
-            $pictures = Picture::whereIn('id', $picture_ids)->where('hidden', 0)->get();
+            
+            $pictures = Picture::whereIn('id', $picture_ids)->where('hidden', 0)->orderBy('id', $order)->get();
+            
             foreach($pictures as &$picture) {
                 $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
             }
