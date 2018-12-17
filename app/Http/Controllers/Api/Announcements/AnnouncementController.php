@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Announcement;
+namespace App\Http\Controllers\Api\Announcements;
 
 use App\Models\Announcement;
 use Illuminate\Http\Request;
