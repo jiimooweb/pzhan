@@ -163,7 +163,9 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('todays/year','Api\Todays\TodayController@getDataByYear');
     Route::post('todays/search','Api\Todays\TodayController@search');
     Route::post('todays/delete','Api\Todays\TodayController@delete');
+    Route::get('todays/one','Api\Todays\TodayController@getOne');
     Route::apiResource('todays', 'Api\Todays\TodayController');
+
 
     //今日点赞
     Route::post('todayLikes/delete','Api\TodayLikes\TodayLikeController@delete');

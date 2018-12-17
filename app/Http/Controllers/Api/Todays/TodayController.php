@@ -414,4 +414,27 @@ class TodayController extends Controller
         return $value;
     }
 
+    public function getOne()
+    {
+        $end = Carbon::today();
+        $first = Carbon::today()->modify('-60 days');
+        $data = Today::whereBetween('created_at',[$first,$end])
+            ->where('is_up',1)
+            ->with(['picture'=>function($query){
+                $query->with('tags');
+            }])
+            ->orderBy('created_at','desc')
+            ->get();
+
+        foreach ($data as $item)
+        {
+            $date = Carbon::parse($item->date);
+            $item->year = $date->year;
+            $monthf = $this->monthFormat($date->month);
+            $item->month = $monthf;
+            $item->day = $date->day;
+        }
+        return response()->json(['data' => $data]);
+    }
+
 }
