@@ -35,11 +35,9 @@ Route::get('/get', function() {
     return \Carbon\Carbon::parse($date);
 });
 
-Route::get('/test', function() {
-    $image = \App\Utils\Common::getImageType('http://download.rdoorweb.com/pzhan/no_profile.png');
-    return $image;
-});
 
+
+Route::get('pictures/poster','Api\Pictures\PictureController@createPoster')->name('poster'); //生成海报页面     
 
 Route::group(['middleware' => ['cors', 'token']], function () {
     
@@ -53,7 +51,6 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
     //图片
     /*** 小程序 ***/
-    Route::get('pictures/poster','Api\Pictures\PictureController@createPoster')->name('poster'); //生成海报页面     
     Route::get('pictures/{picture}/poster','Api\Pictures\PictureController@poster');//生成海报   
     Route::get('pictures/search', 'Api\Pictures\PictureController@search');  //排行榜
     Route::get('pictures/rank', 'Api\Pictures\PictureController@rank');  //排行榜
