@@ -423,7 +423,7 @@ class TodayController extends Controller
             ->with(['picture'=>function($query){
                 $query->with('tags');
             }])
-            ->orderBy('created','desc')
+            ->orderBy('created_at','desc')
             ->get();
 
         foreach ($data as $item)
