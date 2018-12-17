@@ -414,4 +414,25 @@ class TodayController extends Controller
         return $value;
     }
 
+    public function getOne()
+    {
+        $today = Carbon::today();
+        $year = $today->year;
+        $month = $today->month;
+        $day = $today->day;
+        $monthf = $this->monthFormat($month);
+
+        $date['year'] = $year;
+        $date['month'] = $monthf;
+        $date['day'] = $day;
+
+        $data = Today::where([['date', $today],['is_up',1]])
+            ->with(['picture'=>function($query){
+                $query->with('tags');
+            }])
+            ->first();
+        return response()->json(['data' => $data, 'date' => $date]);
+
+    }
+
 }
