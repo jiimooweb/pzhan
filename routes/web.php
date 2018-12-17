@@ -52,10 +52,12 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     //图片
     /*** 小程序 ***/
     Route::get('pictures/{picture}/poster','Api\Pictures\PictureController@poster');//生成海报   
-    Route::get('pictures/search', 'Api\Pictures\PictureController@search');  //排行榜
+    Route::get('pictures/search-author', 'Api\Pictures\PictureController@searchAuthor');  //搜索作者
+    Route::get('pictures/search', 'Api\Pictures\PictureController@search');  //搜索图片
     Route::get('pictures/rank', 'Api\Pictures\PictureController@rank');  //排行榜
     Route::get('pictures/app_list', 'Api\Pictures\PictureController@appList'); 
-    Route::get('pictures/getListByTags', 'Api\Pictures\PictureController@getListByTags'); 
+    Route::get('pictures/get-list-by-tags', 'Api\Pictures\PictureController@getListByTags'); 
+    Route::get('pictures/get-list-by-author', 'Api\Pictures\PictureController@getListByAuthor'); 
     Route::get('pictures/{picture}/hidden', 'Api\Pictures\PictureController@changeHidden');  //改变隐藏
     Route::get('pictures/{picture}/app_show', 'Api\Pictures\PictureController@appShow'); 
     Route::post('pictures/hidden', 'Api\Pictures\PictureController@hiddenChangeAll');  //改变全部图片隐藏
