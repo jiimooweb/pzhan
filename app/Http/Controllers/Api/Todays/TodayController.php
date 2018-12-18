@@ -424,6 +424,7 @@ class TodayController extends Controller
                 $query->with('tags');
             }])
             ->orderBy('created_at','desc')
+            ->limit(60)
             ->get();
 
         foreach ($data as $item)
