@@ -263,10 +263,23 @@ class PictureController extends Controller
             $picture_ids = PictureTag::where('tag_id',$tag_id)->get()->pluck('picture_id');
         }
 
-        $pictures = Picture::with(['tags'])->where('hidden', 0)->when($picture_ids, function($query) use ($picture_ids) {
+        $pictures = Picture::where('hidden', 0)->when($picture_ids, function($query) use ($picture_ids) {
             return $query->whereIn('id', $picture_ids);
         })->withCount(['likeFans', 'collectFans'])->paginate($limit); 
 
+        foreach($pictures as &$picture) {
+            $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
+        }
+        
+        return response()->json(['status' => 'success', 'data' => $pictures]);
+    }
+
+    public function getListByAuthor()
+    {
+        $fan_id = request('fan_id') ?? Token::getUid();                
+        $limit = 20;
+        $author = request('author');
+        $pictures = Picture::where('hidden', 0)->where('author', 'like', $author )->withCount(['likeFans', 'collectFans'])->paginate($limit); 
         foreach($pictures as &$picture) {
             $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
         }
@@ -290,14 +303,6 @@ class PictureController extends Controller
         }
 
         $pictures = ['data' => array_slice($pictures, $offset, $limit)]; 
-        
-        // $pictures = Picture::with(['tags'])->where('hidden', 0)->withCount(['likeFans', 'collectFans'])->when($keyword == 'collect', function($query) {
-        //     return $query->orderBy('collect_fans_count', 'desc');
-        // })->when($keyword == 'like', function($query) {
-        //     return $query->orderBy('like_fans_count', 'desc');
-        // })->when($keyword == 'hot', function($query){
-        //     return $query->orderBy('hot', 'desc');
-        // })->paginate(20);
 
         return response()->json(['status' => 'success', 'data' => $pictures]);
         
@@ -407,9 +412,12 @@ class PictureController extends Controller
         $pictures = [];
         if(count($tag_ids)) {
             $picture_ids = PictureTag::whereIn('tag_id',$tag_ids)->orderBy('id', $order)->get()->pluck('picture_id')->toArray();
+            
             $picture_ids = array_unique($picture_ids);
             $picture_ids = array_slice($picture_ids, $offset, $limit); 
-            $pictures = Picture::whereIn('id', $picture_ids)->where('hidden', 0)->get();
+            
+            $pictures = Picture::whereIn('id', $picture_ids)->where('hidden', 0)->orderBy('id', $order)->get();
+            
             foreach($pictures as &$picture) {
                 $picture->collect = $picture->isCollect($fan_id) ? 1 : 0;
             }
@@ -417,6 +425,26 @@ class PictureController extends Controller
         }     
 
         return response()->json(['status' => 'success', 'data' => $pictures, 'limit' => $limit]);
+        
+    }
+
+    public function searchAuthor() 
+    {
+        $limit = 20;
+        $page = request('page') ?? 1;
+        $offset = $limit * ($page - 1);
+        $fan_id = request('fan_id') ?? Token::getUid();  
+        $keyword = request('keyword');
+        $authors = Picture::where('author', 'like', '%'.$keyword.'%')->pluck('author')->toArray();    
+        $authors = array_unique($authors);
+        $authors = array_slice($authors, $offset, $limit); 
+        $pictures = [];        
+        foreach($authors as $k => &$author) {
+            $pictures[$k]['name'] = $author;
+            $pictures[$k]['pictures'] = Picture::where('author', $author)->orderBy('created_at', 'desc')->limit(3)->get()->toArray();
+        }
+          
+        return response()->json(['status' => 'success', 'data' => $pictures]);
         
     }
 

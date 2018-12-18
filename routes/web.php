@@ -35,15 +35,12 @@ Route::get('/get', function() {
     return \Carbon\Carbon::parse($date);
 });
 
-Route::get('/test', function() {
-    $image = \App\Utils\Common::getImageType('http://download.rdoorweb.com/pzhan/no_profile.png');
-    return $image;
-});
 
-Route::get('pictures/poster','Api\Pictures\PictureController@createPoster')->name('poster'); //生成海报页面   
-Route::get('pictures/{picture}/poster','Api\Pictures\PictureController@poster');//生成海报   
+
+Route::get('pictures/poster','Api\Pictures\PictureController@createPoster')->name('poster'); //生成海报页面     
 
 Route::group(['middleware' => ['cors', 'token']], function () {
+    
     Route::post('wechat/token/saveInfo', 'Api\Fans\FanController@saveInfo');  //存用户信息    
     Route::get('getUid', 'Api\Fans\FanController@getUid');  //获取用户fan_id
     Route::get('getUserInfo', 'Api\Fans\FanController@getUserInfo');  //获取用户信息
@@ -54,10 +51,13 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
     //图片
     /*** 小程序 ***/
-    Route::get('pictures/search', 'Api\Pictures\PictureController@search');  //排行榜
+    Route::get('pictures/{picture}/poster','Api\Pictures\PictureController@poster');//生成海报   
+    Route::get('pictures/search-author', 'Api\Pictures\PictureController@searchAuthor');  //搜索作者
+    Route::get('pictures/search', 'Api\Pictures\PictureController@search');  //搜索图片
     Route::get('pictures/rank', 'Api\Pictures\PictureController@rank');  //排行榜
     Route::get('pictures/app_list', 'Api\Pictures\PictureController@appList'); 
-    Route::get('pictures/getListByTags', 'Api\Pictures\PictureController@getListByTags'); 
+    Route::get('pictures/get-list-by-tags', 'Api\Pictures\PictureController@getListByTags'); 
+    Route::get('pictures/get-list-by-author', 'Api\Pictures\PictureController@getListByAuthor'); 
     Route::get('pictures/{picture}/hidden', 'Api\Pictures\PictureController@changeHidden');  //改变隐藏
     Route::get('pictures/{picture}/app_show', 'Api\Pictures\PictureController@appShow'); 
     Route::post('pictures/hidden', 'Api\Pictures\PictureController@hiddenChangeAll');  //改变全部图片隐藏
@@ -190,37 +190,11 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     //广告
     Route::get('ads/app', 'Api\Ads\AdController@app');
     Route::apiResource('ads', 'Api\Ads\AdController');
+    //公告
+    Route::get('announcements/app', 'Api\Announcements\AnnouncementController@app');
+    Route::apiResource('announcements', 'Api\Announcements\AnnouncementController');
     
 
 });
 
-Route::any('qrcode', function() {
-    $id = request('id');
-    $picture = \App\Models\Picture::find($id);
-
-    $config =  [
-        'app_id' => config('wechat.mini_program.default.app_id'),
-        'secret' => config('wechat.mini_program.default.secret'),
-        'response_type' => 'array',
-        'log' => [
-            'level' => 'debug',
-            'file' => config('wechat.defaults.log.file'),
-        ],
-    ];
-    
-    $app = \EasyWeChat\Factory::miniProgram($config);
-
-    $response = $app->app_code->getUnlimit("id=1", [
-        'page' => 'pages/preview/preview'
-    ]);
-    // $response =  $app->app_code->get('pages/preview/preview?id=' . $id);
-    // $response 成功时为 EasyWeChat\Kernel\Http\StreamResponse 实例，失败为数组或你指定的 API 返回类型
-    
-    if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
-        $filename = $response->saveAs(storage_path('app/public/qrcode'), $picture->pic_id . '.png');
-    }
-
-    dd($filename);
-    
-});
 
