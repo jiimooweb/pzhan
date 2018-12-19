@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Leaderboards;
 
+use App\Models\Leaderboard;
 use App\Models\LeaderDate;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -46,6 +47,15 @@ class LeaderDateController extends Controller
     {
         $id = request()->leaderDate;
         LeaderDate::where('id',$id)->delete();
+        DB::beginTransaction();
+        try {
+            LeaderDate::where('id',$id)->delete();
+            Leaderboard::where('date_id', $id)->delete();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'error', 'msg' => $e]);
+        }
+
     }
 
 }
