@@ -35,7 +35,7 @@ class LeaderboardController extends Controller
     public function update()
     {
         $id = request()->leaderboard;
-        $list = request(['ranking', 'old_ranking', 'up', 'is_first', 'is_hidden']);
+        $list = request(['ranking', 'old_ranking', 'up', 'is_first', 'is_hidden','count','definition']);
         DB::beginTransaction();
         try {
             Leaderboard::where('id', $id)->update($list);
