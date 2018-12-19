@@ -194,7 +194,10 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     //公告
     Route::get('announcements/app', 'Api\Announcements\AnnouncementController@app');
     Route::apiResource('announcements', 'Api\Announcements\AnnouncementController');
-    
+
+    // 每日排行
+    Route::apiResource('leaderboards','Api\Leaderboards\LeaderboardController');
+    Route::apiResource('leaderDates','Api\Leaderboards\leaderDateController');
 
 });
 
