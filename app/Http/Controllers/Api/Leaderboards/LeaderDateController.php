@@ -55,7 +55,51 @@ class LeaderDateController extends Controller
             DB::rollBack();
             return response()->json(['status' => 'error', 'msg' => $e]);
         }
-
     }
+
+
+    public function monthFormat($month)
+    {
+        switch ($month) {
+            case 1:
+                $value = 'Jan.';
+                break;
+            case 2:
+                $value = 'Feb.';
+                break;
+            case 3:
+                $value = 'Mar.';
+                break;
+            case 4:
+                $value = 'Apr.';
+                break;
+            case 5:
+                $value = 'May.';
+                break;
+            case 6:
+                $value = 'June.';
+                break;
+            case 7:
+                $value = 'July.';
+                break;
+            case 8:
+                $value = 'Aug.';
+                break;
+            case 9:
+                $value = 'Sept.';
+                break;
+            case 10:
+                $value = 'Oct.';
+                break;
+            case 11:
+                $value = 'Nov.';
+                break;
+            default:
+                $value = 'Dec';
+
+        }
+        return $value;
+    }
+
 
 }

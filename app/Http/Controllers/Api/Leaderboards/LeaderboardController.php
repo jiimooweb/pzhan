@@ -48,6 +48,13 @@ class LeaderboardController extends Controller
     public function destroy()
     {
         $id = request()->leaderboard;
-        LeaderDate::where('id', $id)->delete();
+        Leaderboard::where('id', $id)->delete();
+    }
+
+    public function getData()
+    {
+        $date_id = request('id');
+        $data = Leaderboard::where([['date_id',$date_id],['is_hidden',0]])->get();
+
     }
 }
