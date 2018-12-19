@@ -13,10 +13,10 @@ class LeaderDateController extends Controller
     public function getDate()
     {
         $list = request(['year','month']);
-        $data = LeaderDate::whereYear('date',$list('year'))
+        $data = LeaderDate::whereYear('date',$list['year'])
             ->whereMonth('date',$list['month'])
             ->get();
-        return response()->json([$data]);
+        return response()->json(['date'=>$data]);
     }
 
     public function show()
