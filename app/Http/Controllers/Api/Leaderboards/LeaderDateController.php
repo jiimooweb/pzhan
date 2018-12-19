@@ -9,21 +9,24 @@ use App\Http\Controllers\Controller;
 class LeaderDateController extends Controller
 {
     //
-    public function index()
+    public function getDate()
     {
-        $date = LeaderDate::orderBy('created_at','desc')->paginate('20');
-        return response()->json([$date]);
+        $list = request(['year','month']);
+        $data = LeaderDate::whereYear('date',$list('year'))
+            ->whereMonth('date',$list['month'])
+            ->get();
+        return response()->json([$data]);
     }
 
     public function show()
     {
         $id = request()->leaderDate;
-        $date = LeaderDate::where('id',$id)
+        $data = LeaderDate::where('id',$id)
             ->with(['leaderboards' => function ($query) {
                 $query->with('picture');
             }])
             ->first();
-        return response()->json([$date]);
+        return response()->json([$data]);
     }
 
     public function store()
