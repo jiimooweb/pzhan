@@ -14,7 +14,7 @@ class LeaderboardController extends Controller
     {
         $id = request()->leaderboard;
         $date = Leaderboard::where('id', $id)->with('picture')->first();
-        return response()->json([$date]);
+        return response()->json(['data' => $date]);
     }
 
     public function store()
@@ -35,7 +35,7 @@ class LeaderboardController extends Controller
     public function update()
     {
         $id = request()->leaderboard;
-        $list = request(['ranking', 'old_ranking', 'up', 'is_first', 'is_hidden','count','definition']);
+        $list = request(['ranking', 'old_ranking', 'up', 'is_first', 'is_hidden','count','definition','sid']);
         DB::beginTransaction();
         try {
             Leaderboard::where('id', $id)->update($list);
@@ -54,7 +54,11 @@ class LeaderboardController extends Controller
     public function getData()
     {
         $date_id = request('id');
-        $data = Leaderboard::where([['date_id',$date_id],['is_hidden',0]])->get();
-
+        $data = Leaderboard::where([['date_id',$date_id],['is_hidden',0],['sid',0]])
+            ->with('allChildrens')
+            ->get();
+        return response()->json(['data' =>$data]);
     }
+
+
 }
