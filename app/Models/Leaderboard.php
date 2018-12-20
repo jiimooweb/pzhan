@@ -21,7 +21,7 @@ class Leaderboard extends Model
     }
 
     public function allChildrens(){
-        return $this->child()->with('allChildrenNavs');
+        return $this->child()->with('allChildrens');
     }
 
 }

@@ -198,6 +198,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     // 每日排行
     Route::post('leaderDates/date', 'Api\Leaderboards\LeaderDateController@getDate');
     Route::get('leaderDates/date', 'Api\Leaderboards\LeaderDateController@getDateforSP');
+    Route::post('leaderDates/data', 'Api\Leaderboards\LeaderDateController@getDataByDate');
     Route::apiResource('leaderDates','Api\Leaderboards\LeaderDateController');
     Route::apiResource('leaderboards','Api\Leaderboards\LeaderboardController');
 

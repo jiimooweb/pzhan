@@ -133,5 +133,19 @@ class LeaderDateController extends Controller
         return response()->json(['data' => $list,'today'=>$date]);
 
     }
+    public function getDataByDate()
+    {
+        $date = Carbon::parse(request('date'));
+
+        $data = LeaderDate::where('date',$date)
+            ->with(['leaderboards' => function ($query) {
+                $query->where([['sid',0],['is_hidden',0]])
+                    ->with('allChildrens')
+                    ->orderBy('ranking')
+                    ->with('picture');
+            }])
+            ->first();
+        return response()->json(['data' => $data]);
+    }
 
 }
