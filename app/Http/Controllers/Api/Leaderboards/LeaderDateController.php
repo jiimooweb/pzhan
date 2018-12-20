@@ -147,10 +147,10 @@ class LeaderDateController extends Controller
             ->first();
         if($data){
             $leaderboards = $data->leaderboards;
-            $fitst = $leaderboards->filter(function ($item) {
+            $first = $leaderboards->filter(function ($item) {
                 return $item->is_first == true ;
             })->all();
-            return response()->json(['data' => $leaderboards,'fitst'=>$fitst]);
+            return response()->json(['data' => $leaderboards,'first'=>$first]);
         }
 
     }
