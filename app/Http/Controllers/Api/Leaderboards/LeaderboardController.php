@@ -22,8 +22,8 @@ class LeaderboardController extends Controller
         $list = request(['ids', 'date_id']);
         DB::beginTransaction();
         try {
-            foreach ($list['ids'] as $id) {
-                Leaderboard::create(['img_id' => $id, 'date_id' => $list['date_id']]);
+            foreach ($list['ids'] as $key => $id) {
+                Leaderboard::create(['img_id' => $id, 'date_id' => $list['date_id'],'count'=>$key+1]);
             }
         } catch (\Exception $e) {
             DB::rollBack();

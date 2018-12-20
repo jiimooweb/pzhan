@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Leaderboards;
 
 use App\Models\Leaderboard;
 use App\Models\LeaderDate;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -24,7 +25,7 @@ class LeaderDateController extends Controller
         $id = request()->leaderDate;
         $data = LeaderDate::where('id', $id)
             ->with(['leaderboards' => function ($query) {
-                $query->with('picture');
+                $query->orderBy('ranking')->with('picture');
             }])
             ->first();
         return response()->json(['data' =>$data]);
@@ -101,5 +102,35 @@ class LeaderDateController extends Controller
         return $value;
     }
 
+    public function getDateforSP()
+    {
+        $today = Carbon::today();
+//        $today = Carbon::parse('2019-04-12');
+        $year = $today->year;
+        $month = $today->month;
+        $day = $today->day;
+        $monthf = $this->monthFormat($month);
+        $list = [];
+        for($i = 2018;$i<$year+1;$i++){
+            if($i == 2018){
+                array_push($list,['year'=>2018,'month'=>[12]]);
+            }else if( $i !=2018 ){
+                if($i == $year){
+                    for($r=1;$r<$month+1;$r++){
+                        $arrMonth[] = $r;
+                    }
+                    array_push($list,['year'=>$i,'month'=>$arrMonth]);
+                }else{
+                    array_push($list,['year'=>$i,'month'=>[1,2,3,4,5,6,7,8,9,10,11,12]]);
+                }
+            }
+        }
+        $date['year']=$year;
+        $date['month']=$month;
+        $date['day']=$day;
+        $date['date'] = $today->toDateString();
+        return response()->json(['data' => $list,'today'=>$date]);
+
+    }
 
 }
