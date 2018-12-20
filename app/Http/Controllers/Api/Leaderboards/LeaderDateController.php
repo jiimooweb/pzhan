@@ -127,6 +127,7 @@ class LeaderDateController extends Controller
         }
         $date['year']=$year;
         $date['month']=$month;
+        $date['monthF']=$monthf;
         $date['day']=$day;
         $date['date'] = $today->toDateString();
         return response()->json(['data' => $list,'today'=>$date]);
