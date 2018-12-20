@@ -116,7 +116,7 @@ class LeaderDateController extends Controller
                 array_push($list,['year'=>2018,'month'=>[12]]);
             }else if( $i !=2018 ){
                 if($i == $year){
-                    for($r=$month;$r<=0;$r--){
+                    for($r=$month;$r>=1;$r--){
                         $arrMonth[] = $r;
                     }
                     array_push($list,['year'=>$i,'month'=>$arrMonth]);
