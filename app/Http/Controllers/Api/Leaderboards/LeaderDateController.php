@@ -135,8 +135,8 @@ class LeaderDateController extends Controller
     }
     public function getDataByDate()
     {
-        $date = Carbon::parse(request('date'));
-
+        $list = request(['year','month','day']);
+        $date = Carbon::parse($list['year']."-".$list['month']."-".$list['day']);
         $data = LeaderDate::where('date',$date)
             ->with(['leaderboards' => function ($query) {
                 $query->where([['sid',0],['is_hidden',0]])
@@ -145,11 +145,14 @@ class LeaderDateController extends Controller
                     ->with('picture');
             }])
             ->first();
-        $leaderboards = $data->leaderboards;
-        $fitst = $leaderboards->filter(function ($item) {
-            return $item->is_first == true ;
-        })->all();
-        return response()->json(['data' => $leaderboards,'fitst'=>$fitst]);
+        if($data){
+            $leaderboards = $data->leaderboards;
+            $fitst = $leaderboards->filter(function ($item) {
+                return $item->is_first == true ;
+            })->all();
+            return response()->json(['data' => $leaderboards,'fitst'=>$fitst]);
+        }
+
     }
 
 }
