@@ -145,7 +145,11 @@ class LeaderDateController extends Controller
                     ->with('picture');
             }])
             ->first();
-        return response()->json(['data' => $data]);
+        $leaderboards = $data->leaderboards;
+        $fitst = $leaderboards->filter(function ($item) {
+            return $item->is_first == true ;
+        })->all();
+        return response()->json(['data' => $leaderboards,'fitst'=>$fitst]);
     }
 
 }
