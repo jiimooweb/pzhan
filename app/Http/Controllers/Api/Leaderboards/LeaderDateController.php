@@ -104,8 +104,8 @@ class LeaderDateController extends Controller
 
     public function getDateforSP()
     {
-        $today = Carbon::today();
-//        $today = Carbon::parse('2019-04-12');
+//        $today = Carbon::today();
+        $today = Carbon::parse('2019-04-12');
         $year = $today->year;
         $month = $today->month;
         $day = $today->day;
