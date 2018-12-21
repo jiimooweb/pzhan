@@ -57,7 +57,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::get('pictures/rank', 'Api\Pictures\PictureController@rank');  //排行榜
     Route::get('pictures/app_list', 'Api\Pictures\PictureController@appList'); 
     Route::get('pictures/getListByTags', 'Api\Pictures\PictureController@getListByTags'); 
-    // Route::get('pictures/get-list-by-tags', 'Api\Pictures\PictureController@getListByTags'); 
+    Route::get('pictures/get-list-by-tags', 'Api\Pictures\PictureController@getListByTags'); 
     Route::get('pictures/get-list-by-author', 'Api\Pictures\PictureController@getListByAuthor'); 
     Route::get('pictures/{picture}/hidden', 'Api\Pictures\PictureController@changeHidden');  //改变隐藏
     Route::get('pictures/{picture}/app_show', 'Api\Pictures\PictureController@appShow'); 
