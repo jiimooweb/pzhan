@@ -104,8 +104,8 @@ class LeaderDateController extends Controller
 
     public function getDateforSP()
     {
-//        $today = Carbon::today();
-        $today = Carbon::parse('2019-04-12');
+        $today = Carbon::today();
+//        $today = Carbon::parse('2019-04-12');
         $year = $today->year;
         $month = $today->month;
         $day = $today->day;
@@ -151,6 +151,26 @@ class LeaderDateController extends Controller
                 return $item->is_first == true ;
             })->all();
             return response()->json(['data' => $leaderboards,'first'=>$first]);
+        }else{
+            $today = Carbon::today();
+            if($today->eq($date)){
+                $yesterday = LeaderDate::where('date',$today->modify('-1 days'))
+                    ->with(['leaderboards' => function ($query) {
+                        $query->where([['sid',0],['is_hidden',0]])
+                            ->with('allChildrens')
+                            ->orderBy('ranking')
+                            ->with('picture');
+                    }])
+                    ->first();
+                if($yesterday){
+                    $y_leaderboards = $yesterday->leaderboards;
+                    $y_first = $y_leaderboards->filter(function ($item) {
+                        return $item->is_first == true ;
+                    })->all();
+                    return response()->json(['data' => $y_leaderboards,'first'=>$y_first]);
+                }
+            }
+            return response()->json(['data' => '','first'=>'']);
         }
 
     }

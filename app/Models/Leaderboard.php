@@ -17,7 +17,7 @@ class Leaderboard extends Model
 
     public function child()
     {
-        return $this->hasMany(Leaderboard::class,'sid','img_id');
+        return $this->hasMany(Leaderboard::class,'sid','id');
     }
 
     public function allChildrens(){
