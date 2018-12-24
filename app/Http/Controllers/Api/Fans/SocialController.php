@@ -265,7 +265,8 @@ class SocialController extends Controller
         if($like ) {
             $likeCount = SocialLike::where('social_id' , $social->id)->count();
             if($likeCount % 5 == 0) {
-                Fan::where('id', $fan_id)->increment('point', 50);
+                $fan = Social::where('id', $social->id)->first()['fan_id'];
+                Fan::where('id', $fan)->increment('point', 50);
                 PointHistory::firstOrCreate([
                     'fan_id' =>  $fan_id,
                     'state' => 1,
