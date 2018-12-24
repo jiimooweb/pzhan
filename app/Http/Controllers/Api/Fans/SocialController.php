@@ -56,7 +56,7 @@ class SocialController extends Controller
     {   
         $data = request()->all();  
         $data['fan_id'] = request('fan_id') ?? Token::getUid(); 
-        $social = Social::firstOrCreate($data);
+        $social = Social::create($data);
         if($social) {
             $point = 0;
             $date = date('Y-m-d', time());
