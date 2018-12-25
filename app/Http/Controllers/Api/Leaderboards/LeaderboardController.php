@@ -27,8 +27,8 @@ class LeaderboardController extends Controller
                 $leaderboard = Leaderboard::create(['img_id' => $id, 'date_id' => $list['date_id']]);
                 $data[] = $leaderboard;
             }
-            return response()->json(['data' => $data]);
             DB::commit();
+            return response()->json(['data' => $data]);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['status' => 'error', 'msg' => $e]);
