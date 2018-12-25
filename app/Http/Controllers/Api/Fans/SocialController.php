@@ -263,18 +263,18 @@ class SocialController extends Controller
         $like = SocialLike::firstOrCreate(['fan_id' => $fan_id, 'social_id' => $social->id]);
         
         if($like ) {
-            $likeCount = SocialLike::where('social_id' , $social->id)->count();
-            if($likeCount % 5 == 0) {
-                $fan = Social::where('id', $social->id)->first()['fan_id'];
-                Fan::where('id', $fan)->increment('point', 50);
-                PointHistory::firstOrCreate([
-                    'fan_id' =>  $fan_id,
-                    'state' => 1,
-                    'point' => 50,
-                    'tag' => 'social',
-                    'comment' => '点赞活动'.$likeCount.'个赞获得的50积分'
-                ]);
-            }
+            // $likeCount = SocialLike::where('social_id' , $social->id)->count();
+            // if($likeCount % 5 == 0) {
+            //     $fan = Social::where('id', $social->id)->first()['fan_id'];
+            //     Fan::where('id', $fan)->increment('point', 50);
+            //     PointHistory::firstOrCreate([
+            //         'fan_id' =>  $fan_id,
+            //         'state' => 1,
+            //         'point' => 50,
+            //         'tag' => 'social',
+            //         'comment' => '点赞活动'.$likeCount.'个赞获得的50积分'
+            //     ]);
+            // }
             if($fan_id != $social->fan_id) {
                 //添加通知
                 $notice = [

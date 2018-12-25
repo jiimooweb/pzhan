@@ -204,4 +204,9 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
 });
 
+// Route::get('social', function() {
+//     $socials = \App\Models\Social::where('created_at', '>=', '2018-12-24')->with(['fan'])->withCount(['likeFans'])->orderBy('like_fans_count', 'desc')->paginate(20);
+//     return $socials;
+// });
+
 
