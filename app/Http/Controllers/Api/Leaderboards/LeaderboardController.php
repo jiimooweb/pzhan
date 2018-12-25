@@ -22,9 +22,13 @@ class LeaderboardController extends Controller
         $list = request(['ids', 'date_id']);
         DB::beginTransaction();
         try {
-            foreach ($list['ids'] as $key => $id) {
-                Leaderboard::create(['img_id' => $id, 'date_id' => $list['date_id'],'count'=>$key+1]);
+            $data = [];
+            foreach ($list['ids'] as $id) {
+                $leaderboard = Leaderboard::create(['img_id' => $id, 'date_id' => $list['date_id']]);
+                $data[] = $leaderboard;
             }
+            DB::commit();
+            return response()->json(['data' => $data]);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['status' => 'error', 'msg' => $e]);
@@ -39,6 +43,7 @@ class LeaderboardController extends Controller
         DB::beginTransaction();
         try {
             Leaderboard::where('id', $id)->update($list);
+            DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['status' => 'error', 'msg' => $e]);

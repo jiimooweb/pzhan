@@ -52,6 +52,7 @@ class LeaderDateController extends Controller
         try {
             LeaderDate::where('id', $id)->delete();
             Leaderboard::where('date_id', $id)->delete();
+            DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['status' => 'error', 'msg' => $e]);
