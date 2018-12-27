@@ -298,8 +298,10 @@ class PictureController extends Controller
             $pictures = \Cache::store('redis')->get('collectRank');
         }else if($keyword == 'like') {
             $pictures = \Cache::store('redis')->get('likeRank');
+        }else if($keyword == 'download'){
+            $pictures = \Cache::store('redis')->get('downloadRank');
         }else {
-            $pictures = \Cache::store('redis')->get('hotRank');
+            $pictures = \Cache::store('redis')->get('hotRank');            
         }
 
         $pictures = ['data' => array_slice($pictures, $offset, $limit)]; 
