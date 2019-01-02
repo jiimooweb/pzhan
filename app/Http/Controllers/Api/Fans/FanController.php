@@ -38,7 +38,7 @@ class FanController extends Controller
         
         $token = $miniToken->getToken($user);
 
-        return response()->json(['token' => $token]);
+        return response()->json(['token' => $token,'user' => $user]);
     }
 
     public function saveInfo() 
