@@ -106,6 +106,8 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('socials/uploadPhoto', 'Api\Fans\SocialController@uploadPhoto');
     Route::post('socials/deleteComment', 'Api\Fans\SocialController@deleteComment');
     Route::get('socials/list', 'Api\Fans\SocialController@list');
+    Route::get('socials/{social}/hidden', 'Api\Fans\SocialController@changeHidden');  //改变隐藏
+    Route::post('socials/hidden', 'Api\Fans\SocialController@hiddenChangeAll');  //改变全部图片隐藏
     Route::post('socials/{social}/addCommentNotice', 'Api\Fans\SocialController@addCommentNotice');
     Route::post('socials/{social}/addReplyNotice', 'Api\Fans\SocialController@addReplyNotice');
     Route::post('socials/replys', 'Api\Fans\SocialController@replys');

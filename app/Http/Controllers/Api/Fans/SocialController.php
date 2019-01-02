@@ -308,6 +308,30 @@ class SocialController extends Controller
 
     }
 
+    public function changeHidden(Social $social)
+    {
+        if($social->hidden == 0) {
+            $social->hidden = 1;
+        } else {
+            $social->hidden = 0;
+        }
+
+        if($social->save()) {
+            return response()->json(['status' => 'success']);
+        }
+
+        return response()->json(['status' => 'error']);  
+    }
+
+    public function hiddenChangeAll()
+    {
+        $hidden = request('hidden');
+
+        Social::where('id', '>', 0)->update(['hidden' => $hidden]);
+
+        return response()->json(['status' => 'success']);     
+    }
+
 
 
 }
