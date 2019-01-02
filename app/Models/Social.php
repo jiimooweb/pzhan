@@ -8,14 +8,14 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Social extends Model
 {
-    public static function boot()
-    {
-        parent::boot();
+    // public static function boot()
+    // {
+    //     parent::boot();
 
-        static::addGlobalScope('hidden', function(Builder $builder) {
-            $builder->where('hidden', 0);
-        });
-    }
+    //     static::addGlobalScope('hidden', function(Builder $builder) {
+    //         $builder->where('hidden', 0);
+    //     });
+    // }
 
     public function getCreatedAtAttribute($date)
     {

@@ -25,7 +25,7 @@ class SocialController extends Controller
     public function webIndex() 
     {
         $fan_id = request('fan_id') ?? Token::getUid();
-        $socials = Social::withoutGlobalScopes()->with(['photos','fan'])->withCount(['likeFans', 'comments', 'photos'])->orderBy('created_at', 'desc')->paginate(10);
+        $socials = Social::with(['photos','fan'])->withCount(['likeFans', 'comments', 'photos'])->orderBy('created_at', 'desc')->paginate(10);
         foreach($socials as &$social) {
             $social->like = $social->isLike($fan_id) ? 1 : 0;
             if($social->photos_count == 1) {
@@ -40,7 +40,7 @@ class SocialController extends Controller
     public function index() 
     {
         $fan_id = request('fan_id') ?? Token::getUid();
-        $socials = Social::with(['photos','fan'])->withCount(['likeFans', 'comments', 'photos'])->orderBy('created_at', 'desc')->paginate(10);
+        $socials = Social::with(['photos','fan'])->where('hidden', 0)->withCount(['likeFans', 'comments', 'photos'])->orderBy('created_at', 'desc')->paginate(10);
         foreach($socials as &$social) {
             $social->like = $social->isLike($fan_id) ? 1 : 0;
             if($social->photos_count == 1) {
@@ -55,7 +55,7 @@ class SocialController extends Controller
     public function list() 
     {
         $fan_id = request('fan_id') ?? Token::getUid();
-        $socials = Social::where('fan_id', $fan_id)->with(['photos','fan'])->withCount(['likeFans', 'comments', 'photos'])->orderBy('created_at', 'desc')->paginate(10);
+        $socials = Social::where('fan_id', $fan_id)->where('hidden', 0)->with(['photos','fan'])->withCount(['likeFans', 'comments', 'photos'])->orderBy('created_at', 'desc')->paginate(10);
         foreach($socials as &$social) {
             $social->like = $social->isLike($fan_id) ? 1 : 0;
             if($social->photos_count == 1) {
