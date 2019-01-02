@@ -218,7 +218,7 @@ Route::get('encrypt', function() {
         ],
     ];
     
-    $app = Factory::miniProgram($config);
+    $app = \EasyWeChat\Factory::miniProgram($config);
     //oYNjw1BulyNyFxruJ8K3Jyq6ndvc
     $session = 'Zb0bb8ClDBX541MLPfda7Q==';
     $vi = "CY+vtg6YViAg3UEmZJi3pA==";
