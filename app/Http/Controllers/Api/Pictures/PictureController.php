@@ -443,7 +443,7 @@ class PictureController extends Controller
         $pictures = [];        
         foreach($authors as $k => &$author) {
             $pictures[$k]['name'] = $author;
-            $pictures[$k]['pictures'] = Picture::where('author', $author)->orderBy('created_at', 'desc')->limit(3)->get()->toArray();
+            $pictures[$k]['pictures'] = Picture::where('author', $author)->where('hidden', 0)->orderBy('created_at', 'desc')->limit(3)->get()->toArray();
         }
           
         return response()->json(['status' => 'success', 'data' => $pictures]);
