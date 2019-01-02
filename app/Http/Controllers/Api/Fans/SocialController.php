@@ -22,6 +22,21 @@ use App\Http\Requests\SocialRequest;
 
 class SocialController extends Controller
 {
+    public function webIndex() 
+    {
+        $fan_id = request('fan_id') ?? Token::getUid();
+        $socials = Social::withoutGlobalScopes()->with(['photos','fan'])->withCount(['likeFans', 'comments', 'photos'])->orderBy('created_at', 'desc')->paginate(10);
+        foreach($socials as &$social) {
+            $social->like = $social->isLike($fan_id) ? 1 : 0;
+            if($social->photos_count == 1) {
+                $social->img_type = Common::getImageType($social->photos[0]['url']);
+            }else {
+                $social->img_type = 0;
+            }
+        }
+        return response()->json(['status' => 'success', 'data' => $socials]);   
+    }
+
     public function index() 
     {
         $fan_id = request('fan_id') ?? Token::getUid();
