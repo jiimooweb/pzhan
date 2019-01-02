@@ -113,7 +113,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('socials/replys', 'Api\Fans\SocialController@replys');
     Route::post('socials/change', 'Api\Fans\SocialController@change');
     Route::post('socials/upload', 'Api\Fans\SocialController@upload');
-    Route::get('socials/web-index', 'Api\Fans\SocialController@webIndex');
+    Route::get('socials/index', 'Api\Fans\SocialController@webIndex');
     Route::apiResource('socials', 'Api\Fans\SocialController');
 
     //通知
