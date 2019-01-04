@@ -66,10 +66,13 @@ class FanController extends Controller
             $userInfo = $app->encryptor->decryptData($sessionKey, $iv, $encryptData);
             $userInfo['openid'] = $userInfo['openId'];
             $userInfo['unionid'] = $userInfo['unionId'];
+            unset($userInfo['openId']);
+            unset($userInfo['unionId']);
         } else {
             $userInfo = $request->userInfo['userInfo'];
         }
         $userInfo['nickname'] = $userInfo['nickName'];
+        unset($userInfo['nickName']);
         $userInfo['status'] = 1;
 
         if(Fan::where('id', $data['uid'])->update($userInfo)){
