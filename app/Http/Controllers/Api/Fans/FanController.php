@@ -64,6 +64,7 @@ class FanController extends Controller
         $encryptData =  $userInfo['encryptedData'] ?? '';
         if($iv && $encryptData) {
             $userInfo = $app->encryptor->decryptData($sessionKey, $iv, $encryptData);
+            return $userInfo;
             $userInfo['openid'] = $userInfo['openId'];
             $userInfo['unionid'] = $userInfo['unionId'];
             unset($userInfo['openId']);
