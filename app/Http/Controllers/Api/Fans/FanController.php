@@ -60,12 +60,16 @@ class FanController extends Controller
         
         $userInfo = $request->userInfo;
         $sessionKey = \App\Services\Token::getCurrentTokenVar('session_key');
-        $iv = $userInfo['iv'];
-        $encryptData =  $userInfo['encryptedData'];
-        $userInfo = $app->encryptor->decryptData($sessionKey, $iv, $encryptData);
+        $iv = $userInfo['iv'] ?? '';
+        $encryptData =  $userInfo['encryptedData'] ?? '';
+        if($iv && $encryptData) {
+            $userInfo = $app->encryptor->decryptData($sessionKey, $iv, $encryptData);
+        } else {
+            $userInfo = $request->userInfo['userInfo'];
+        }
         $userInfo['nickname'] = $userInfo['nickName'];
         $userInfo['status'] = 1;
-        
+
         if(Fan::where('id', $data['uid'])->update($userInfo)){
             return response()->json('保存成功');
         }
