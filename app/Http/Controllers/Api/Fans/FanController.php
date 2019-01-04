@@ -41,16 +41,31 @@ class FanController extends Controller
         return response()->json(['token' => $token,'user' => $user]);
     }
 
-    public function saveInfo() 
+    public function saveInfo(Request $request) 
     {
         $token = request()->header('token');
         $data = Cache::get($token);
         $data = json_decode($data, true);
-        $userInfo = request('userInfo');
+        $config =  [
+            'app_id' => config('wechat.mini_program.default.app_id'),
+            'secret' => config('wechat.mini_program.default.secret'),
+            'response_type' => 'array',
+            'log' => [
+                'level' => 'debug',
+                'file' => config('wechat.defaults.log.file'),
+            ],
+        ];
+
+        $app = \EasyWeChat\Factory::miniProgram($config);
+        
+        $userInfo = $request->userInfo;
+        $sessionKey = \App\Services\Token::getCurrentTokenVar('session_key');
+        $iv = $userInfo['iv'];
+        $encryptData =  $userInfo['encryptedData'];
+        $userInfo = $app->encryptor->decryptData($sessionKey, $iv, $encryptData);
         $userInfo['nickname'] = $userInfo['nickName'];
         $userInfo['status'] = 1;
-        unset($userInfo['nickName']);
-
+        
         if(Fan::where('id', $data['uid'])->update($userInfo)){
             return response()->json('保存成功');
         }
