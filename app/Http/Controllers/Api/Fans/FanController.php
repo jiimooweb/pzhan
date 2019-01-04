@@ -69,6 +69,7 @@ class FanController extends Controller
             $userInfo['unionid'] = $userInfo['unionId'];
             unset($userInfo['openId']);
             unset($userInfo['unionId']);
+            unset($userInfo['watermark']);
         } else {
             $userInfo = $request->userInfo['userInfo'];
         }
