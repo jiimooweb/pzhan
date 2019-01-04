@@ -219,8 +219,8 @@ Route::post('encrypt', function(\Illuminate\Http\Request $request) {
     ];
     $userInfo = $request->userInfo;
     $sessionKey = \App\Services\Token::getCurrentTokenVar('session_key');
-    $iv = $userInfo->iv;
-    $encryptData =  $userInfo->encryptedData;
+    $iv = $userInfo['iv'];
+    $encryptData =  $userInfo['encryptedData'];
     
     $app = \EasyWeChat\Factory::miniProgram($config);
 
