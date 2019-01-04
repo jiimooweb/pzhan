@@ -30,6 +30,7 @@ class MiniProgramToken extends Token
     {
         $cachedValue = $data;
         $cachedValue['uid'] = $uid;
+        $cachedValue['session_key'] = $data['session_key'];
         // $cachedValue['scope'] = \App\Utils\RoleScope::User;
         return $cachedValue;
     }

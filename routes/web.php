@@ -207,7 +207,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
 });
 
-Route::get('encrypt', function() {
+Route::get('encrypt', function(\Illuminate\Http\Request $request) {
     $config =  [
         'app_id' => config('wechat.mini_program.default.app_id'),
         'secret' => config('wechat.mini_program.default.secret'),
@@ -217,14 +217,14 @@ Route::get('encrypt', function() {
             'file' => config('wechat.defaults.log.file'),
         ],
     ];
+    $userInfo = $request->userInfo;
+    $sessionKey = \App\Services\Token::getCurrentTokenVar('session_key');
+    $iv = $userInfo->iv;
+    $encryptData =  $userInfo->encryptedData;
     
     $app = \EasyWeChat\Factory::miniProgram($config);
-    //oYNjw1BulyNyFxruJ8K3Jyq6ndvc
-    $session = 'Zb0bb8ClDBX541MLPfda7Q==';
-    $iv = "CY+vtg6YViAg3UEmZJi3pA==";
-    $encryptData = "CnD0qWyrrxUIkxcxKX64M+IRp1gWr58MB0BFZ2NMaAWDt1B4EQaeEyDoCBU6IIb7+cOrAImvREqexKK10vOMLd3cm7635BS4xr7DEtqyC7Db6S5vGjAsw1EKE7Km0oxQIU3LH6u/mVxVaYWGpSzJm9isymNesvCfyes/5nlnDzDqYzDR+CzFkxuxDh3CffcVRqkXSu7Wcd6VBzr24V5QCwwTgXeMLITpjpdiOc1WcDj/xe+xayfQFtD5Tgwb3kQS+nbgfJSqsQA33AuerSY0Zp87ElMoOrRqNvYjnfShNm5PDammLS15fpkEeMb81y7mgFGBelWVRuZXI1QQPel4OlNZ6BzaDWeD9yeQLt+qQu95YhrMfWj20JJlZN9q4FHM2yLEs1FEQgo7c6PIHOW2DR9cbHe+FF52V1veI+hDix1Kstj8X5bbnT+Eu/JC+ycAXqhVtpCUcCXYOK2Vs5RYS/lL+eg2nETFb0Jj4enHcm1vg94jQMedSz4U3OwOU2uwCC22h4EmdftYBONXIFXg9w==";
 
-    $decryptedData = $app->encryptor->decryptData($session, $iv, $encryptData);
+    $decryptedData = $app->encryptor->decryptData($sessionKey, $iv, $encryptData);
     return $decryptedData;
 });
 
