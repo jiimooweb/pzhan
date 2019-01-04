@@ -31,7 +31,7 @@ class Fan extends Model
         return self::where('openid', $openid)->first();
     }
 
-    public static function getByUnionID($unionid) 
+    public static function getByUninoID($unionid) 
     {
         return self::where('unionid', $unionid)->first();
     }

@@ -14,7 +14,7 @@ class MiniProgramToken extends Token
         $openid = $data['openid'];
         $unionid = $data['unionid'] ?? '';
         if($unionid) {
-            $fans = Fan::getByUninoID($unionid);
+            $fans = Fan::getByUnionID($unionid);
         } else {
             $fans = Fan::getByOpenID($openid);
         }
