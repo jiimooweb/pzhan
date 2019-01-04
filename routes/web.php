@@ -207,7 +207,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
 });
 
-Route::get('encrypt', function(\Illuminate\Http\Request $request) {
+Route::post('encrypt', function(\Illuminate\Http\Request $request) {
     $config =  [
         'app_id' => config('wechat.mini_program.default.app_id'),
         'secret' => config('wechat.mini_program.default.secret'),
