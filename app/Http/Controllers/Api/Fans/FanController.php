@@ -66,9 +66,7 @@ class FanController extends Controller
             $userInfo = $app->encryptor->decryptData($sessionKey, $iv, $encryptData);
             $userInfo['openid'] = $userInfo['openId'];
             $userInfo['unionid'] = $userInfo['unionId'];
-            unset($userInfo['openId']);
-            unset($userInfo['unionId']);
-            unset($userInfo['watermark']);
+            unset($userInfo['openId'],$userInfo['unionId'],$userInfo['watermark']);
         } else {
             $userInfo = $request->userInfo['userInfo'];
         }
