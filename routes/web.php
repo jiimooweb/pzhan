@@ -209,7 +209,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
 Route::get('scale', function(\Illuminate\Http\Request $request) {
     $pictures =  \App\Models\Picture::where('scale', 0)->limit(200)->get();
-    return $pictures;
+    // return $pictures;
     foreach($pictures as &$picture) {
         $file = $picture->url .'?imageMogr2/auto-orient/thumbnail/!20p/blur/1x0/quality/75|imageslim';
         $picture->scale = \App\Utils\Common::getImageScale($file);
