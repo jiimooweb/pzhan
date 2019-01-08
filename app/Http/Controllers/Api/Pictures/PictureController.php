@@ -63,7 +63,7 @@ class PictureController extends Controller
     {
         $tags = $request->tags;
         $data = $request->picture;
-        $data['scale'] = \App\Utils\Common::getImageScale($data['url']);
+        $data['scale'] = \App\Utils\Common::getImageScale($data['url'].'?imageMogr2/auto-orient/thumbnail/!20p/blur/1x0/quality/75|imageslim');
         $picture = Picture::create($data);
         $picture_id = $picture->id;
         if($picture) {
