@@ -65,9 +65,7 @@ class PictureController extends Controller
         $data = $request->picture;
         $data['scale'] = \App\Utils\Common::getImageScale($data['url']);
         $picture = Picture::create($data);
-
         $picture_id = $picture->id;
-
         if($picture) {
 
             if($tags) {
