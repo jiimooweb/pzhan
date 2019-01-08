@@ -82,21 +82,13 @@ class Common
         return $result;
     }
 
-    public static function getImageType($file = '') {
+    public static function getImageScale($file = '') {
         $img_type = 0;
         $image = getimagesize($file);
         $width = $image[0];
         $height = $image[1];
-        $scale = $width / $height;
-        if ($scale > 1) {
-            $img_type = 1;
-        } else if ($scale < 1) {
-            $img_type = 2;
-        } else {
-            $img_type = 3;
-        }
-
-        return $img_type;
+        $scale = $height / $width;
+        return number_format($scale,2);
     }
 
 }

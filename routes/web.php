@@ -207,25 +207,16 @@ Route::group(['middleware' => ['cors', 'token']], function () {
 
 });
 
-Route::post('encrypt', function(\Illuminate\Http\Request $request) {
-    $config =  [
-        'app_id' => config('wechat.mini_program.default.app_id'),
-        'secret' => config('wechat.mini_program.default.secret'),
-        'response_type' => 'array',
-        'log' => [
-            'level' => 'debug',
-            'file' => config('wechat.defaults.log.file'),
-        ],
-    ];
-    $userInfo = $request->userInfo;
-    $sessionKey = \App\Services\Token::getCurrentTokenVar('session_key');
-    $iv = $userInfo['iv'];
-    $encryptData =  $userInfo['encryptedData'];
+Route::get('scale', function(\Illuminate\Http\Request $request) {
+    $pictures =  \App\Models\Picture::where('scale', 0)->limit(200)->get();
+    // return $pictures;
+    foreach($pictures as &$picture) {
+        $file = $picture->url .'?imageMogr2/auto-orient/thumbnail/!20p/blur/1x0/quality/75|imageslim';
+        $picture->scale = \App\Utils\Common::getImageScale($file);
+        $picture->save();
+    }
     
-    $app = \EasyWeChat\Factory::miniProgram($config);
-
-    $decryptedData = $app->encryptor->decryptData($sessionKey, $iv, $encryptData);
-    return $decryptedData;
+    return 'success';
 });
 
 

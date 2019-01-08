@@ -62,8 +62,9 @@ class PictureController extends Controller
     public function store(PictureRequest $request) 
     {
         $tags = $request->tags;
-
-        $picture = Picture::create($request->picture);
+        $data = $request->picture;
+        $data['scale'] = \App\Utils\Common::getImageScale($data['url']);
+        $picture = Picture::create($data);
 
         $picture_id = $picture->id;
 
