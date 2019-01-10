@@ -25,7 +25,8 @@ class LeaderboardController extends Controller
             $data = [];
             foreach ($list['ids'] as $id) {
                 $leaderboard = Leaderboard::create(['img_id' => $id, 'date_id' => $list['date_id']]);
-                $data[] = $leaderboard;
+//                $data[] = $leaderboard;
+                array_push($data,$leaderboard);
             }
             DB::commit();
             return response()->json(['data' => $data]);
@@ -65,5 +66,12 @@ class LeaderboardController extends Controller
         return response()->json(['data' =>$data]);
     }
 
+    public function isHidden()
+    {
+        $date_id = request('date_id');
+        Leaderboard::where('date_id',$date_id)
+            ->update(['is_hidden'=>0]);
+
+    }
 
 }
