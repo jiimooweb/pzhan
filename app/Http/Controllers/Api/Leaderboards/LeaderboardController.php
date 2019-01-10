@@ -13,7 +13,7 @@ class LeaderboardController extends Controller
     public function show()
     {
         $id = request()->leaderboard;
-        $date = Leaderboard::where('id', $id)->with('picture')->orderBy('created_at')->orderBy('ranking')->first();
+        $date = Leaderboard::where('id', $id)->with('picture')->first();
         return response()->json(['data' => $date]);
     }
 
