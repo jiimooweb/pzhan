@@ -38,18 +38,41 @@ class FanController extends Controller
         
         $token = $miniToken->getToken($user);
 
-        return response()->json(['token' => $token]);
+        return response()->json(['token' => $token,'user' => $user]);
     }
 
-    public function saveInfo() 
+    public function saveInfo(Request $request) 
     {
         $token = request()->header('token');
         $data = Cache::get($token);
         $data = json_decode($data, true);
-        $userInfo = request('userInfo');
+        $config =  [
+            'app_id' => config('wechat.mini_program.default.app_id'),
+            'secret' => config('wechat.mini_program.default.secret'),
+            'response_type' => 'array',
+            'log' => [
+                'level' => 'debug',
+                'file' => config('wechat.defaults.log.file'),
+            ],
+        ];
+
+        $app = \EasyWeChat\Factory::miniProgram($config);
+        
+        $userInfo = $request->userInfo;
+        $sessionKey = \App\Services\Token::getCurrentTokenVar('session_key');
+        $iv = $userInfo['iv'] ?? '';
+        $encryptData =  $userInfo['encryptedData'] ?? '';
+        if($iv && $encryptData) {
+            $userInfo = $app->encryptor->decryptData($sessionKey, $iv, $encryptData);
+            $userInfo['openid'] = $userInfo['openId'];
+            $userInfo['unionid'] = $userInfo['unionId'];
+            unset($userInfo['openId'],$userInfo['unionId'],$userInfo['watermark']);
+        } else {
+            $userInfo = $request->userInfo['userInfo'];
+        }
         $userInfo['nickname'] = $userInfo['nickName'];
-        $userInfo['status'] = 1;
         unset($userInfo['nickName']);
+        $userInfo['status'] = 1;
 
         if(Fan::where('id', $data['uid'])->update($userInfo)){
             return response()->json('保存成功');

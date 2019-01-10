@@ -106,11 +106,14 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('socials/uploadPhoto', 'Api\Fans\SocialController@uploadPhoto');
     Route::post('socials/deleteComment', 'Api\Fans\SocialController@deleteComment');
     Route::get('socials/list', 'Api\Fans\SocialController@list');
+    Route::get('socials/{social}/hidden', 'Api\Fans\SocialController@changeHidden');  //改变隐藏
+    Route::post('socials/hidden', 'Api\Fans\SocialController@hiddenChangeAll');  //改变全部图片隐藏
     Route::post('socials/{social}/addCommentNotice', 'Api\Fans\SocialController@addCommentNotice');
     Route::post('socials/{social}/addReplyNotice', 'Api\Fans\SocialController@addReplyNotice');
     Route::post('socials/replys', 'Api\Fans\SocialController@replys');
     Route::post('socials/change', 'Api\Fans\SocialController@change');
     Route::post('socials/upload', 'Api\Fans\SocialController@upload');
+    Route::get('socials/index', 'Api\Fans\SocialController@webIndex');
     Route::apiResource('socials', 'Api\Fans\SocialController');
 
     //通知
@@ -202,6 +205,18 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::apiResource('leaderDates','Api\Leaderboards\LeaderDateController');
     Route::apiResource('leaderboards','Api\Leaderboards\LeaderboardController');
 
+});
+
+Route::get('scale', function(\Illuminate\Http\Request $request) {
+    $pictures =  \App\Models\Picture::where('scale', 0)->limit(200)->get();
+    // return $pictures;
+    foreach($pictures as &$picture) {
+        $file = $picture->url .'?imageMogr2/auto-orient/thumbnail/!20p/blur/1x0/quality/75|imageslim';
+        $picture->scale = \App\Utils\Common::getImageScale($file);
+        $picture->save();
+    }
+    
+    return 'success';
 });
 
 

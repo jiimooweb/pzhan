@@ -69,6 +69,10 @@ class Picture extends Model
         $likeRank = self::where('hidden', 0)->withCount(['likeFans'])->orderBy('like_fans_count', 'desc')->limit(100)->get()->toArray();
         \Cache::store('redis')->put('likeRank', $likeRank, 30);
 
+        //下载排行
+        $downloadRank = self::where('hidden', 0)->withCount(['downloadFans'])->orderBy('download_fans_count', 'desc')->limit(100)->get()->toArray();
+        \Cache::store('redis')->put('downloadRank', $downloadRank, 30);
+
         //热度排行
         $hotRank = self::where('hidden', 0)->orderBy('hot', 'desc')->limit(100)->get()->toArray();
         \Cache::store('redis')->put('hotRank', $hotRank, 30);

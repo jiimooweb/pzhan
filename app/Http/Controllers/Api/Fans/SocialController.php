@@ -22,7 +22,7 @@ use App\Http\Requests\SocialRequest;
 
 class SocialController extends Controller
 {
-    public function index() 
+    public function webIndex() 
     {
         $fan_id = request('fan_id') ?? Token::getUid();
         $socials = Social::with(['photos','fan'])->withCount(['likeFans', 'comments', 'photos'])->orderBy('created_at', 'desc')->paginate(10);
@@ -37,10 +37,25 @@ class SocialController extends Controller
         return response()->json(['status' => 'success', 'data' => $socials]);   
     }
 
+    public function index() 
+    {
+        $fan_id = request('fan_id') ?? Token::getUid();
+        $socials = Social::with(['photos','fan'])->where('hidden', 0)->withCount(['likeFans', 'comments', 'photos'])->orderBy('created_at', 'desc')->paginate(10);
+        foreach($socials as &$social) {
+            $social->like = $social->isLike($fan_id) ? 1 : 0;
+            if($social->photos_count == 1) {
+                $social->img_type = Common::getImageType($social->photos[0]['url']);
+            }else {
+                $social->img_type = 0;
+            }
+        }
+        return response()->json(['status' => 'success', 'data' => $socials]);   
+    }
+
     public function list() 
     {
         $fan_id = request('fan_id') ?? Token::getUid();
-        $socials = Social::where('fan_id', $fan_id)->with(['photos','fan'])->withCount(['likeFans', 'comments', 'photos'])->orderBy('created_at', 'desc')->paginate(10);
+        $socials = Social::where('fan_id', $fan_id)->where('hidden', 0)->with(['photos','fan'])->withCount(['likeFans', 'comments', 'photos'])->orderBy('created_at', 'desc')->paginate(10);
         foreach($socials as &$social) {
             $social->like = $social->isLike($fan_id) ? 1 : 0;
             if($social->photos_count == 1) {
@@ -263,18 +278,18 @@ class SocialController extends Controller
         $like = SocialLike::firstOrCreate(['fan_id' => $fan_id, 'social_id' => $social->id]);
         
         if($like ) {
-            $likeCount = SocialLike::where('social_id' , $social->id)->count();
-            if($likeCount % 5 == 0) {
-                $fan = Social::where('id', $social->id)->first()['fan_id'];
-                Fan::where('id', $fan)->increment('point', 50);
-                PointHistory::firstOrCreate([
-                    'fan_id' =>  $fan_id,
-                    'state' => 1,
-                    'point' => 50,
-                    'tag' => 'social',
-                    'comment' => '点赞活动'.$likeCount.'个赞获得的50积分'
-                ]);
-            }
+            // $likeCount = SocialLike::where('social_id' , $social->id)->count();
+            // if($likeCount % 5 == 0) {
+            //     $fan = Social::where('id', $social->id)->first()['fan_id'];
+            //     Fan::where('id', $fan)->increment('point', 50);
+            //     PointHistory::firstOrCreate([
+            //         'fan_id' =>  $fan_id,
+            //         'state' => 1,
+            //         'point' => 50,
+            //         'tag' => 'social',
+            //         'comment' => '点赞活动'.$likeCount.'个赞获得的50积分'
+            //     ]);
+            // }
             if($fan_id != $social->fan_id) {
                 //添加通知
                 $notice = [
@@ -306,6 +321,30 @@ class SocialController extends Controller
 
         return response()->json(['status' => 'error']);
 
+    }
+
+    public function changeHidden(Social $social)
+    {
+        if($social->hidden == 0) {
+            $social->hidden = 1;
+        } else {
+            $social->hidden = 0;
+        }
+
+        if($social->save()) {
+            return response()->json(['status' => 'success']);
+        }
+
+        return response()->json(['status' => 'error']);  
+    }
+
+    public function hiddenChangeAll()
+    {
+        $hidden = request('hidden');
+
+        Social::where('id', '>', 0)->update(['hidden' => $hidden]);
+
+        return response()->json(['status' => 'success']);     
     }
 
 

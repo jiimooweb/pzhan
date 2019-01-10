@@ -14,8 +14,7 @@ class MiniProgramToken extends Token
         $openid = $data['openid'];
         $unionid = $data['unionid'] ?? '';
         $fans = Fan::getByOpenID($openid);
-        if (!$fans)
-        {
+        if (!$fans) {
             $uid = $this->newUser($openid, $unionid);
         }else {
             $uid = $fans->id;
@@ -30,6 +29,7 @@ class MiniProgramToken extends Token
     {
         $cachedValue = $data;
         $cachedValue['uid'] = $uid;
+        $cachedValue['session_key'] = $data['session_key'];
         // $cachedValue['scope'] = \App\Utils\RoleScope::User;
         return $cachedValue;
     }

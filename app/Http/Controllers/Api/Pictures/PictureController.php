@@ -62,11 +62,10 @@ class PictureController extends Controller
     public function store(PictureRequest $request) 
     {
         $tags = $request->tags;
-
-        $picture = Picture::create($request->picture);
-
+        $data = $request->picture;
+        $data['scale'] = \App\Utils\Common::getImageScale($data['url'].'?imageMogr2/auto-orient/thumbnail/!20p/blur/1x0/quality/75|imageslim');
+        $picture = Picture::create($data);
         $picture_id = $picture->id;
-
         if($picture) {
 
             if($tags) {
@@ -88,7 +87,11 @@ class PictureController extends Controller
 
         $picture_id = $picture->id;
 
-        if($picture->update($request->picture)){
+        $data = $request->picture;
+        
+        $data['scale'] = \App\Utils\Common::getImageScale($data['url'].'?imageMogr2/auto-orient/thumbnail/!20p/blur/1x0/quality/75|imageslim');
+
+        if($picture->update($data)){
             
             if($tags) {
                 PictureTag::where('picture_id', $picture_id)->delete();
@@ -298,8 +301,10 @@ class PictureController extends Controller
             $pictures = \Cache::store('redis')->get('collectRank');
         }else if($keyword == 'like') {
             $pictures = \Cache::store('redis')->get('likeRank');
+        }else if($keyword == 'download'){
+            $pictures = \Cache::store('redis')->get('downloadRank');
         }else {
-            $pictures = \Cache::store('redis')->get('hotRank');
+            $pictures = \Cache::store('redis')->get('hotRank');            
         }
 
         $pictures = ['data' => array_slice($pictures, $offset, $limit)]; 
@@ -441,7 +446,7 @@ class PictureController extends Controller
         $pictures = [];        
         foreach($authors as $k => &$author) {
             $pictures[$k]['name'] = $author;
-            $pictures[$k]['pictures'] = Picture::where('author', $author)->orderBy('created_at', 'desc')->limit(3)->get()->toArray();
+            $pictures[$k]['pictures'] = Picture::where('author', $author)->where('hidden', 0)->orderBy('created_at', 'desc')->limit(3)->get()->toArray();
         }
           
         return response()->json(['status' => 'success', 'data' => $pictures]);

@@ -82,6 +82,15 @@ class Common
         return $result;
     }
 
+    public static function getImageScale($file = '') {
+        $img_type = 0;
+        $image = getimagesize($file);
+        $width = $image[0];
+        $height = $image[1];
+        $scale = $height / $width;
+        return number_format($scale,2);
+    }
+
     public static function getImageType($file = '') {
         $img_type = 0;
         $image = getimagesize($file);
@@ -95,7 +104,6 @@ class Common
         } else {
             $img_type = 3;
         }
-
         return $img_type;
     }
 
