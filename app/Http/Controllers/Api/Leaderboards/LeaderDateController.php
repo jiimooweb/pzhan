@@ -25,7 +25,7 @@ class LeaderDateController extends Controller
         $id = request()->leaderDate;
         $data = LeaderDate::where('id', $id)
             ->with(['leaderboards' => function ($query) {
-                $query->orderBy('created_at')->orderBy('ranking')->with('picture');
+                $query->orderBy('ranking')->orderBy('created_at')->with('picture');
             }])
             ->first();
         return response()->json(['data' =>$data]);
