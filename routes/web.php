@@ -202,8 +202,13 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('leaderDates/date', 'Api\Leaderboards\LeaderDateController@getDate');
     Route::get('leaderDates/date', 'Api\Leaderboards\LeaderDateController@getDateforSP');
     Route::post('leaderDates/data', 'Api\Leaderboards\LeaderDateController@getDataByDate');
+    Route::post('leaderboards/hide', 'Api\Leaderboards\LeaderDateController@getDataByDate');
     Route::apiResource('leaderDates','Api\Leaderboards\LeaderDateController');
     Route::apiResource('leaderboards','Api\Leaderboards\LeaderboardController');
+
+    //第三方广告
+    Route::post('third_ads','Api\ThirdPartyAds\ThirdPartyAdController@switch');
+    Route::post('third_ads/add','Api\ThirdPartyAds\ThirdPartyAdController@add');
 
 });
 
