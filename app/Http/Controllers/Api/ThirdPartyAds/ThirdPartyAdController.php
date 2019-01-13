@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\ThirdPartyAds;
 
 use App\Models\Fan;
+use App\Models\ThirdPartyAd;
 use App\Services\Token;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ class ThirdPartyAdController extends Controller
         $switch_title = 0;
         $fan_id = Token::getUid();
         $today = Carbon::today();
-        $ads = ThirdPartyAdController::where([['fan_id', $fan_id], ['type', $type]])
+        $ads = ThirdPartyAd::where([['fan_id', $fan_id], ['type', $type]])
             ->whereDate('created_at', '>=', $today->toFormattedDateString())
             ->get();
         $count = count($ads);
@@ -48,14 +49,14 @@ class ThirdPartyAdController extends Controller
         $start = Carbon::today()->addHours(12);
         $integral = rand(10, 20);
         $now = Carbon::now();
-        $ads = ThirdPartyAdController::where([['fan_id', $fan_id], ['type', $type]])
+        $ads = ThirdPartyAd::where([['fan_id', $fan_id], ['type', $type]])
             ->whereDate('created_at', '>=', $today->toFormattedDateString())
             ->get();
         $count = count($ads);
         if ($count == 0) {
             DB::beginTransaction();
             try {
-                ThirdPartyAdController::create(['fan_id' => $fan_id], ['integral' => $integral], ['type' => $type]);
+                ThirdPartyAd::create(['fan_id' => $fan_id], ['integral' => $integral], ['type' => $type]);
                 Fan::where('id', $fan_id)->increment('point', $integral);
                 DB::commit();
             } catch (\Exception $e) {
@@ -66,7 +67,7 @@ class ThirdPartyAdController extends Controller
             if ($record->lt($start) && $now->gte($start)) {
                 DB::beginTransaction();
                 try {
-                    ThirdPartyAdController::create(['fan_id' => $fan_id], ['integral' => $integral], ['type' => $type]);
+                    ThirdPartyAd::create(['fan_id' => $fan_id], ['integral' => $integral], ['type' => $type]);
                     Fan::where('id', $fan_id)->increment('point', $integral);
                     DB::commit();
                 } catch (\Exception $e) {
