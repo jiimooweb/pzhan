@@ -20,6 +20,7 @@ class ThirdPartyAdController extends Controller
         $switch_title = 0;
         $fan_id = Token::getUid();
         $today = Carbon::today();
+        $start = Carbon::today()->addHours(12);
         $ads = ThirdPartyAd::where([['fan_id', $fan_id], ['type', $type]])
             ->whereDate('created_at', '>=', $today->toFormattedDateString())
             ->get();
