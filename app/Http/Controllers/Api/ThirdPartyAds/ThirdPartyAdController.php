@@ -8,6 +8,7 @@ use App\Services\Token;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class ThirdPartyAdController extends Controller
 {
@@ -76,5 +77,6 @@ class ThirdPartyAdController extends Controller
             }
 
         }
+        return response()->json(['tSwitch' => 0]);
     }
 }
