@@ -57,9 +57,10 @@ class ThirdPartyAdController extends Controller
         if ($count == 0) {
             DB::beginTransaction();
             try {
-                ThirdPartyAd::create(['fan_id' => $fan_id], ['integral' => $integral], ['type' => $type]);
+                $a = ThirdPartyAd::create(['fan_id' => $fan_id,'integral' => $integral,'type' => $type]);
                 Fan::where('id', $fan_id)->increment('point', $integral);
                 DB::commit();
+                return $a;
             } catch (\Exception $e) {
                 DB::rollBack();
             }
