@@ -16,7 +16,7 @@ class ThirdPartyAdController extends Controller
     public function switch()
     {
         $type = request('type');
-        $title = "加分";
+        $title = "每天正午12点前后首次点击广告，可获得随机积分哟";
         $switch_title = 0;
         $fan_id = Token::getUid();
         $today = Carbon::today();
@@ -56,12 +56,15 @@ class ThirdPartyAdController extends Controller
             ->whereDate('created_at', '>=', $today->toFormattedDateString())
             ->get();
         $count = count($ads);
+        $switch_title = 1;//点击是否开启文字显示
+        $title = "已获得".$integral."积分";
         if ($count == 0) {
             DB::beginTransaction();
             try {
                 ThirdPartyAd::create(['fan_id' => $fan_id,'integral' => $integral,'type' => $type]);
                 Fan::where('id', $fan_id)->increment('point', $integral);
                 DB::commit();
+                return response()->json(['tSwitch' => $switch_title,'title' => $title]);
             } catch (\Exception $e) {
                 DB::rollBack();
             }
