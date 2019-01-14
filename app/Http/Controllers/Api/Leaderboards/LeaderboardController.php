@@ -79,6 +79,7 @@ class LeaderboardController extends Controller
         $id = request()->leaderboard;
         $data = Leaderboard::where([['id',$id],['is_hidden',0],['sid',0]])
             ->orWhere([['sid',$id],['is_hidden',0]])
+            ->with('picture')
             ->get();
         return response()->json(['data' =>$data]);
     }
