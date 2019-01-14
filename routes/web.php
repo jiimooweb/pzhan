@@ -203,6 +203,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::get('leaderDates/date', 'Api\Leaderboards\LeaderDateController@getDateforSP');
     Route::post('leaderDates/data', 'Api\Leaderboards\LeaderDateController@getDataByDate');
     Route::post('leaderboards/hide', 'Api\Leaderboards\LeaderDateController@getDataByDate');
+    Route::get('leaderboards/{leaderboard}/more','Api\Leaderboards\LeaderboardController@getDataByID');
     Route::apiResource('leaderDates','Api\Leaderboards\LeaderDateController');
     Route::apiResource('leaderboards','Api\Leaderboards\LeaderboardController');
 

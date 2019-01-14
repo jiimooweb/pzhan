@@ -74,4 +74,13 @@ class LeaderboardController extends Controller
 
     }
 
+    public function getDataByID()
+    {
+        $id = request()->leaderboard;
+        $data = Leaderboard::where([['id',$id],['is_hidden',0],['sid',0]])
+            ->orWhere([['sid',$id],['is_hidden',0]])
+            ->get();
+        return response()->json(['data' =>$data]);
+    }
+
 }
