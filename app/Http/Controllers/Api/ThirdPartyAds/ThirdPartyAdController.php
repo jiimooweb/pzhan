@@ -73,9 +73,10 @@ class ThirdPartyAdController extends Controller
             if ($record->lt($start) && $now->gte($start)) {
                 DB::beginTransaction();
                 try {
-                    ThirdPartyAd::create(['fan_id' => $fan_id], ['integral' => $integral], ['type' => $type]);
+                    ThirdPartyAd::create(['fan_id' => $fan_id, 'integral' => $integral, 'type' => $type]);
                     Fan::where('id', $fan_id)->increment('point', $integral);
                     DB::commit();
+                    return response()->json(['tSwitch' => $switch_title,'title' => $title]);
                 } catch (\Exception $e) {
                     DB::rollBack();
                 }
