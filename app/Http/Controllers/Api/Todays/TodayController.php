@@ -416,7 +416,7 @@ class TodayController extends Controller
 
     public function getOne()
     {
-        $end = Carbon::today();
+        $end = Carbon::now();
         $first = Carbon::today()->modify('-60 days');
         $data = Today::whereBetween('created_at',[$first,$end])
             ->where('is_up',1)
@@ -426,7 +426,6 @@ class TodayController extends Controller
             ->orderBy('created_at','desc')
             ->limit(60)
             ->get();
-
         foreach ($data as $item)
         {
             $date = Carbon::parse($item->date);
