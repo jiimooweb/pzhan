@@ -41,7 +41,7 @@ class ThirdPartyAdController extends Controller
 //            预览
             $switch_ad = 1;
         }
-        return response()->json(['tSwitch' => $switch_title, 'adSwitch'=>$switch_ad,'title' => $title]);
+        return response()->json(['tSwitch' => 0, 'adSwitch'=>$switch_ad,'title' => $title]);
     }
 
     public function add()
@@ -64,7 +64,7 @@ class ThirdPartyAdController extends Controller
                 ThirdPartyAd::create(['fan_id' => $fan_id,'integral' => $integral,'type' => $type]);
                 Fan::where('id', $fan_id)->increment('point', $integral);
                 DB::commit();
-                return response()->json(['tSwitch' => $switch_title,'title' => $title]);
+                return response()->json(['tSwitch' => 0,'title' => $title]);
             } catch (\Exception $e) {
                 DB::rollBack();
             }
@@ -76,7 +76,7 @@ class ThirdPartyAdController extends Controller
                     ThirdPartyAd::create(['fan_id' => $fan_id, 'integral' => $integral, 'type' => $type]);
                     Fan::where('id', $fan_id)->increment('point', $integral);
                     DB::commit();
-                    return response()->json(['tSwitch' => $switch_title,'title' => $title]);
+                    return response()->json(['tSwitch' => 0,'title' => $title]);
                 } catch (\Exception $e) {
                     DB::rollBack();
                 }
