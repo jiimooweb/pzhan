@@ -426,6 +426,7 @@ class TodayController extends Controller
             ->orderBy('created_at','desc')
             ->limit(60)
             ->get();
+
         foreach ($data as $item)
         {
             $date = Carbon::parse($item->date);
