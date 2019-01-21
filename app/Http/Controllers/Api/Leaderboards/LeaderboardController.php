@@ -41,6 +41,9 @@ class LeaderboardController extends Controller
     {
         $id = request()->leaderboard;
         $list = request(['ranking', 'old_ranking', 'up', 'is_first', 'is_hidden','count','definition','sid']);
+        if($list['old_ranking']==''){
+            $list['is_first']=1;
+        }
         DB::beginTransaction();
         try {
             Leaderboard::where('id', $id)->update($list);
