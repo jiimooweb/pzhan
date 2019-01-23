@@ -76,9 +76,27 @@ class SocialController extends Controller
             $point = 0;
             $date = date('Y-m-d', time());
             $socialReward = SocialReward::where('fan_id', $data['fan_id'])->whereDate('created_at', $date)->count();
-            if($socialReward == 0) {
-                $point = rand(5,50);
+            $socialFirst = SocialReward::where('fan_id',$data['fan_id'])->count();
+            if($socialFirst == 0 ){
+                $point = 50;
+                SocialReward::firstOrCreate(['fan_id' => $data['fan_id'], 'social_id' => $social->id, 'point' => $point]);
+                Fan::where('id', $data['fan_id'])->increment('point', $point);
+                PointHistory::firstOrCreate([
+                    'fan_id' => $data['fan_id'],
+                    'state' => 1,
+                    'point' => $point,
+                    'tag' => 'social',
+                    'comment' => '每日首次发布动态获得:' .$point. '积分'
+                ]);
+            }
 
+            if($socialFirst != 0 && $socialReward == 0) {
+                $fan = Fan::find($data['fan_id']);
+                if($fan->point < 100 ){
+                    $point = rand(20,50);
+                }else{
+                    $point = rand(9,50);
+                }
                 SocialReward::firstOrCreate(['fan_id' => $data['fan_id'], 'social_id' => $social->id, 'point' => $point]);
                 Fan::where('id', $data['fan_id'])->increment('point', $point);
                 PointHistory::firstOrCreate([
