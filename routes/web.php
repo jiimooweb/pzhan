@@ -220,3 +220,5 @@ Route::get('scale', function(\Illuminate\Http\Request $request) {
 });
 
 
+
+
