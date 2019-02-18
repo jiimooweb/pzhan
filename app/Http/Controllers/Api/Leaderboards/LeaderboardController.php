@@ -25,7 +25,8 @@ class LeaderboardController extends Controller
             $data = [];
             foreach ($list['ids'] as $id) {
                 $leaderboard = Leaderboard::create(['img_id' => $id, 'date_id' => $list['date_id']]);
-                $data[] = $leaderboard;
+//                $data[] = $leaderboard;
+                array_push($data,$leaderboard);
             }
             DB::commit();
             return response()->json(['data' => $data]);
@@ -40,6 +41,9 @@ class LeaderboardController extends Controller
     {
         $id = request()->leaderboard;
         $list = request(['ranking', 'old_ranking', 'up', 'is_first', 'is_hidden','count','definition','sid']);
+        if($list['old_ranking']==''){
+            $list['is_first']=1;
+        }
         DB::beginTransaction();
         try {
             Leaderboard::where('id', $id)->update($list);
@@ -65,5 +69,22 @@ class LeaderboardController extends Controller
         return response()->json(['data' =>$data]);
     }
 
+    public function isHidden()
+    {
+        $date_id = request('date_id');
+        Leaderboard::where('date_id',$date_id)
+            ->update(['is_hidden'=>0]);
+
+    }
+
+    public function getDataByID()
+    {
+        $id = request()->leaderboard;
+        $data = Leaderboard::where([['id',$id],['is_hidden',0],['sid',0]])
+            ->orWhere([['sid',$id],['is_hidden',0]])
+            ->with('picture')
+            ->get();
+        return response()->json(['data' =>$data]);
+    }
 
 }

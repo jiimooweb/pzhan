@@ -416,9 +416,9 @@ class TodayController extends Controller
 
     public function getOne()
     {
-        $end = Carbon::today();
+        $end = Carbon::now();
         $first = Carbon::today()->modify('-60 days');
-        $data = Today::whereBetween('created_at',[$first,$end])
+        $data = Today::whereBetween('date',[$first,$end])
             ->where('is_up',1)
             ->with(['picture'=>function($query){
                 $query->with('tags');
