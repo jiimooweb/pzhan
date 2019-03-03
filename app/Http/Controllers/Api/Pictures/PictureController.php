@@ -58,7 +58,7 @@ class PictureController extends Controller
         $status = $picture ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $picture]);   
     }
-
+    
     public function store(PictureRequest $request) 
     {
         $tags = $request->tags;
