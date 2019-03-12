@@ -212,7 +212,7 @@ Route::group(['middleware' => ['cors', 'token']], function () {
     Route::post('third_ads/add','Api\ThirdPartyAds\ThirdPartyAdController@add');
 
     //配置
-    Route::post('config','Api\Configs\ConfigController@index');
+    Route::get('config','Api\Configs\ConfigController@index');
 });
 
 Route::get('scale', function(\Illuminate\Http\Request $request) {
